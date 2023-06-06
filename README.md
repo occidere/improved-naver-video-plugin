@@ -22,3 +22,6 @@
 
 ## 3. 사용 방법 및 기능 추가 등 문의
 - GitHub Issues: https://github.com/occidere/improved-naver-video-plugin/issues/new/choose
+
+## 4. Contribute
+- 오타 수정이나 버그 픽스, 신규 기능 추가 등 컨트리뷰션에 대해선 항상 환영입니다 😄
