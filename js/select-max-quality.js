@@ -2,9 +2,18 @@ const QUALITY_SELECT_UL_CLASS = 'pzp-pc-setting-quality-pane__list-container';
 const QUALITY_SELECT_LI_CLASS = 'pzp-pc-ui-setting-quality-item pzp-pc-ui-setting-item';
 const QUALITY_TEXT_CLASS = 'pzp-pc-ui-setting-quality-item__prefix';
 const MAX_QUALITY_IDX = 1;
+const CAFE_IFRAME_SELECTOR = 'iframe#cafe_main';
+const BLOG_IFRAME_SELECTOR = 'iframe#mainFrame';
 
 function init() {
-    chrome.storage.sync.get('selectMaxQuality', ({selectMaxQuality}) => applyMaxQuality(selectMaxQuality));
+    chrome.storage.sync.get('selectMaxQuality', ({selectMaxQuality}) => {
+        const cafeIframe = document.querySelector(CAFE_IFRAME_SELECTOR);
+        if (cafeIframe) {
+            cafeIframe.addEventListener('load', () => applyMaxQuality(selectMaxQuality));
+        } else {
+            applyMaxQuality(selectMaxQuality);
+        }
+    });
 }
 
 async function applyMaxQuality(selectMaxQuality) {
@@ -14,7 +23,7 @@ async function applyMaxQuality(selectMaxQuality) {
 
         // If no video found due to slow loading, retry until availRetryCnt value
         while ((videoCnt === 0 || applied.length < videoCnt) && 0 < availRetryCnt--) {
-            const [cafeIframe, blogIframe] = [document.querySelector('iframe#cafe_main'), document.querySelector('iframe#mainFrame')];
+            const [cafeIframe, blogIframe] = [document.querySelector(CAFE_IFRAME_SELECTOR), document.querySelector(BLOG_IFRAME_SELECTOR)];
             const qualitySelectUls = (cafeIframe ? cafeIframe.contentWindow.document :
                     (blogIframe ? blogIframe.contentWindow.document : document)
             ).getElementsByClassName(QUALITY_SELECT_UL_CLASS);
