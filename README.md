@@ -10,7 +10,7 @@
 ## 2. 기능
 
 ### 2.1. 동영상의 기본 화질을 최대 해상도로 적용
-[<img src="https://github.com/occidere/improved-naver-video-plugin/assets/20942871/12cd152f-6a44-499f-a80b-a4debb466d8e" width="50%">](https://youtu.be/UL6zXFaOtqU)
+[![사용법 예시](https://postfiles.pstatic.net/MjAyMzA2MDZfMjMz/MDAxNjg2MDU3NDcwNDI0.FBoAG5kdDaIxp9oqvfL7NIcb4gswH2iVMZzLloVrO64g.Rd1_b0MHhcxtsxtyxqk87wj-WmIVMev9fdPpJd4y6m8g.PNG.occidere/youtube.png?type=w773)](https://www.youtube.com/watch?v=UL6zXFaOtqU)
 
 ![image](https://github.com/occidere/improved-naver-video-plugin/assets/20942871/fa254860-7eef-4e9c-9041-d794c0d7e436)
 ![image](https://github.com/occidere/improved-naver-video-plugin/assets/20942871/e0bc9fe3-fcc4-44a5-99ff-840403716eaa)
@@ -22,4 +22,3 @@
 
 ## 3. 사용 방법 및 기능 추가 등 문의
 - GitHub Issues: https://github.com/occidere/improved-naver-video-plugin/issues/new/choose
- 
