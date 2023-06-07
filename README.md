@@ -5,7 +5,7 @@
 
 
 ## 1. 설치
-- Chrome 웹 스토어: TBD
+- Chrome 웹 스토어: https://chrome.google.com/webstore/detail/improved-naver-video-plug/baoedklaoahloonjpncnhkjhcefldheb
 
 ## 2. 기능
 
