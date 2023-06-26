@@ -1,7 +1,7 @@
 {
   "name": "Improved NAVER video plugin",
   "description": "네이버 카페 / 블로그 동영상을 위한 추가 기능 플러그인",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "manifest_version": 3,
   "background": {
     "service_worker": "js/background.js"
@@ -33,6 +33,9 @@
         "https://blog.naver.com/*"
       ],
       "js": [
+        "js/common/class-variables.js",
+        "js/common/util.js",
+        "js/service/quality-display-service.js",
         "js/select-max-quality.js"
       ]
     }
