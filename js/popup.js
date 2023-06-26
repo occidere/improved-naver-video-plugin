@@ -1,12 +1,12 @@
 function init() {
     document.addEventListener('DOMContentLoaded', () => {
         const selectMaxQualityCheckbox = document.getElementById('selectMaxQualityCheckbox');
-        selectMaxQualityCheckbox.addEventListener('change', (event) => onCheckboxChanged(selectMaxQualityCheckbox, event));
+        selectMaxQualityCheckbox.addEventListener('change', (event) => onSelectMaxQualityCheckboxChanged(selectMaxQualityCheckbox, event));
         changeSelectMaxQualityCheckboxStatus(selectMaxQualityCheckbox);
     });
 }
 
-function onCheckboxChanged(selectMaxQualityCheckbox, event) {
+function onSelectMaxQualityCheckboxChanged(selectMaxQualityCheckbox, event) {
     chrome.storage.sync.set(({selectMaxQuality: event.target.checked}), () => changeSelectMaxQualityCheckboxStatus(selectMaxQualityCheckbox));
 }
 
