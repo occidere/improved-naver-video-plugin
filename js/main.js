@@ -23,7 +23,7 @@ async function decorateAll() {
 
 async function getVideoPlayerElements() {
     const videoPlayerElements = [];
-    let maxRetryCount = 10;
+    let maxRetryCount = 20;
     while (videoPlayerElements.length === 0 && 0 < maxRetryCount--) {
         console.debug(`Try to gather video elements (retry left: ${maxRetryCount})`);
         const videoPlayerDivs = getIframeDocument().getElementsByClassName(VIDEO_PLAYER_CLASS);
@@ -39,7 +39,7 @@ async function getVideoPlayerElements() {
                 console.debug(`Failed click max quality: ${e}`); // Mostly due to slow loading
             }
         }
-        await sleep(1000);
+        await sleep(750);
     }
     return videoPlayerElements;
 }
