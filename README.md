@@ -19,6 +19,10 @@
 - 체크박스를 체크하여 활성화 한 뒤 새로고침 하면 적용됩니다.
 - 체크박스를 해제하여 비활성화 한 뒤 새로고침을 하면 다시 기본 (480/720) 화질로 재생됩니다.
 
+### 적용 결과
+<img src="https://github.com/occidere/improved-naver-video-plugin/assets/20942871/4e904f08-819b-45b4-82a9-5cffd549350c" width="75%"><img src="https://github.com/occidere/improved-naver-video-plugin/assets/20942871/2ef53069-69c1-4b41-a593-d84d48e77b03" width="25%">
+
+
 
 ## 3. 사용 방법 및 기능 추가 등 문의
 - GitHub Issues: https://github.com/occidere/improved-naver-video-plugin/issues/new/choose
