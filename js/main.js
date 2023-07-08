@@ -1,4 +1,4 @@
-APP_VERSION = '1.1.3';
+APP_VERSION = '1.1.4';
 
 // Add all decorators in here
 DECORATORS = [
@@ -42,7 +42,7 @@ async function applyEnabledDecorators(enabledDecorators) {
                     videoPlayerElements.push(videoPlayerDiv);
                 }
             } catch (e) {
-                console.debug(`Failed click max quality: ${e}`); // Mostly due to slow loading
+                console.debug(`Failed to gather video elements: ${e}`); // Mostly due to slow loading
             }
         }
         await sleep(10 <= maxRetryCount ? 70 : 250);

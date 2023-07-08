@@ -3,27 +3,31 @@ class SelectMaxQualityDecorator extends Decorator {
     MAX_QUALITY_IDX = 1;
 
     async isEnabled() {
-        const enable = await getSyncValue('selectMaxQuality');
-        console.debug(`SelectMaxQualityDecorator is enabled: ${enable}`);
-        return enable;
+        return await getSyncValue('selectMaxQuality');
     }
 
     async decorate(videoPlayerElement) {
-        try {
-            const ul = videoPlayerElement.getElementsByClassName(QUALITY_SELECT_UL_CLASS)[0];
-            const li = ul.getElementsByClassName(QUALITY_SELECT_LI_CLASS)[this.MAX_QUALITY_IDX];
+        let maxRetryCount = 10;
+        while (maxRetryCount-- > 0) {
+            try {
+                const ul = videoPlayerElement.getElementsByClassName(QUALITY_SELECT_UL_CLASS)[0];
+                const li = ul.getElementsByClassName(QUALITY_SELECT_LI_CLASS)[this.MAX_QUALITY_IDX];
 
-            // Show current quality
-            const maxVideoQualityText = this.getVideoQualityText(li.getElementsByClassName(QUALITY_TEXT_CLASS)[0]);
-            this.updateCurrentVideoQualityDisplay(videoPlayerElement, maxVideoQualityText);
+                // Show current quality
+                const maxVideoQualityText = this.getVideoQualityText(li.getElementsByClassName(QUALITY_TEXT_CLASS)[0]);
+                this.updateCurrentVideoQualityDisplay(videoPlayerElement, maxVideoQualityText);
 
-            // Change to max quality
-            li.click(); // Took the longest time
+                // Change to max quality
+                li.click(); // Took the longest time
 
-            // Add quality change click event listener
-            ul.addEventListener('click', () => this.updateCurrentVideoQualityDisplay(videoPlayerElement));
-        } catch (e) {
-            console.debug(`Failed click max quality: ${e}`); // Mostly due to slow loading
+                // Add quality change click event listener
+                ul.addEventListener('click', () => this.updateCurrentVideoQualityDisplay(videoPlayerElement));
+
+                break;
+            } catch (e) {
+                console.debug(`Failed click max quality: ${e}`); // Mostly due to slow loading
+                await sleep(50);
+            }
         }
     }
 
