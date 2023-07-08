@@ -1,3 +1,10 @@
+APP_VERSION = '1.1.3';
+
+// Add all decorators in here
+DECORATORS = [
+    new SelectMaxQualityDecorator(),
+];
+
 async function init() {
     if (isCafe()) {
         getIframe().addEventListener('load', () => decorateAll());
@@ -9,21 +16,20 @@ async function init() {
 }
 
 async function decorateAll() {
-    const decorators = [
-        new SelectMaxQualityDecorator(),
-        new QualityDisplayDecorator(), // Have to follow after SelectMaxQualityDecorator
-    ];
-    const videoPlayerElements = await getVideoPlayerElements();
-    console.debug(`video count: ${videoPlayerElements.length}, decorator count: ${decorators.length}`);
-
-    for (const decorator of decorators) {
-        await decorator.decorate(videoPlayerElements);
+    const enabledDecorators = [];
+    for (const decorator of DECORATORS) {
+        if (await decorator.isEnabled()) {
+            enabledDecorators.push(decorator);
+        }
     }
+    console.debug(`APP_VERSION: ${APP_VERSION}, enabled decorators (${enabledDecorators.length}): ${enabledDecorators.map(it => it.constructor.name)}`)
+    await applyEnabledDecorators(enabledDecorators);
 }
 
-async function getVideoPlayerElements() {
+async function applyEnabledDecorators(enabledDecorators) {
+    const startMs = new Date().getTime();
     const videoPlayerElements = [];
-    let maxRetryCount = 20;
+    let maxRetryCount = 30;
     while (videoPlayerElements.length === 0 && 0 < maxRetryCount--) {
         console.debug(`Try to gather video elements (retry left: ${maxRetryCount})`);
         const videoPlayerDivs = getIframeDocument().getElementsByClassName(VIDEO_PLAYER_CLASS);
@@ -39,9 +45,16 @@ async function getVideoPlayerElements() {
                 console.debug(`Failed click max quality: ${e}`); // Mostly due to slow loading
             }
         }
-        await sleep(750);
+        await sleep(10 <= maxRetryCount ? 70 : 250);
     }
-    return videoPlayerElements;
+    console.debug(`video count: ${videoPlayerElements.length}, (took: ${new Date().getTime() - startMs} ms)`);
+
+    // Apply all enabled decorators
+    for (const videoPlayerDiv of videoPlayerElements) {
+        for (const decorator of enabledDecorators) {
+            decorator.decorate(videoPlayerDiv);
+        }
+    }
 }
 
 init();
