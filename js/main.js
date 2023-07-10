@@ -1,4 +1,5 @@
-APP_VERSION = '1.1.4';
+// Sync main.js, manifest.json, popup.html
+APP_VERSION = '1.2.0';
 
 // Add all decorators in here
 DECORATORS = [
