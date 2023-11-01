@@ -1,3 +1,6 @@
+// Sync main.js, manifest.json, popup.html
+APP_VERSION = '1.1.5';
+
 async function init() {
     if (isCafe()) {
         if (getIframeDocument().readyState === "complete") {
