@@ -1,6 +1,10 @@
 async function init() {
     if (isCafe()) {
-        getIframe().addEventListener('load', () => decorateAll());
+        if (getIframeDocument().readyState === "complete") {
+            await decorateAll();
+        } else {
+            getIframe().addEventListener('load', () => decorateAll());
+        }
     } else if (isBlog()) {
         await decorateAll();
     } else {
