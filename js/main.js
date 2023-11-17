@@ -19,6 +19,8 @@ function getVideoFinder() {
     switch (location.hostname) {
         case 'cafe.naver.com':
             return new CafeVideoFinder;
+        case 'blog.naver.com':
+            return new BlogVideoFinder;
     }
 }
 
@@ -36,6 +38,7 @@ async function updateCallbacks(videoFinder) {
     // create callbacks
     switch (videoFinder.constructor) {
         case CafeVideoFinder:
+        case BlogVideoFinder:
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality]

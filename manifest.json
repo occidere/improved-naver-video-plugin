@@ -30,7 +30,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://cafe.naver.com/*"
+        "https://cafe.naver.com/*",
+        "https://blog.naver.com/*"
       ],
       "js": [
         "js/common/class-variables.js",
@@ -39,6 +40,7 @@
         "js/decorator/quality-display-decorator.js",
         "js/video-finder/video-finder.js",
         "js/video-finder/cafe-video-finder.js",
+        "js/video-finder/blog-video-finder.js",
         "js/main.js"
       ]
     }

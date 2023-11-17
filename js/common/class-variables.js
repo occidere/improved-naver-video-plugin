@@ -1,9 +1,7 @@
 const CAFE_IFRAME_ID = 'cafe_main';
+const BLOG_IFRAME_ID = 'mainFrame';
 const CAFE_APP_ID = 'app';
 const CAFE_ARTICLE_CLASS = 'Article';
-
-const BLOG_IFRAME_ID = 'mainFrame';
-
 const VIDEO_MODULE_CLASS = 'se-module-video';
 const VIDEO_PLAYER_CLASS = 'prismplayer-area';
 const QUALITY_SETTING_UL_CLASS = 'pzp-pc-setting-quality-pane__list-container';
