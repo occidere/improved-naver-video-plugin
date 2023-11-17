@@ -11,7 +11,7 @@
 (3) div.se-module-video
       div.prismplayer-area (video)
         div.pzp-pc__video
-          video
+          video.webplayer-internal-video
         div.pzp-pc__setting-quality-pane
           ul.pzp-pc-setting-quality-pane__list-container >>
 

@@ -21,6 +21,8 @@ function getVideoFinder() {
             return new CafeVideoFinder;
         case 'blog.naver.com':
             return new BlogVideoFinder;
+        case 'kin.naver.com':
+            return new KinVideoFinder;
     }
 }
 
@@ -41,6 +43,12 @@ async function updateCallbacks(videoFinder) {
         case BlogVideoFinder:
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
+                [new SelectMaxQualityDecorator, options.selectMaxQuality]
+            );
+            break;
+        case KinVideoFinder:
+            push(decoratorsOnVideoQualityFound,
+                [new KinQualityDisplayDecorator, true],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality]
             );
             break;

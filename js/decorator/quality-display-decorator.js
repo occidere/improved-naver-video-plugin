@@ -64,7 +64,7 @@ class QualityDisplayDecorator extends Decorator {
     createQualityDisplay(qualityText) {
         const element = document.createElement('div');
         element.className = BOTTOM_RIGHT_BUTTON_STYLE_CLASSES + ' ' + QUALITY_DISPLAY_CLASS;
-        element.innerHTML = `<span class="${QUALITY_TEXT_SPAN_CLASS}" style="white-space: nowrap">${qualityText}</span>`;
+        element.innerHTML = `<span class="${QUALITY_TEXT_SPAN_CLASS}" style="white-space: nowrap; font-size: 12px">${qualityText}</span>`;
         return element;
     }
 }
