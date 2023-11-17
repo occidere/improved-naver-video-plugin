@@ -1,46 +1,70 @@
 class QualityDisplayDecorator extends Decorator {
 
-    async decorate(videoPlayerElements) {
-        const selectMaxQuality = await getSyncValue('selectMaxQuality'); // TODO: 별도로 분리?
-        if (selectMaxQuality) {
-            for (const videoPlayerDiv of videoPlayerElements) {
-                try {
-                    // Show current quality
-                    this.updateCurrentVideoQualityDisplay(videoPlayerDiv);
+    async decorate(video) {
+        try {
+            // Show current quality
+            const checkedLi = video.querySelector('.' + QUALITY_SETTING_LI_CLASS + '.' + SETTING_CHECKED_LI_CLASS);
+            this.updateQualityDisplay(video, checkedLi);
 
-                    // Add quality change click event listener
-                    videoPlayerDiv.getElementsByClassName(QUALITY_SELECT_UL_CLASS)[0]
-                        .addEventListener('click', () => videoPlayerElements.forEach(vid => this.updateCurrentVideoQualityDisplay(vid)));
-                } catch (e) {
-                    console.warn(`Failed to display current quality: ${e}`); // Mostly due to slow loading
+            // quality setting click listener
+            const lis = video.getElementsByClassName(QUALITY_SETTING_LI_CLASS);
+            for (const li of lis) {
+                li.addEventListener('click', (event) => {
+                    const video = this.getParentVideo(event.target);
+                    this.updateQualityDisplay(video, event.target);
+                });
+            }
+
+            // auto quality change observer
+            if (lis[0]) {
+                const span = this.getQualityTextSpan(lis[0]);
+                const textNode = span?.firstChild;
+                if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+                    this.autoQualityObserver.observe(textNode, { characterData: true });
                 }
             }
+        } catch (e) {
+            console.warn(`Failed to display current quality: ${e}`);
         }
     }
 
-    updateCurrentVideoQualityDisplay(videoPlayerDiv, qualityText) {
-        const displayCurrentVideoQualityDiv = videoPlayerDiv.getElementsByClassName(DISPLAY_CURRENT_VIDEO_QUALITY_CLASS)[0];
-        const currentVideoQualityText = qualityText ? qualityText : videoPlayerDiv.getElementsByClassName(CURRENT_VIDEO_QUALITY_CLASS)[0]
-            .getElementsByClassName(QUALITY_TEXT_CLASS)[0]
-            .textContent
-            .replace(/[^A-Za-z0-9]/g, '')
-            .trim();
-        const displayCurrentVideoQualityElement = this.createDisplayCurrentVideoQualityElement(currentVideoQualityText);
-        console.debug(`currentVideoQualityText: ${currentVideoQualityText}`);
+    autoQualityObserver = new MutationObserver((mutationList) => {
+        for (const mutation of mutationList) {
+            const textNode = mutation.target;
+            const span = textNode.parentElement;
+            const li = span.closest('li');
+            if (li?.classList.contains(SETTING_CHECKED_LI_CLASS)) {
+                const video = this.getParentVideo(li);
+                return this.updateQualityDisplay(video, li);
+            }
+        }
+    });
 
-        if (displayCurrentVideoQualityDiv) {
-            displayCurrentVideoQualityDiv.replaceWith(displayCurrentVideoQualityElement);
+    getParentVideo(element) {
+        return element.closest('.' + VIDEO_PLAYER_CLASS);
+    }
+
+    getQualityTextSpan(element) {
+        return element.querySelector('.' + QUALITY_TEXT_SPAN_CLASS);
+    }
+
+    updateQualityDisplay(video, li) {
+        const span = this.getQualityTextSpan(li);
+        if (!span) return;
+        const qualityText = span.textContent.trim(); // .replace(/[^A-Za-z0-9]/g, '')
+        const qualityDisplay = video.querySelector('.' + QUALITY_DISPLAY_CLASS);
+        if (qualityDisplay) {
+            qualityDisplay.firstElementChild.textContent = qualityText;
         } else {
-            const bottomRightButtonDiv = videoPlayerDiv.getElementsByClassName(BOTTOM_RIGHT_BUTTON_CLASS)[0];
-            bottomRightButtonDiv.prepend(displayCurrentVideoQualityElement);
+            const bottomRightButtonDiv = video.querySelector('.' + BOTTOM_RIGHT_BUTTON_CLASS);
+            bottomRightButtonDiv?.prepend(this.createQualityDisplay(qualityText));
         }
     }
 
-    createDisplayCurrentVideoQualityElement(qualityText) {
+    createQualityDisplay(qualityText) {
         const element = document.createElement('div');
-        element.className = DISPLAY_CURRENT_VIDEO_QUALITY_CLASS;
-        element.innerHTML = `<span class="${QUALITY_TEXT_CLASS}">${qualityText}</span>`;
+        element.className = BOTTOM_RIGHT_BUTTON_STYLE_CLASSES + ' ' + QUALITY_DISPLAY_CLASS;
+        element.innerHTML = `<span class="${QUALITY_TEXT_SPAN_CLASS}" style="white-space: nowrap">${qualityText}</span>`;
         return element;
     }
 }
-
