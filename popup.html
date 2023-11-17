@@ -6,13 +6,14 @@
   </head>
   <body>
     <div class="popup version">
+      <!--Sync with manifest.json-->
       <b>Version: 1.1.5 (20231101)</b>
     </div>
     <hr>
-    <div>
-      <div class="maxQualityClass">
-        <input type="checkbox" id="selectMaxQualityCheckbox">
-        <label for="selectMaxQualityCheckbox">최고화질 기본사용</label>
+    <div id="options">
+      <!--Sync with background.js, main.js-->
+      <div class="option-checkbox">
+        <label><input type="checkbox" name="selectMaxQuality">최고화질 기본사용</label>
       </div>
     </div>
     <script src="js/popup.js"></script>

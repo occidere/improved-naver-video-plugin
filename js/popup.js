@@ -1,17 +1,28 @@
 function init() {
-    document.addEventListener('DOMContentLoaded', () => {
-        const selectMaxQualityCheckbox = document.getElementById('selectMaxQualityCheckbox');
-        selectMaxQualityCheckbox.addEventListener('change', (event) => onSelectMaxQualityCheckboxChanged(selectMaxQualityCheckbox, event));
-        changeSelectMaxQualityCheckboxStatus(selectMaxQualityCheckbox);
-    });
+    const optionsDiv = document.getElementById('options');
+    for (const optionCheckboxDiv of optionsDiv.getElementsByClassName('option-checkbox')) {
+        const checkbox = optionCheckboxDiv.getElementsByTagName('input')[0];
+        chrome.storage.sync.get(checkbox.name, (items) => {
+            checkbox.checked = items[checkbox.name];
+        });
+        checkbox.addEventListener('change', (event) => {
+            const items = { [event.target.name]: event.target.checked };
+            chrome.storage.sync.set(items, sendOptionChangedMessage);
+        });
+    }
 }
 
-function onSelectMaxQualityCheckboxChanged(selectMaxQualityCheckbox, event) {
-    chrome.storage.sync.set(({selectMaxQuality: event.target.checked}), () => changeSelectMaxQualityCheckboxStatus(selectMaxQualityCheckbox));
+async function sendOptionChangedMessage() {
+    const message = { event: 'optionChanged' };
+    const urlMatches = chrome.runtime.getManifest().content_scripts[0].matches;
+    const tabs = await chrome.tabs.query({ url: urlMatches });
+    for (const tab of tabs) {
+        try {
+            chrome.tabs.sendMessage(tab.id, message);
+        } catch (e) {
+            console.debug(`sendMessage failed: ${e}`);
+        }
+    }
 }
 
-function changeSelectMaxQualityCheckboxStatus(selectMaxQualityCheckbox) {
-    chrome.storage.sync.get('selectMaxQuality', ({selectMaxQuality}) => selectMaxQualityCheckbox.checked = selectMaxQuality);
-}
-
-init();
+document.addEventListener('DOMContentLoaded', init);
