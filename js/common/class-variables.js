@@ -7,6 +7,7 @@ const KIN_VIDEO_MODULE_CLASS = 'kin_movie_info';
 const VIDEO_PLAYER_CLASS = 'prismplayer-area';
 const VIDEO_WEBPLAYER_CLASS = 'webplayer-internal-video'; // <video>
 const VIDEO_BEFORE_PLAY_CLASS = 'pzp-pc--beforeplay';
+const VIDEO_PLAYING_CLASS = 'pzp-pc--playing';
 const VIDEO_PLAY_BUTTON_CLASS = 'pzp-brand-playback-button';
 
 // pzp-pc__fullscreen-button이 있어야 자동 숨김이 적용됨
@@ -21,3 +22,6 @@ const QUALITY_SETTING_UL_CLASS = 'pzp-pc-setting-quality-pane__list-container';
 const QUALITY_SETTING_LI_CLASS = 'pzp-pc-ui-setting-quality-item';
 const SETTING_CHECKED_LI_CLASS = 'pzp-pc-ui-setting-item--checked';
 const QUALITY_TEXT_SPAN_CLASS = 'pzp-pc-ui-setting-quality-item__prefix';
+
+const VIDEO_HEADER_CLASS = 'pzp-pc-header';
+const VIDEO_DIM_CLASS = 'pzp-ui-dimmed';

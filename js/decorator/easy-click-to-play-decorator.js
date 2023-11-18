@@ -4,16 +4,46 @@ class EasyClickToPlayDecorator extends Decorator {
 
     async decorate(video) {
         try {
-            video.style.cursor = 'pointer';
-            video.addEventListener('click', (event) => {
+            // don't decorate after playing
+            if (video.querySelector('.' + VIDEO_PLAYING_CLASS)) return;
+
+            const clickListener = (event) => {
+                const video = this.getParentVideo(event.currentTarget);
+                const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
+                const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
+
+                // only for 'beforeplay'
                 if (video.querySelector('.' + VIDEO_BEFORE_PLAY_CLASS)) {
-                    const playButton = event.currentTarget.querySelector('.' + VIDEO_PLAY_BUTTON_CLASS);
+                    // <video>.play()는 blog.naver.com에서 에러 발생
+                    const playButton = video.querySelector('.' + VIDEO_PLAY_BUTTON_CLASS);
                     playButton?.click();
-                    video.style.cursor = '';
                 }
-            }, { once: true });
+
+                // reset listener (once: true 효과)
+                dim.removeEventListener('click', clickListener);
+                header.removeEventListener('click', clickListener);
+
+                // reset style
+                dim.style.cursor = '';
+                header.style.cursor = '';
+            };
+
+            // set listener & style
+            const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
+            const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
+            dim.addEventListener('click', clickListener);
+            header.addEventListener('click', clickListener);
+            dim.style.cursor = 'pointer';
+            header.style.cursor = 'pointer';
         } catch (e) {
             console.warn(`Failed to click play button: ${e}`);
         }
+    }
+
+    getParentVideo(element) {
+        if (location.hostname === 'kin.naver.com') {
+            return element.closest('.' + KIN_VIDEO_MODULE_CLASS);
+        }
+        return element.closest('.' + VIDEO_PLAYER_CLASS);
     }
 }
