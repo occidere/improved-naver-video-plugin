@@ -6,6 +6,7 @@ const VIDEO_MODULE_CLASS = 'se-module-video';
 const KIN_VIDEO_MODULE_CLASS = 'kin_movie_info';
 const VIDEO_PLAYER_CLASS = 'prismplayer-area';
 const VIDEO_WEBPLAYER_CLASS = 'webplayer-internal-video'; // <video>
+const VIDEO_BEFORE_PLAY_CLASS = 'pzp-pc--beforeplay';
 
 // pzp-pc__fullscreen-button이 있어야 자동 숨김이 적용됨
 const BOTTOM_RIGHT_BUTTON_STYLE_CLASSES = 'pzp-pc__fullscreen-button pzp-pc-ui-button';

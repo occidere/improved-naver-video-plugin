@@ -41,12 +41,16 @@ async function updateCallbacks(videoFinder) {
     switch (videoFinder.constructor) {
         case CafeVideoFinder:
         case BlogVideoFinder:
+            push(decoratorsOnVideoFound,
+                [new EasyClickToPlayDecorator, true]);
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality]
             );
             break;
         case KinVideoFinder:
+            push(decoratorsOnVideoFound,
+                [new EasyClickToPlayDecorator, true]);
             push(decoratorsOnVideoQualityFound,
                 [new KinQualityDisplayDecorator, true],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality]
