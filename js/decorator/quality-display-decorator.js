@@ -11,7 +11,7 @@ class QualityDisplayDecorator extends Decorator {
             for (const li of lis) {
                 li.addEventListener('click', (event) => {
                     const li = event.currentTarget;
-                    const video = this.getParentVideo(li);
+                    const video = getClosestVideo(li);
                     this.updateQualityDisplay(video, li);
                 });
             }
@@ -35,18 +35,11 @@ class QualityDisplayDecorator extends Decorator {
             const span = textNode.parentElement;
             const li = span.closest('li');
             if (li?.classList.contains(SETTING_CHECKED_LI_CLASS)) {
-                const video = this.getParentVideo(li);
+                const video = getClosestVideo(li);
                 return this.updateQualityDisplay(video, li);
             }
         }
     });
-
-    getParentVideo(element) {
-        if (location.hostname === 'kin.naver.com') {
-            return element.closest('.' + KIN_VIDEO_MODULE_CLASS);
-        }
-        return element.closest('.' + VIDEO_PLAYER_CLASS);
-    }
 
     getQualityTextSpan(element) {
         return element.querySelector('.' + QUALITY_TEXT_SPAN_CLASS);
@@ -71,12 +64,12 @@ class QualityDisplayDecorator extends Decorator {
         element.innerHTML = `<span class="${QUALITY_TEXT_SPAN_CLASS}" style="white-space: nowrap; font-size: 12px">${qualityText}</span>`;
         // 클릭했을 때 화질 설정 메뉴를 보여줌
         element.addEventListener('click', async (event) => {
-            const video = this.getParentVideo(event.currentTarget);
+            const video = getClosestVideo(event.currentTarget);
             if (video.querySelector('.' + VIDEO_QUALITY_PANE_VISIBLE_CLASS)) {
                 // 화질 설정 메뉴가 이미 떠 있는 상황이면 아무 곳이나 클릭함으로써 메뉴를 끔
                 video.click();
             } else {
-                await sleep(10);
+                await sleep(10); // 없으면 동작 안 함
                 const qualitySettingMenuItem = this.getQualitySettingMenuItem(video);
                 qualitySettingMenuItem?.click();
             }
@@ -86,8 +79,14 @@ class QualityDisplayDecorator extends Decorator {
 
     getQualitySettingMenuItem(element) {
         if (location.hostname === 'kin.naver.com') {
-            return element.querySelector('.' + KIN_QUALITY_SETTING_MENU_ITEM_CLASS);
+            const menuItems = element.getElementsByClassName(VIDEO_SETTING_MENU_ITEM_CLASS);
+            for (const menuItem of menuItems) {
+                if (menuItem.querySelector('.' + VIDEO_SETTING_MENU_ITEM_SPAN_CLASS)?.textContent.includes('해상도')) {
+                    return menuItem;
+                }
+            }
+        } else {
+            return element.querySelector('.' + QUALITY_SETTING_MENU_ITEM_CLASS);
         }
-        return element.querySelector('.' + QUALITY_SETTING_MENU_ITEM_CLASS);
     }
 }
