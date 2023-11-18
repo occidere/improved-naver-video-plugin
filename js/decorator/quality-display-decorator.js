@@ -77,10 +77,17 @@ class QualityDisplayDecorator extends Decorator {
                 video.click();
             } else {
                 await sleep(10);
-                const qualitySettingMenuItem = video.querySelector('.' + QUALITY_SETTING_MENU_ITEM_CLASS);
+                const qualitySettingMenuItem = this.getQualitySettingMenuItem(video);
                 qualitySettingMenuItem?.click();
             }
         });
         return element;
+    }
+
+    getQualitySettingMenuItem(element) {
+        if (location.hostname === 'kin.naver.com') {
+            return element.querySelector('.' + KIN_QUALITY_SETTING_MENU_ITEM_CLASS);
+        }
+        return element.querySelector('.' + QUALITY_SETTING_MENU_ITEM_CLASS);
     }
 }

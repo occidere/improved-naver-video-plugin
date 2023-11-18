@@ -12,6 +12,7 @@ const VIDEO_BEFORE_PLAY_CLASS = 'pzp-pc--beforeplay';
 const BOTTOM_RIGHT_BUTTON_STYLE_CLASSES = 'pzp-pc__fullscreen-button pzp-pc-ui-button';
 const BOTTOM_RIGHT_BUTTON_CLASS = 'pzp-pc__bottom-buttons-right';
 const QUALITY_SETTING_MENU_ITEM_CLASS = 'pzp-pc-setting-intro-quality';
+const KIN_QUALITY_SETTING_MENU_ITEM_CLASS = 'pzp-pc-ui-setting-intro-panel';
 const QUALITY_DISPLAY_CLASS = 'improved-naver-video-plugin__quality-display';
 
 const VIDEO_QUALITY_PANE_VISIBLE_CLASS = 'pzp-pc--setting-quality';
