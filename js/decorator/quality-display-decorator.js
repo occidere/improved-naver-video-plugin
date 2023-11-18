@@ -65,6 +65,12 @@ class QualityDisplayDecorator extends Decorator {
         const element = document.createElement('div');
         element.className = BOTTOM_RIGHT_BUTTON_STYLE_CLASSES + ' ' + QUALITY_DISPLAY_CLASS;
         element.innerHTML = `<span class="${QUALITY_TEXT_SPAN_CLASS}" style="white-space: nowrap; font-size: 12px">${qualityText}</span>`;
+        element.addEventListener('click', async (event) => {
+            const video = this.getParentVideo(event.target);
+            const qualitySettingMenuItem = video.querySelector('.' + QUALITY_SETTING_MENU_ITEM_CLASS);
+            await sleep(10);
+            qualitySettingMenuItem?.click();
+        });
         return element;
     }
 }

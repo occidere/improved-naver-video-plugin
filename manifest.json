@@ -36,6 +36,7 @@
       ],
       "js": [
         "js/common/class-variables.js",
+        "js/common/util.js",
         "js/decorator/decorator.js",
         "js/decorator/select-max-quality-decorator.js",
         "js/decorator/quality-display-decorator.js",
