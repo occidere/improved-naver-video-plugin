@@ -1,11 +1,17 @@
 class SelectMaxQualityDecorator extends Decorator {
 
-    static MAX_QUALITY_IDX = 1;
-
     async decorate(video) {
         try {
             const lis = video.getElementsByClassName(QUALITY_SETTING_LI_CLASS);
-            lis[SelectMaxQualityDecorator.MAX_QUALITY_IDX]?.click();
+            let maxQualityLi;
+            for (const li of lis) {
+                const span = li.querySelector('.' + QUALITY_TEXT_SPAN_CLASS);
+                if (!span?.textContent.includes('자동')) {
+                    maxQualityLi = li;
+                    break;
+                }
+            }
+            maxQualityLi?.click();
         } catch (e) {
             console.warn(`Failed to click max quality: ${e}`);
         }
