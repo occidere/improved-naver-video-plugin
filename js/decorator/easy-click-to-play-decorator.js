@@ -2,48 +2,62 @@
 // 적용시: 로딩중이더라도 video 아무 곳이나 클릭했을 때 재생이 시작됨
 class EasyClickToPlayDecorator extends Decorator {
 
+    playPauseVideo = (event) => {
+        // videoElement.play()를 사용하면 blog.naver.com에서 에러 발생
+        const video = getClosestVideo(event.currentTarget);
+        const playPauseButton = video.querySelector('.' + VIDEO_PLAY_PAUSE_BUTTON_CLASS);
+        playPauseButton?.click();
+    };
+
+    toggleFullScreen = (event) => {
+        const video = getClosestVideo(event.currentTarget);
+        const fullScreenButton = video.querySelector('.' + VIDEO_FULL_SCREEN_BUTTON_CLASS);
+        fullScreenButton?.click();
+    };
+
+    setupEasyClick(video) {
+        const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
+        const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
+        const videoElement = video.querySelector('video');
+
+        // set styles
+        if (dim) dim.style.cursor = 'pointer';
+        if (header) header.style.cursor = 'pointer';
+
+        // add one-shot listener
+        dim?.addEventListener('click', this.playPauseVideo);
+
+        videoElement?.addEventListener('play', () => this.clearEasyClick(video), { once: true });
+    }
+
+    clearEasyClick(video) {
+        const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
+        const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
+        const videoElement = video.querySelector('video');
+
+        // reset styles
+        if (dim) dim.style.cursor = '';
+        if (header) header.style.cursor = '';
+
+        // remove one-shot listener
+        dim?.removeEventListener('click', this.playPauseVideo);
+
+        videoElement?.addEventListener('ended', () => this.setupEasyClick(video), { once: true });
+    }
+
     async decorate(video) {
         try {
-            // don't decorate after playing
-            if (video.querySelector('.' + VIDEO_PLAYING_CLASS)) return;
-
-            const clickListener = (event) => {
-                const video = this.getParentVideo(event.currentTarget);
-                const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
-                const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
-
-                // only for 'beforeplay'
-                if (video.querySelector('.' + VIDEO_BEFORE_PLAY_CLASS)) {
-                    // <video>.play()는 blog.naver.com에서 에러 발생
-                    const playButton = video.querySelector('.' + VIDEO_PLAY_BUTTON_CLASS);
-                    playButton?.click();
-                }
-
-                // reset listener (once: true 효과)
-                dim.removeEventListener('click', clickListener);
-                header.removeEventListener('click', clickListener);
-
-                // reset style
-                dim.style.cursor = '';
-                header.style.cursor = '';
-            };
-
-            // set listener & style
-            const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
+            // 부가 기능: 비디오 윗 부분(header) 클릭 활성화
             const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
-            dim.addEventListener('click', clickListener);
-            header.addEventListener('click', clickListener);
-            dim.style.cursor = 'pointer';
-            header.style.cursor = 'pointer';
+            header?.addEventListener('click', this.playPauseVideo);
+            header?.addEventListener('dblclick', this.toggleFullScreen);
+
+            const videoElement = video.querySelector('video');
+            if (videoElement?.paused && !video.querySelector('.' + VIDEO_PLAYING_CLASS)) {
+                this.setupEasyClick(video);
+            }
         } catch (e) {
             console.warn(`Failed to click play button: ${e}`);
         }
-    }
-
-    getParentVideo(element) {
-        if (location.hostname === 'kin.naver.com') {
-            return element.closest('.' + KIN_VIDEO_MODULE_CLASS);
-        }
-        return element.closest('.' + VIDEO_PLAYER_CLASS);
     }
 }
