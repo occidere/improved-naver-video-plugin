@@ -4,10 +4,12 @@ class EasyClickToPlayDecorator extends Decorator {
 
     async decorate(video) {
         try {
+            video.style.cursor = 'pointer';
             video.addEventListener('click', (event) => {
                 if (video.querySelector('.' + VIDEO_BEFORE_PLAY_CLASS)) {
-                    const videoElement = event.currentTarget.querySelector('video');
-                    videoElement?.play();
+                    const playButton = event.currentTarget.querySelector('.' + VIDEO_PLAY_BUTTON_CLASS);
+                    playButton?.click();
+                    video.style.cursor = '';
                 }
             }, { once: true });
         } catch (e) {

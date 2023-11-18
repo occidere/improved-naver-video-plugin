@@ -42,7 +42,7 @@ async function updateCallbacks(videoFinder) {
         case CafeVideoFinder:
         case BlogVideoFinder:
         case KinVideoFinder:
-            push(decoratorsOnVideoFound,
+            push(decoratorsOnVideoFoundAsync,
                 [new EasyClickToPlayDecorator, true]);
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],

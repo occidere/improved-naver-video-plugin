@@ -20,7 +20,7 @@ class QualityDisplayDecorator extends Decorator {
             if (lis[0]) {
                 const span = this.getQualityTextSpan(lis[0]);
                 const textNode = span?.firstChild;
-                if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+                if (textNode?.nodeType === Node.TEXT_NODE) {
                     this.autoQualityObserver.observe(textNode, { characterData: true });
                 }
             }
