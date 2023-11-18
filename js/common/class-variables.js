@@ -13,6 +13,7 @@ const BOTTOM_RIGHT_BUTTON_CLASS = 'pzp-pc__bottom-buttons-right';
 const QUALITY_SETTING_MENU_ITEM_CLASS = 'pzp-pc-setting-intro-quality';
 const QUALITY_DISPLAY_CLASS = 'improved-naver-video-plugin__quality-display';
 
+const VIDEO_QUALITY_PANE_VISIBLE_CLASS = 'pzp-pc--setting-quality';
 const QUALITY_SETTING_UL_CLASS = 'pzp-pc-setting-quality-pane__list-container';
 const QUALITY_SETTING_LI_CLASS = 'pzp-pc-ui-setting-quality-item';
 const SETTING_CHECKED_LI_CLASS = 'pzp-pc-ui-setting-item--checked';

@@ -67,9 +67,13 @@ class QualityDisplayDecorator extends Decorator {
         element.innerHTML = `<span class="${QUALITY_TEXT_SPAN_CLASS}" style="white-space: nowrap; font-size: 12px">${qualityText}</span>`;
         element.addEventListener('click', async (event) => {
             const video = this.getParentVideo(event.target);
-            const qualitySettingMenuItem = video.querySelector('.' + QUALITY_SETTING_MENU_ITEM_CLASS);
-            await sleep(10);
-            qualitySettingMenuItem?.click();
+            if (video.querySelector('.' + VIDEO_QUALITY_PANE_VISIBLE_CLASS)) {
+                video.click();
+            } else {
+                await sleep(10);
+                const qualitySettingMenuItem = video.querySelector('.' + QUALITY_SETTING_MENU_ITEM_CLASS);
+                qualitySettingMenuItem?.click();
+            }
         });
         return element;
     }
