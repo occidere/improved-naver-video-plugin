@@ -70,8 +70,7 @@ class QualityDisplayDecorator extends Decorator {
                 video.click();
             } else {
                 await sleep(10); // 없으면 동작 안 함
-                const qualitySettingMenuItem = this.getQualitySettingMenuItem(video);
-                qualitySettingMenuItem?.click();
+                this.getQualitySettingMenuItem(video).click();
             }
         });
         return element;

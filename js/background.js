@@ -1,4 +1,5 @@
 // set default values
 chrome.runtime.onInstalled.addListener(() => chrome.storage.sync.set({
-    selectMaxQuality: true
+    selectMaxQuality: true,
+    playbackRateDisplay: true
 }));

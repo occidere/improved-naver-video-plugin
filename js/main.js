@@ -34,7 +34,8 @@ async function updateCallbacks(videoFinder) {
 
     // get options
     const options = await chrome.storage.sync.get([
-        'selectMaxQuality'
+        'selectMaxQuality',
+        'playbackRateDisplay'
     ]);
 
     // create callbacks
@@ -46,6 +47,7 @@ async function updateCallbacks(videoFinder) {
                 [new EasyClickToPlayDecorator, true]);
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
+                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality]);
     }
     // utility function (item = [decorator, isEnabled])
