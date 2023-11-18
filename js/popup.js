@@ -6,7 +6,8 @@ function init() {
             checkbox.checked = items[checkbox.name];
         });
         checkbox.addEventListener('change', (event) => {
-            const items = { [event.target.name]: event.target.checked };
+            const checkbox = event.currentTarget;
+            const items = { [checkbox.name]: checkbox.checked };
             chrome.storage.sync.set(items, sendOptionChangedMessage);
         });
     }

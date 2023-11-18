@@ -10,12 +10,13 @@ class QualityDisplayDecorator extends Decorator {
             const lis = video.getElementsByClassName(QUALITY_SETTING_LI_CLASS);
             for (const li of lis) {
                 li.addEventListener('click', (event) => {
-                    const video = this.getParentVideo(event.target);
-                    this.updateQualityDisplay(video, event.target);
+                    const li = event.currentTarget;
+                    const video = this.getParentVideo(li);
+                    this.updateQualityDisplay(video, li);
                 });
             }
 
-            // auto quality change observer
+            // 화질이 '자동' 상태일 때 화질의 변화를 실시간으로 반영함
             if (lis[0]) {
                 const span = this.getQualityTextSpan(lis[0]);
                 const textNode = span?.firstChild;
@@ -65,9 +66,11 @@ class QualityDisplayDecorator extends Decorator {
         const element = document.createElement('div');
         element.className = BOTTOM_RIGHT_BUTTON_STYLE_CLASSES + ' ' + QUALITY_DISPLAY_CLASS;
         element.innerHTML = `<span class="${QUALITY_TEXT_SPAN_CLASS}" style="white-space: nowrap; font-size: 12px">${qualityText}</span>`;
+        // 클릭했을 때 화질 설정 메뉴를 보여줌
         element.addEventListener('click', async (event) => {
-            const video = this.getParentVideo(event.target);
+            const video = this.getParentVideo(event.currentTarget);
             if (video.querySelector('.' + VIDEO_QUALITY_PANE_VISIBLE_CLASS)) {
+                // 화질 설정 메뉴가 이미 떠 있는 상황이면 아무 곳이나 클릭함으로써 메뉴를 끔
                 video.click();
             } else {
                 await sleep(10);
