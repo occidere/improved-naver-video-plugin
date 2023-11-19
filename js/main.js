@@ -44,7 +44,8 @@ async function updateCallbacks(videoFinder) {
         case BlogVideoFinder:
         case KinVideoFinder:
             push(decoratorsOnVideoFoundAsync,
-                [new EasyClickToPlayDecorator, true]);
+                [new EasyClickToPlayDecorator, true],
+                [new AutoPlayDecorator, true]);
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality],

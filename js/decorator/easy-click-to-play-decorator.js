@@ -3,7 +3,6 @@
 class EasyClickToPlayDecorator extends Decorator {
 
     playPauseVideo = (event) => {
-        // videoElement.play()를 사용하면 blog.naver.com에서 에러 발생
         const video = getClosestVideo(event.currentTarget);
         const playPauseButton = video.querySelector('.' + VIDEO_PLAY_PAUSE_BUTTON_CLASS);
         playPauseButton?.click();
@@ -18,7 +17,7 @@ class EasyClickToPlayDecorator extends Decorator {
     setupEasyClick(video) {
         const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
         const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
-        const videoElement = video.querySelector('video');
+        const videoMedia = video.querySelector('video');
 
         // set styles
         if (dim) dim.style.cursor = 'pointer';
@@ -27,13 +26,13 @@ class EasyClickToPlayDecorator extends Decorator {
         // add one-shot listener
         dim?.addEventListener('click', this.playPauseVideo);
 
-        videoElement?.addEventListener('play', () => this.clearEasyClick(video), { once: true });
+        videoMedia?.addEventListener('play', () => this.clearEasyClick(video), { once: true });
     }
 
     clearEasyClick(video) {
         const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
         const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
-        const videoElement = video.querySelector('video');
+        const videoMedia = video.querySelector('video');
 
         // reset styles
         if (dim) dim.style.cursor = '';
@@ -42,7 +41,7 @@ class EasyClickToPlayDecorator extends Decorator {
         // remove one-shot listener
         dim?.removeEventListener('click', this.playPauseVideo);
 
-        videoElement?.addEventListener('ended', () => this.setupEasyClick(video), { once: true });
+        videoMedia?.addEventListener('ended', () => this.setupEasyClick(video), { once: true });
     }
 
     async decorate(video) {
@@ -52,8 +51,8 @@ class EasyClickToPlayDecorator extends Decorator {
             header?.addEventListener('click', this.playPauseVideo);
             header?.addEventListener('dblclick', this.toggleFullScreen);
 
-            const videoElement = video.querySelector('video');
-            if (videoElement?.paused && !video.querySelector('.' + VIDEO_PLAYING_CLASS)) {
+            const videoMedia = video.querySelector('video');
+            if (videoMedia?.paused && !video.querySelector('.' + VIDEO_PLAYING_CLASS)) {
                 this.setupEasyClick(video);
             } else {
                 this.clearEasyClick(video); // for video 'ended' listener

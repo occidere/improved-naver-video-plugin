@@ -8,3 +8,16 @@ function getClosestVideo(element) {
     }
     return element.closest('.' + VIDEO_PLAYER_CLASS);
 }
+
+function getFirstVideo(document) {
+    if (location.hostname === 'kin.naver.com') {
+        return document.querySelector('.' + KIN_VIDEO_MODULE_CLASS);
+    }
+    return document.querySelector('.' + VIDEO_PLAYER_CLASS);
+}
+
+function isFirstVideo(video) {
+    const document = video.ownerDocument;
+    const firstVideo = getFirstVideo(document);
+    return video === firstVideo;
+}
