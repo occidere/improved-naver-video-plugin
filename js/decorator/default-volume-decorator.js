@@ -6,8 +6,11 @@ class DefaultVolumeDecorator extends Decorator {
         try {
             const videoMedia = video.querySelector('video');
             if (videoMedia) {
-                const volume = (await chrome.storage.sync.get('defaultVolume'))?.defaultVolume;
-                videoMedia.volume = parseFloat(volume);
+                const items = (await chrome.storage.sync.get('defaultVolume'))
+                const volume = items?.defaultVolume;
+                if (volume !== undefined) {
+                    videoMedia.volume = parseFloat(volume);
+                }
             }
         } catch (e) {
             console.warn(`Failed to set default volume: ${e}`);

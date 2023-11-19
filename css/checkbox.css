@@ -25,6 +25,7 @@
 }
 
 .option-range .range-value-indicator {
-    width: 30px;
+    width: 32px;
+    flex-shrink: 0;
     text-align: right;
 }
