@@ -1,4 +1,4 @@
-class AutoPlayDecorator extends Decorator {
+class AutoPlayFirstVideoDecorator extends Decorator {
 
     playListener = (event) => {
         const videoMedia = event.currentTarget;
@@ -7,7 +7,7 @@ class AutoPlayDecorator extends Decorator {
         // Without user interaction, unmuting will be failed and video will be paused.
     };
 
-    async decorate(video, index) {
+    async decorate(video) {
         try {
             if (!isFirstVideo(video)) return;
             const videoMedia = video.querySelector('video');

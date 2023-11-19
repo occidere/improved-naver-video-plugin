@@ -42,7 +42,7 @@
         "js/decorator/quality-display-decorator.js",
         "js/decorator/playback-rate-display-decorator.js",
         "js/decorator/easy-click-to-play-decorator.js",
-        "js/decorator/auto-play-decorator.js",
+        "js/decorator/auto-play-first-video-decorator.js",
         "js/video-finder/video-finder.js",
         "js/video-finder/cafe-video-finder.js",
         "js/video-finder/blog-video-finder.js",

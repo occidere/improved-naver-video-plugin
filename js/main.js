@@ -35,7 +35,8 @@ async function updateCallbacks(videoFinder) {
     // get options
     const options = await chrome.storage.sync.get([
         'selectMaxQuality',
-        'playbackRateDisplay'
+        'playbackRateDisplay',
+        'autoPlayFirstVideo'
     ]);
 
     // create callbacks
@@ -44,8 +45,8 @@ async function updateCallbacks(videoFinder) {
         case BlogVideoFinder:
         case KinVideoFinder:
             push(decoratorsOnVideoFoundAsync,
-                [new EasyClickToPlayDecorator, true],
-                [new AutoPlayDecorator, true]);
+                [new AutoPlayFirstVideoDecorator, options.autoPlayFirstVideo],
+                [new EasyClickToPlayDecorator, true]);
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality],
