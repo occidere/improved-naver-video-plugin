@@ -11,6 +11,8 @@ class EasyClickToPlayDecorator extends Decorator {
                 const videoMedia = event.currentTarget;
                 videoMedia.autoplay = false;
             }, { once: true });
+            const playButton = video.querySelector('.' + VIDEO_PLAY_BUTTON_CLASS);
+            playButton?.click();
         } else {
             const playPauseButton = video.querySelector('.' + VIDEO_PLAY_PAUSE_BUTTON_CLASS);
             playPauseButton?.click();
