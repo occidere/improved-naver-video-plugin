@@ -1,7 +1,31 @@
-div.maxQualityClass {
+.option-checkbox {
   height: 20px;
   width: 180px;
   outline: none;
   margin: 1px;
   border: none;
+}
+
+.option-range {
+    height: 20px;
+    width: 180px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.option-range .range-label {
+    width: 45px;
+    white-space: nowrap;
+}
+
+.option-range input {
+    min-width: 0;
+}
+
+.option-range .range-value-indicator {
+    width: 32px;
+    flex-shrink: 0;
+    text-align: right;
 }

@@ -1,54 +1,84 @@
-// Sync main.js, manifest.json, popup.html
-APP_VERSION = '1.1.5';
-
 async function init() {
-    if (isCafe()) {
-        if (getIframeDocument().readyState === "complete") {
-            await decorateAll();
-        } else {
-            getIframe().addEventListener('load', () => decorateAll());
+    // create videoFinder
+    const videoFinder = getVideoFinder();
+    if (!videoFinder) return;
+
+    // set option change listener
+    chrome.runtime.onMessage.addListener((message) => {
+        if (message.event === 'optionChanged') {
+            updateCallbacks(videoFinder);
         }
-    } else if (isBlog()) {
-        await decorateAll();
-    } else {
-        console.warn(`Unknown source!`);
+    });
+
+    // update videoFinder and connect
+    await updateCallbacks(videoFinder);
+    videoFinder.connect(document);
+}
+
+function getVideoFinder() {
+    switch (location.hostname) {
+        case 'cafe.naver.com':
+            return new CafeVideoFinder;
+        case 'blog.naver.com':
+            return new BlogVideoFinder;
+        case 'kin.naver.com':
+            return new KinVideoFinder;
     }
 }
 
-async function decorateAll() {
-    const decorators = [
-        new SelectMaxQualityDecorator(),
-        new QualityDisplayDecorator(), // Have to follow after SelectMaxQualityDecorator
-    ];
-    const videoPlayerElements = await getVideoPlayerElements();
-    console.debug(`video count: ${videoPlayerElements.length}, decorator count: ${decorators.length}`);
+async function updateCallbacks(videoFinder) {
+    const decoratorsOnVideoFoundAsync = [];
+    const decoratorsOnVideoFound = [];
+    const decoratorsOnVideoQualityFoundAsync = [];
+    const decoratorsOnVideoQualityFound = [];
 
-    for (const decorator of decorators) {
-        await decorator.decorate(videoPlayerElements);
+    // get options
+    const options = await chrome.storage.sync.get([
+        'selectMaxQuality',
+        'playbackRateDisplay',
+        'autoPlayFirstVideo'
+    ]);
+
+    // create callbacks
+    switch (videoFinder.constructor) {
+        case CafeVideoFinder:
+        case BlogVideoFinder:
+        case KinVideoFinder:
+            push(decoratorsOnVideoFoundAsync,
+                [new AutoPlayFirstVideoDecorator, options.autoPlayFirstVideo],
+                [new EasyClickToPlayDecorator, true]);
+            push(decoratorsOnVideoQualityFound,
+                [new QualityDisplayDecorator, true],
+                [new SelectMaxQualityDecorator, options.selectMaxQuality],
+                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay],
+                [new DefaultVolumeDecorator, true]);
     }
-}
+    // utility function (item = [decorator, isEnabled])
+    function push(array, ...items) {
+        for (const item of items) {
+            if (item[1]) array.push(item[0]);
+        }
+    }
 
-async function getVideoPlayerElements() {
-    const videoPlayerElements = [];
-    let maxRetryCount = 20;
-    while (videoPlayerElements.length === 0 && 0 < maxRetryCount--) {
-        console.debug(`Try to gather video elements (retry left: ${maxRetryCount})`);
-        const videoPlayerDivs = getIframeDocument().getElementsByClassName(VIDEO_PLAYER_CLASS);
-        for (const videoPlayerDiv of videoPlayerDivs) {
-            try {
-                // Explicitly check whether video all loaded or not
-                videoPlayerDiv.getElementsByClassName(QUALITY_SELECT_UL_CLASS)[0]
-                    .getElementsByClassName(QUALITY_SELECT_LI_CLASS);
-                if (!videoPlayerElements.includes(videoPlayerDiv)) {
-                    videoPlayerElements.push(videoPlayerDiv);
-                }
-            } catch (e) {
-                console.debug(`Failed click max quality: ${e}`); // Mostly due to slow loading
+    // set callbacks
+    videoFinder.setCallbacks({
+        onVideoFound: async (video) => {
+            for (const decorator of decoratorsOnVideoFoundAsync) {
+                decorator.decorate(video);
+            }
+            for (const decorator of decoratorsOnVideoFound) {
+                await decorator.decorate(video);
+            }
+        },
+        onVideoQualityFound: async (video) => {
+            for (const decorator of decoratorsOnVideoQualityFoundAsync) {
+                decorator.decorate(video);
+            }
+            for (const decorator of decoratorsOnVideoQualityFound) {
+                await decorator.decorate(video);
             }
         }
-        await sleep(750);
-    }
-    return videoPlayerElements;
+    });
 }
 
 init();

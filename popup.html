@@ -6,13 +6,26 @@
   </head>
   <body>
     <div class="popup version">
-      <b>Version: 1.1.5 (20231101)</b>
+      <!--Sync with manifest.json-->
+      <b>Version: 1.2 (20231118)</b>
     </div>
     <hr>
-    <div>
-      <div class="maxQualityClass">
-        <input type="checkbox" id="selectMaxQualityCheckbox">
-        <label for="selectMaxQualityCheckbox">최고화질 기본사용</label>
+    <div id="options">
+      <!--Sync with background.js, main.js-->
+      <div class="popup option-checkbox">
+        <label><input type="checkbox" name="selectMaxQuality">최고화질 기본사용</label>
+      </div>
+      <div class="popup option-checkbox">
+        <label><input type="checkbox" name="playbackRateDisplay">배속 표시</label>
+      </div>
+      <div class="popup option-checkbox">
+        <label><input type="checkbox" name="autoPlayFirstVideo">첫 영상 자동재생</label>
+      </div>
+      <hr>
+      <div class="popup option-range">
+        <span class="range-label">기본 음량</span>
+        <input type="range" name="defaultVolume" min="0" max="1" value="1" step="0.01">
+        <span class="range-value-indicator"></span>
       </div>
     </div>
     <script src="js/popup.js"></script>

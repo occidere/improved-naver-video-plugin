@@ -1,12 +1,13 @@
 {
   "name": "Improved NAVER video plugin",
   "description": "네이버 카페 / 블로그 동영상을 위한 추가 기능 플러그인",
-  "version": "1.1.5",
+  "version": "1.2",
   "manifest_version": 3,
   "background": {
     "service_worker": "js/background.js"
   },
   "permissions": [
+    "tabs",
     "storage"
   ],
   "action": {
@@ -30,7 +31,8 @@
     {
       "matches": [
         "https://cafe.naver.com/*",
-        "https://blog.naver.com/*"
+        "https://blog.naver.com/*",
+        "https://kin.naver.com/*"
       ],
       "js": [
         "js/common/class-variables.js",
@@ -38,6 +40,14 @@
         "js/decorator/decorator.js",
         "js/decorator/select-max-quality-decorator.js",
         "js/decorator/quality-display-decorator.js",
+        "js/decorator/playback-rate-display-decorator.js",
+        "js/decorator/easy-click-to-play-decorator.js",
+        "js/decorator/auto-play-first-video-decorator.js",
+        "js/decorator/default-volume-decorator.js",
+        "js/video-finder/video-finder.js",
+        "js/video-finder/cafe-video-finder.js",
+        "js/video-finder/blog-video-finder.js",
+        "js/video-finder/kin-video-finder.js",
         "js/main.js"
       ]
     }

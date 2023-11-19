@@ -2,29 +2,22 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getSyncValue(varName) {
-    return new Promise(function (resolve, reject) {
-            chrome.storage.sync.get(varName, function (res) {
-                resolve(res[varName]);
-            })
-        }
-    );
+function getClosestVideo(element) {
+    if (location.hostname === 'kin.naver.com') {
+        return element.closest('.' + KIN_VIDEO_MODULE_CLASS);
+    }
+    return element.closest('.' + VIDEO_PLAYER_CLASS);
 }
 
-function isCafe() {
-    return !!document.querySelector(CAFE_IFRAME_SELECTOR);
+function getFirstVideo(document) {
+    if (location.hostname === 'kin.naver.com') {
+        return document.querySelector('.' + KIN_VIDEO_MODULE_CLASS);
+    }
+    return document.querySelector('.' + VIDEO_PLAYER_CLASS);
 }
 
-function isBlog() {
-    return !!document.querySelector(BLOG_IFRAME_SELECTOR);
-}
-
-function getIframe() {
-    const [cafeIframe, blogIframe] = [document.querySelector(CAFE_IFRAME_SELECTOR), document.querySelector(BLOG_IFRAME_SELECTOR)];
-    return (cafeIframe ? cafeIframe : (blogIframe ? blogIframe : undefined));
-}
-
-function getIframeDocument() {
-    const iframe = getIframe();
-    return iframe ? iframe.contentWindow.document : document;
+function isFirstVideo(video) {
+    const document = video.ownerDocument;
+    const firstVideo = getFirstVideo(document);
+    return video === firstVideo;
 }
