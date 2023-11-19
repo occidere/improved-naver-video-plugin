@@ -4,8 +4,17 @@ class EasyClickToPlayDecorator extends Decorator {
 
     playPauseVideo = (event) => {
         const video = getClosestVideo(event.currentTarget);
-        const playPauseButton = video.querySelector('.' + VIDEO_PLAY_PAUSE_BUTTON_CLASS);
-        playPauseButton?.click();
+        const videoMedia = video.querySelector('video');
+        if (videoMedia?.paused && video.querySelector('.' + VIDEO_BEFORE_PLAY_CLASS)) {
+            videoMedia.autoplay = true;
+            videoMedia.addEventListener('play', (event) => {
+                const videoMedia = event.currentTarget;
+                videoMedia.autoplay = false;
+            }, { once: true });
+        } else {
+            const playPauseButton = video.querySelector('.' + VIDEO_PLAY_PAUSE_BUTTON_CLASS);
+            playPauseButton?.click();
+        }
     };
 
     toggleFullScreen = (event) => {
