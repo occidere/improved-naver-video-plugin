@@ -46,6 +46,7 @@ class QualityDisplayDecorator extends Decorator {
     }
 
     updateQualityDisplay(video, li) {
+        if (!video) return;
         const span = this.getQualityTextSpan(li);
         if (!span) return;
         const qualityText = span.textContent.trim(); // .replace(/[^A-Za-z0-9]/g, '')
@@ -70,7 +71,7 @@ class QualityDisplayDecorator extends Decorator {
                 video.click();
             } else {
                 await sleep(10); // 없으면 동작 안 함
-                this.getQualitySettingMenuItem(video).click();
+                this.getQualitySettingMenuItem(video)?.click();
             }
         });
         return element;

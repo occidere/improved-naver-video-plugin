@@ -25,6 +25,7 @@ class PlaybackRateDisplayDecorator extends Decorator {
     }
 
     updatePlaybackRateDisplay(video, li) {
+        if (!video) return;
         const span = this.getPlaybackRateTextSpan(li);
         if (!span) return;
         const playbackRateText = span.textContent.trim().replace(/[^A-Za-z0-9.]/g, '');

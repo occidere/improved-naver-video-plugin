@@ -55,6 +55,8 @@ class EasyClickToPlayDecorator extends Decorator {
             const videoElement = video.querySelector('video');
             if (videoElement?.paused && !video.querySelector('.' + VIDEO_PLAYING_CLASS)) {
                 this.setupEasyClick(video);
+            } else {
+                this.clearEasyClick(video); // for video 'ended' listener
             }
         } catch (e) {
             console.warn(`Failed to click play button: ${e}`);

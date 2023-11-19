@@ -47,8 +47,8 @@ async function updateCallbacks(videoFinder) {
                 [new EasyClickToPlayDecorator, true]);
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
-                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay],
-                [new SelectMaxQualityDecorator, options.selectMaxQuality]);
+                [new SelectMaxQualityDecorator, options.selectMaxQuality],
+                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay]);
     }
     // utility function (item = [decorator, isEnabled])
     function push(array, ...items) {
