@@ -1,7 +1,7 @@
 function init() {
     const optionsDiv = document.getElementById('options');
     for (const optionCheckboxDiv of optionsDiv.getElementsByClassName('option-checkbox')) {
-        const checkbox = optionCheckboxDiv.getElementsByTagName('input')[0];
+        const checkbox = optionCheckboxDiv.querySelector('input');
         chrome.storage.sync.get(checkbox.name, (items) => {
             checkbox.checked = items[checkbox.name];
         });
@@ -9,6 +9,25 @@ function init() {
             const checkbox = event.currentTarget;
             const items = { [checkbox.name]: checkbox.checked };
             chrome.storage.sync.set(items, sendOptionChangedMessage);
+        });
+    }
+    for (const optionRangeDiv of optionsDiv.getElementsByClassName('option-range')) {
+        const range = optionRangeDiv.querySelector('input');
+        const indicator = optionRangeDiv.querySelector('.range-value-indicator');
+        const setIndicator = (value) => indicator.textContent = (parseFloat(value) * 100).toFixed() + '%';
+        chrome.storage.sync.get(range.name, (items) => {
+            const value = items[range.name];
+            range.value = value;
+            setIndicator(value);
+        });
+        range.addEventListener('input', (event) => {
+            const range = event.currentTarget;
+            setIndicator(range.value);
+        });
+        range.addEventListener('change', (event) => {
+            const range = event.currentTarget;
+            const items = { [range.name]: range.value };
+            chrome.storage.sync.set(items);
         });
     }
 }

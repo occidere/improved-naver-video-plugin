@@ -50,7 +50,8 @@ async function updateCallbacks(videoFinder) {
             push(decoratorsOnVideoQualityFound,
                 [new QualityDisplayDecorator, true],
                 [new SelectMaxQualityDecorator, options.selectMaxQuality],
-                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay]);
+                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay],
+                [new DefaultVolumeDecorator, true]);
     }
     // utility function (item = [decorator, isEnabled])
     function push(array, ...items) {

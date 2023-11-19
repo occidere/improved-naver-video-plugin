@@ -1,5 +1,6 @@
 class QualityDisplayDecorator extends Decorator {
 
+    // select-max-quality 이전에 실행
     async decorate(video) {
         try {
             // Show current quality
