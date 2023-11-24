@@ -43,7 +43,7 @@ class SetDefaultVolumeDecorator extends Decorator {
         }, { once: true });
         new MutationObserver((mutationList, observer) => {
             for (const mutation of mutationList) {
-                if (mutation.target.classList.contains('pzp-pc--active-volume-control')) {
+                if (prismPlayer.isVolumeControlActive()) {
                     isVolumeChangedByUser = true;
                     return observer.disconnect();
                 }
