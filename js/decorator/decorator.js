@@ -1,7 +1,6 @@
 class Decorator {
 
-    // video: HTMLDivElement
-    async decorate(video) {
+    async decorate(videoPlayer) {
         throw new Error("Method 'decorate(...)' must be implemented.");
     }
 }

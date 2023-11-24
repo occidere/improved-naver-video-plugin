@@ -1,23 +1,51 @@
 class AutoPlayFirstVideoDecorator extends Decorator {
 
-    playListener = (event) => {
-        const videoMedia = event.currentTarget;
-        videoMedia.autoplay = false;
-        videoMedia.muted = false;
-        // Without user interaction, unmuting will be failed and video will be paused.
-    };
+    async decorate(prismPlayer) {
+        if (!prismPlayer.isFirstPrismPlayer()) return;
 
-    async decorate(video) {
-        try {
-            if (!isFirstVideo(video)) return;
-            const videoMedia = video.querySelector('video');
-            if (videoMedia?.paused) {
-                videoMedia.muted = true; // autoplay policy
-                videoMedia.autoplay = true;
-                videoMedia.addEventListener('play', this.playListener, { once: true });
+        const video = prismPlayer.getVideo();
+        if (!this.isUserActivated()) {
+            prismPlayer.getVolumeButton().click(); // for visual effect
+            video.muted = true; // autoplay policy
+            video.addEventListener('play', (event) => {
+                if (this.isUserActivated()) {
+                    const videoMedia = event.currentTarget;
+                    videoMedia.muted = false;
+                }
+            }, { once: true });
+            this.setUserActivationListener(video.ownerDocument, () => {
+                if (this.isUserActivated()) {
+                    video.muted = false;
+                }
+            });
+        }
+        video.autoplay = true;
+        prismPlayer.getPlayButton().click();
+    }
+
+    isUserActivated() {
+        return navigator.userActivation.hasBeenActive;
+    }
+
+    setUserActivationListener(ownerDocument, listener) {
+        const userActivationEvents = ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend'];
+        const userActivationListener = (event) => {
+            if (event.isTrusted) {
+                listener();
+                // clear userActivationListener
+                for (const userActivationEvent of userActivationEvents) {
+                    document.removeEventListener(userActivationEvent, userActivationListener);
+                    if (ownerDocument !== document) {
+                        ownerDocument.removeEventListener(userActivationEvent, userActivationListener);
+                    }
+                }
             }
-        } catch (e) {
-            console.warn(`Failed to auto play video: ${e}`);
+        };
+        for (const userActivationEvent of userActivationEvents) {
+            document.addEventListener(userActivationEvent, userActivationListener);
+            if (ownerDocument !== document) {
+                ownerDocument.addEventListener(userActivationEvent, userActivationListener);
+            }
         }
     }
 }

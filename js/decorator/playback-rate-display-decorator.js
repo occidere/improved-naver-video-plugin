@@ -1,71 +1,60 @@
 class PlaybackRateDisplayDecorator extends Decorator {
 
-    async decorate(video) {
-        try {
-            // Show current playback rate
-            const checkedLi = video.querySelector('.' + PLAYBACK_RATE_SETTING_LI_CLASS + '.' + SETTING_CHECKED_LI_CLASS);
-            this.updatePlaybackRateDisplay(video, checkedLi);
+    async decorate(prismPlayer) {
+        const lis = prismPlayer.getPlaybackRateSettingItems();
+        for (const li of lis) {
+            // update when item is clicked
+            li.addEventListener('click', (event) => {
+                this.updatePlaybackRateDisplay(prismPlayer, event.currentTarget);
+            });
 
-            // playback rate setting click listener
-            const lis = video.getElementsByClassName(PLAYBACK_RATE_SETTING_LI_CLASS);
-            for (const li of lis) {
-                li.addEventListener('click', (event) => {
-                    const li = event.currentTarget;
-                    const video = getClosestVideo(li);
-                    this.updatePlaybackRateDisplay(video, li);
-                });
+            // default state
+            const span = PrismPlayer.getPlaybackRateSettingItemText(li);
+            if (span.textContent.includes('1.0x')) {
+                this.updatePlaybackRateDisplay(prismPlayer, li);
             }
-        } catch (e) {
-            console.warn(`Failed to display current playback rate: ${e}`);
         }
     }
 
-    getPlaybackRateTextSpan(element) {
-        return element.querySelector('.' + PLAYBACK_RATE_TEXT_SPAN_CLASS);
-    }
-
-    updatePlaybackRateDisplay(video, li) {
-        if (!video) return;
-        const span = this.getPlaybackRateTextSpan(li);
-        if (!span) return;
-        const playbackRateText = span.textContent.trim().replace(/[^A-Za-z0-9.]/g, '');
-        const playbackRateDisplay = video.querySelector('.' + PLAYBACK_RATE_DISPLAY_CLASS);
+    updatePlaybackRateDisplay(prismPlayer, li) {
+        const span = PrismPlayer.getPlaybackRateSettingItemText(li);
+        const playbackRateText = span.textContent.trim().replace(/[^0-9.x]/g, '');
+        let playbackRateDisplay = prismPlayer.getPlaybackRateDisplay();
         if (playbackRateDisplay) {
-            playbackRateDisplay.firstElementChild.textContent = playbackRateText;
+            const span = PrismPlayer.getPlaybackRateSettingItemText(playbackRateDisplay);
+            span.textContent = playbackRateText;
         } else {
-            const bottomRightButtonDiv = video.querySelector('.' + BOTTOM_RIGHT_BUTTON_CLASS);
-            bottomRightButtonDiv?.prepend(this.createPlaybackRateDisplay(playbackRateText));
-        }
-    }
-
-    createPlaybackRateDisplay(playbackRateText) {
-        const element = document.createElement('div');
-        element.className = BOTTOM_RIGHT_BUTTON_STYLE_CLASSES + ' ' + PLAYBACK_RATE_DISPLAY_CLASS;
-        element.innerHTML = `<span class="${PLAYBACK_RATE_TEXT_SPAN_CLASS}" style="white-space: nowrap; font-size: 12px">${playbackRateText}</span>`;
-        // 클릭했을 때 재생 속도 설정 메뉴를 보여줌
-        element.addEventListener('click', async (event) => {
-            const video = getClosestVideo(event.currentTarget);
-            if (video.querySelector('.' + VIDEO_PLAYBACK_RATE_PANE_VISIBLE_CLASS)) {
-                // 재생 속도 설정 메뉴가 이미 떠 있는 상황이면 아무 곳이나 클릭함으로써 메뉴를 끔
-                video.click();
-            } else {
-                await sleep(10); // 없으면 동작 안 함
-                this.getPlaybackRateSettingMenuItem(video)?.click();
-            }
-        });
-        return element;
-    }
-
-    getPlaybackRateSettingMenuItem(element) {
-        if (location.hostname === 'kin.naver.com') {
-            const menuItems = element.getElementsByClassName(VIDEO_SETTING_MENU_ITEM_CLASS);
-            for (const menuItem of menuItems) {
-                if (menuItem.querySelector('.' + VIDEO_SETTING_MENU_ITEM_SPAN_CLASS)?.textContent.includes('재생 속도')) {
-                    return menuItem;
+            playbackRateDisplay = this.createPlaybackRateDisplay(playbackRateText, async () => {
+                if (prismPlayer.isPlaybackRateSettingPaneVisible()) {
+                    // close menu by clicking player when menu is already open
+                    prismPlayer.element.click();
+                } else {
+                    // open menu when clicked
+                    await sleep(10);
+                    prismPlayer.getPlaybackRateSettingMenu().click();
                 }
-            }
-        } else {
-            return element.querySelector('.' + PLAYBACK_RATE_SETTING_MENU_ITEM_CLASS);
+            });
+            const bottomRightButtonsDiv = prismPlayer.getBottomRightButtons();
+            bottomRightButtonsDiv.prepend(playbackRateDisplay);
         }
+    }
+
+    createPlaybackRateDisplay(playbackRateText, clickListener) {
+        const button = document.createElement('button');
+              button.classList.add(PLAYER_BUTTON_CLASS,
+                                   PLAYER_UI_BUTTON_CLASS,
+                                   APP_UI_BUTTON_CLASS,
+                                   APP_PLAYBACK_RATE_DISPLAY_CLASS);
+              button.addEventListener('click', clickListener);
+        const tooltip = document.createElement('span');
+              tooltip.classList.add(PLAYER_UI_TOOLTIP_CLASS,
+                                    PLAYER_UI_TOOLTIP_TOP_CLASS);
+              tooltip.textContent = '배속 변경';
+              button.appendChild(tooltip);
+        const span = document.createElement('span');
+              span.classList.add(PLAYBACK_RATE_SETTING_ITEM_TEXT_CLASS);
+              span.textContent = playbackRateText;
+              button.appendChild(span);
+        return button;
     }
 }

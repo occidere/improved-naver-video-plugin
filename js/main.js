@@ -1,57 +1,59 @@
 async function init() {
-    // create videoFinder
-    const videoFinder = getVideoFinder();
-    if (!videoFinder) return;
+    // create videoPlayerFinder
+    const videoPlayerFinder = getVideoPlayerFinder();
+    if (!videoPlayerFinder) return;
 
-    // set option change listener
+    // listen for setting change
     chrome.runtime.onMessage.addListener((message) => {
-        if (message.event === 'optionChanged') {
-            updateCallbacks(videoFinder);
+        if (message.app === APP_NAME &&
+            message.event === SETTING_CHANGED_EVENT) {
+            updateCallback(videoPlayerFinder);
         }
     });
 
-    // update videoFinder and connect
-    await updateCallbacks(videoFinder);
-    videoFinder.connect(document);
+    // update videoPlayerFinder and connect
+    await updateCallback(videoPlayerFinder);
+    videoPlayerFinder.connect(document);
 }
 
-function getVideoFinder() {
+function getVideoPlayerFinder() {
     switch (location.hostname) {
         case 'cafe.naver.com':
-            return new CafeVideoFinder;
+            return new CafeVideoPlayerFinder;
         case 'blog.naver.com':
-            return new BlogVideoFinder;
-        case 'kin.naver.com':
-            return new KinVideoFinder;
+            return new BlogVideoPlayerFinder;
     }
 }
 
-async function updateCallbacks(videoFinder) {
-    const decoratorsOnVideoFoundAsync = [];
-    const decoratorsOnVideoFound = [];
-    const decoratorsOnVideoQualityFoundAsync = [];
-    const decoratorsOnVideoQualityFound = [];
+async function updateCallback(videoPlayerFinder) {
+    const decoratorsAsync = [];
+    const decoratorsSync = [];
 
-    // get options
-    const options = await chrome.storage.sync.get([
+    // get settings
+    const settings = await chrome.storage.sync.get([
         'selectMaxQuality',
+        'qualityDisplay',
         'playbackRateDisplay',
-        'autoPlayFirstVideo'
+        'autoPlayFirstVideo',
+        'easyClickToPlay',
+        'setDefaultVolume'
     ]);
 
-    // create callbacks
-    switch (videoFinder.constructor) {
-        case CafeVideoFinder:
-        case BlogVideoFinder:
-        case KinVideoFinder:
-            push(decoratorsOnVideoFoundAsync,
-                [new AutoPlayFirstVideoDecorator, options.autoPlayFirstVideo],
-                [new EasyClickToPlayDecorator, true]);
-            push(decoratorsOnVideoQualityFound,
-                [new QualityDisplayDecorator, true],
-                [new SelectMaxQualityDecorator, options.selectMaxQuality],
-                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay],
-                [new DefaultVolumeDecorator, true]);
+    // create decorators
+    switch (videoPlayerFinder.constructor) {
+        case CafeVideoPlayerFinder:
+        case BlogVideoPlayerFinder:
+            push(decoratorsAsync,
+                [new EasyClickToPlayDecorator, settings.easyClickToPlay],
+                [new PlaybackRateDisplayDecorator, settings.playbackRateDisplay],
+                [new AutoPlayFirstVideoDecorator, settings.autoPlayFirstVideo],
+                [new SetDefaultVolumeDecorator, settings.setDefaultVolume],
+            );
+            push(decoratorsSync,
+                [new QualityDisplayDecorator, settings.qualityDisplay],
+                [new SelectMaxQualityDecorator, settings.selectMaxQuality],
+            );
+            break;
     }
     // utility function (item = [decorator, isEnabled])
     function push(array, ...items) {
@@ -61,21 +63,19 @@ async function updateCallbacks(videoFinder) {
     }
 
     // set callbacks
-    videoFinder.setCallbacks({
-        onVideoFound: async (video) => {
-            for (const decorator of decoratorsOnVideoFoundAsync) {
-                decorator.decorate(video);
+    videoPlayerFinder.setCallback(async (videoPlayer) => {
+        for (const decorator of decoratorsAsync) {
+            try {
+                decorator.decorate(videoPlayer);
+            } catch (e) {
+                console.warn(e);
             }
-            for (const decorator of decoratorsOnVideoFound) {
-                await decorator.decorate(video);
-            }
-        },
-        onVideoQualityFound: async (video) => {
-            for (const decorator of decoratorsOnVideoQualityFoundAsync) {
-                decorator.decorate(video);
-            }
-            for (const decorator of decoratorsOnVideoQualityFound) {
-                await decorator.decorate(video);
+        }
+        for (const decorator of decoratorsSync) {
+            try {
+                await decorator.decorate(videoPlayer);
+            } catch (e) {
+                console.warn(e);
             }
         }
     });

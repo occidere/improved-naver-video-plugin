@@ -1,0 +1,37 @@
+.setting-checkbox {
+  height: 20px;
+  width: 180px;
+  outline: none;
+  margin: 1px;
+  border: none;
+}
+
+/* align checkbox and label vertically */
+.setting-checkbox label {
+    /* align-items: center; */
+    display: flex;
+}
+
+.setting-range {
+    height: 20px;
+    width: 180px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.setting-range input[type="range"] {
+    min-width: 0;
+    flex-grow: 1;
+}
+
+.setting-range input[type="range"].disabled {
+    opacity: 0.35;
+}
+
+.setting-range span.indicator {
+    width: 35px;
+    flex-shrink: 0;
+    text-align: right;
+}

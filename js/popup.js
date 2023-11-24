@@ -1,46 +1,74 @@
 function init() {
-    const optionsDiv = document.getElementById('options');
-    for (const optionCheckboxDiv of optionsDiv.getElementsByClassName('option-checkbox')) {
-        const checkbox = optionCheckboxDiv.querySelector('input');
+    // settings (checkbox)
+    for (const container of document.querySelectorAll('.setting-checkbox')) {
+        const checkbox = container.querySelector('input');
+        // initialize
         chrome.storage.sync.get(checkbox.name, (items) => {
             checkbox.checked = items[checkbox.name];
+            activateSetting(checkbox);
         });
-        checkbox.addEventListener('change', (event) => {
+        // update storage when clicked
+        checkbox.addEventListener('input', (event) => {
             const checkbox = event.currentTarget;
             const items = { [checkbox.name]: checkbox.checked };
-            chrome.storage.sync.set(items, sendOptionChangedMessage);
+            chrome.storage.sync.set(items, sendSettingChangedMessage);
+            activateSetting(checkbox);
         });
     }
-    for (const optionRangeDiv of optionsDiv.getElementsByClassName('option-range')) {
-        const range = optionRangeDiv.querySelector('input');
-        const indicator = optionRangeDiv.querySelector('.range-value-indicator');
-        const setIndicator = (value) => indicator.textContent = (parseFloat(value) * 100).toFixed() + '%';
+
+    // settings (range)
+    for (const container of document.querySelectorAll('.setting-range')) {
+        const range = container.querySelector('input');
+        const indicator = container.querySelector('span.indicator');
+        const setIndicator = (value) => {
+            indicator.textContent = (parseFloat(value) * 100).toFixed() + '%';
+        };
+        // initialize
         chrome.storage.sync.get(range.name, (items) => {
-            const value = items[range.name];
-            range.value = value;
-            setIndicator(value);
+            range.value = items[range.name];
+            setIndicator(range.value);
         });
+        // update indicator when dragged
         range.addEventListener('input', (event) => {
             const range = event.currentTarget;
             setIndicator(range.value);
         });
+        // update storage when value is changed
         range.addEventListener('change', (event) => {
             const range = event.currentTarget;
             const items = { [range.name]: range.value };
             chrome.storage.sync.set(items);
         });
+        // activate by mousedown when it is disabled
+        range.addEventListener('mousedown', (event) => {
+            const range = event.currentTarget;
+            if (range.classList.contains('disabled')) {
+                const checkbox = document.querySelector(`#${range.name}Checkbox`);
+                checkbox.click();
+            }
+        });
     }
 }
 
-async function sendOptionChangedMessage() {
-    const message = { event: 'optionChanged' };
-    const urlMatches = chrome.runtime.getManifest().content_scripts[0].matches;
-    const tabs = await chrome.tabs.query({ url: urlMatches });
+async function sendSettingChangedMessage() {
+    const message = { app: APP_NAME, event: SETTING_CHANGED_EVENT };
+    const tabs = await chrome.tabs.query({});
     for (const tab of tabs) {
         try {
             chrome.tabs.sendMessage(tab.id, message);
         } catch (e) {
-            console.debug(`sendMessage failed: ${e}`);
+            console.warn(`sendMessage failed: ${e}`);
+        }
+    }
+}
+
+function activateSetting(checkbox) {
+    if (checkbox.classList.contains('activate-range')) {
+        const range = document.querySelector(`#${checkbox.name}Range`);
+        if (checkbox.checked) {
+            range.classList.remove('disabled');
+        } else {
+            range.classList.add('disabled');
         }
     }
 }

@@ -1,48 +1,50 @@
-// wrapper elements
-const CAFE_IFRAME_ID = 'cafe_main';
-const BLOG_IFRAME_ID = 'mainFrame';
-const CAFE_APP_ID = 'app';
-const CAFE_ARTICLE_CLASS = 'Article';
+const APP_NAME = 'improved-naver-video-plugin';
+const SETTING_CHANGED_EVENT = 'setting-changed';
 
-// video elements
-const VIDEO_MODULE_CLASS = 'se-module-video';
-const KIN_VIDEO_MODULE_CLASS = 'kin_movie_info'; // video
-const VIDEO_PLAYER_CLASS = 'prismplayer-area'; // video
-const VIDEO_WEBPLAYER_CLASS = 'webplayer-internal-video'; // <video>
-const VIDEO_HEADER_CLASS = 'pzp-pc-header';
-const VIDEO_DIM_CLASS = 'pzp-ui-dimmed';
+// app element classes
+const APP_UI_BUTTON_CLASS = APP_NAME + '__pzp-pc-ui-button';
+const APP_QUALITY_DISPLAY_CLASS = APP_NAME + '__quality-display';
+const APP_PLAYBACK_RATE_DISPLAY_CLASS = APP_NAME + '__playback-rate-display';
 
-// video state
+// prism player own classes
+const PRISM_PLAYER_CLASS = 'pzp-pc';
+const PLAYER_QUALITY_SETTING_PANE_VISIBLE_CLASS = 'pzp-pc--setting-quality';
+const PLAYER_PLAYBACK_RATE_SETTING_PANE_VISIBLE_CLASS = 'pzp-pc--setting-playbackrate';
 const VIDEO_BEFORE_PLAY_CLASS = 'pzp-pc--beforeplay';
 const VIDEO_PLAYING_CLASS = 'pzp-pc--playing';
 const VIDEO_ENDED_CLASS = 'pzp-pc--ended';
 
-// video buttons
-const VIDEO_PLAY_BUTTON_CLASS = 'pzp-brand-playback-button'; // center play button
-const VIDEO_PLAY_PAUSE_BUTTON_CLASS = 'pzp-pc-playback-switch'; // bottom-left play/pause button
-const VIDEO_FULL_SCREEN_BUTTON_CLASS = 'pzp-pc-fullscreen-button';
+// prism player own elements
+const PLAYER_DIM_CLASS = 'pzp-pc__dimmed';
+const PLAYER_HEADER_CLASS = 'pzp-pc__header';
+const PLAYER_PLAY_BUTTON_CLASS = 'pzp-pc__brand-playback-button'; // center play button
+const PLAYER_BOTTOM_CLASS = 'pzp-pc__bottom';
+const PLAYER_PLAY_PAUSE_BUTTON_CLASS = 'pzp-pc__playback-switch'; // bottom-left play button
+const PLAYER_VOLUME_BUTTON_CLASS = 'pzp-pc__volume-button';
+const PLAYER_VOLUME_SLIDER_CLASS = 'pzp-pc__volume-slider';
+const PLAYER_BOTTOM_RIGHT_BUTTONS_CLASS = 'pzp-pc__bottom-buttons-right';
+const PLAYER_SETTING_BUTTON_CLASS = 'pzp-pc__setting-button';
+const PLAYER_FULL_SCREEN_BUTTON_CLASS = 'pzp-pc__fullscreen-button';
 
-// pzp-pc__fullscreen-button이 있어야 자동 숨김이 적용됨
-const BOTTOM_RIGHT_BUTTON_STYLE_CLASSES = 'pzp-pc__fullscreen-button pzp-pc-ui-button';
-const BOTTOM_RIGHT_BUTTON_CLASS = 'pzp-pc__bottom-buttons-right';
+// prism player style classes
+const PLAYER_BUTTON_CLASS = 'pzp-button';
+const PLAYER_UI_BUTTON_CLASS = 'pzp-pc-ui-button';
 
-// video settings
-const VIDEO_SETTING_MENU_ITEM_CLASS = 'pzp-pc-ui-setting-intro-panel';
-const VIDEO_SETTING_MENU_ITEM_SPAN_CLASS = 'pzp-pc-ui-setting-intro-panel__name';
-const SETTING_CHECKED_LI_CLASS = 'pzp-pc-ui-setting-item--checked';
+// prism player quality settings
+const QUALITY_SETTING_MENU_CLASS = 'pzp-pc-setting-intro-quality';
+const QUALITY_SETTING_LIST_CLASS = 'pzp-pc-setting-quality-pane__list-container';
+const QUALITY_SETTING_ITEM_CLASS = 'pzp-pc-ui-setting-quality-item';
+const QUALITY_SETTING_ITEM_TEXT_CLASS = 'pzp-pc-ui-setting-quality-item__prefix';
 
-// quality display
-const QUALITY_DISPLAY_CLASS = 'improved-naver-video-plugin__quality-display';
-const QUALITY_SETTING_UL_CLASS = 'pzp-pc-setting-quality-pane__list-container';
-const QUALITY_SETTING_LI_CLASS = 'pzp-pc-ui-setting-quality-item';
-const QUALITY_TEXT_SPAN_CLASS = 'pzp-pc-ui-setting-quality-item__prefix';
-const QUALITY_SETTING_MENU_ITEM_CLASS = 'pzp-pc-setting-intro-quality';
-const VIDEO_QUALITY_PANE_VISIBLE_CLASS = 'pzp-pc--setting-quality';
+// prism player playback rate settings
+const PLAYBACK_RATE_SETTING_MENU_CLASS = 'pzp-pc-setting-intro-playbackrate';
+const PLAYBACK_RATE_SETTING_LIST_CLASS = 'pzp-pc-setting-playbackrate-pane__list';
+const PLAYBACK_RATE_SETTING_ITEM_CLASS = 'pzp-pc-ui-setting-playbackrate-item';
+const PLAYBACK_RATE_SETTING_ITEM_TEXT_CLASS = 'pzp-pc-ui-setting-playbackrate-item__value';
 
-// playback rate display
-const PLAYBACK_RATE_DISPLAY_CLASS = 'improved-naver-video-plugin__playback-rate-display';
-const PLAYBACK_RATE_SETTING_UL_CLASS = 'pzp-pc-setting-playbackrate-pane__list';
-const PLAYBACK_RATE_SETTING_LI_CLASS = 'pzp-pc-ui-setting-playbackrate-item';
-const PLAYBACK_RATE_TEXT_SPAN_CLASS = 'pzp-pc-ui-setting-playbackrate-item__value';
-const PLAYBACK_RATE_SETTING_MENU_ITEM_CLASS = 'pzp-pc-setting-intro-playbackrate';
-const VIDEO_PLAYBACK_RATE_PANE_VISIBLE_CLASS = 'pzp-pc--setting-playbackrate';
+// prism player setting item own class
+const CHECKED_SETTING_ITEM_CLASS = 'pzp-pc-ui-setting-item--checked';
+
+// prism player button tooltip classes
+const PLAYER_UI_TOOLTIP_CLASS = 'pzp-pc-ui-button__tooltip';
+const PLAYER_UI_TOOLTIP_TOP_CLASS = 'pzp-pc-ui-button__tooltip--top';
