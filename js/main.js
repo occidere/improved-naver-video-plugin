@@ -44,8 +44,8 @@ async function updateCallback(videoPlayerFinder) {
         case CafeVideoPlayerFinder:
         case BlogVideoPlayerFinder:
             push(decoratorsAsync,
-                [new EasyClickToPlayDecorator, settings.easyClickToPlay],
                 [new PlaybackRateDisplayDecorator, settings.playbackRateDisplay],
+                [new EasyClickToPlayDecorator, settings.easyClickToPlay],
                 [new AutoPlayFirstVideoDecorator, settings.autoPlayFirstVideo],
                 [new SetDefaultVolumeDecorator, settings.setDefaultVolume],
             );

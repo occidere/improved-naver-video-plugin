@@ -13,8 +13,7 @@ class CafeVideoPlayerFinder extends VideoPlayerFinder {
                 this.connectDocument(iframe.contentDocument);
             }
         } else {
-            // 인기글을 새 창에서 열면 iframe이 없다.
-            this.connectDocument(document);
+            this.connectDocument(document); // 인기글을 새 창에서 열면 iframe이 없다.
         }
     }
 

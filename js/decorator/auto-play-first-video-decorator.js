@@ -9,13 +9,13 @@ class AutoPlayFirstVideoDecorator extends Decorator {
             video.muted = true; // autoplay policy
             video.addEventListener('play', (event) => {
                 if (this.isUserActivated()) {
-                    const videoMedia = event.currentTarget;
-                    videoMedia.muted = false;
+                    const video = event.currentTarget;
+                    video.muted = false;
                 }
             }, { once: true });
             this.setUserActivationListener(video.ownerDocument, () => {
                 if (this.isUserActivated()) {
-                    video.muted = false;
+                    prismPlayer.getVideo().muted = false;
                 }
             });
         }
