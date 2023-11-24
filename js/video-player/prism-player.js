@@ -11,6 +11,7 @@ class PrismPlayer extends VideoPlayer {
     isVideoBeforePlay = () => this.element.classList.contains(VIDEO_BEFORE_PLAY_CLASS);
     isVideoPlaying = () => this.element.classList.contains(VIDEO_PLAYING_CLASS);
     isVideoEnded = () => this.element.classList.contains(VIDEO_ENDED_CLASS);
+    isVideoLoading = () => this.element.classList.contains(VIDEO_LOADING_CLASS);
 
     getVideo = () => this.element.querySelector('video');
     getDim = () => this.element.querySelector('.' + PLAYER_DIM_CLASS);

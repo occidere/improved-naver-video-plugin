@@ -20,7 +20,17 @@ class AutoPlayFirstVideoDecorator extends Decorator {
             });
         }
         video.autoplay = true;
-        prismPlayer.getPlayButton().click();
+        new MutationObserver(async (mutationList, observer) => {
+            for (const mutation of mutationList) {
+                if (mutation.oldValue.includes(VIDEO_LOADING_CLASS) &&
+                    !prismPlayer.isVideoLoading()) {
+                    observer.disconnect();
+                    await sleep(100);
+                    prismPlayer.getPlayButton().click();
+                    return;
+                }
+            }
+        }).observe(prismPlayer.element, { attributeOldValue: true, attributeFilter: ['class'] });
     }
 
     isUserActivated() {

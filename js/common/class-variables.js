@@ -13,6 +13,7 @@ const PLAYER_PLAYBACK_RATE_SETTING_PANE_VISIBLE_CLASS = 'pzp-pc--setting-playbac
 const VIDEO_BEFORE_PLAY_CLASS = 'pzp-pc--beforeplay';
 const VIDEO_PLAYING_CLASS = 'pzp-pc--playing';
 const VIDEO_ENDED_CLASS = 'pzp-pc--ended';
+const VIDEO_LOADING_CLASS = 'pzp-pc--loading';
 
 // prism player own elements
 const PLAYER_DIM_CLASS = 'pzp-pc__dimmed';
