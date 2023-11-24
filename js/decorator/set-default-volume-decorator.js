@@ -8,11 +8,9 @@ class SetDefaultVolumeDecorator extends Decorator {
         prismPlayer.getVideo().addEventListener('loadstart', (event) => {
             const video = event.currentTarget;
             const maxVolume = video.volume;
-            console.log('max', video.volume);
 
             // 1.0 : defaultVolume = maxVolume : adjustedVolume
             const adjustedVolume = maxVolume * defaultVolume;
-            console.log('1', video.volume, adjustedVolume);
             video.volume = adjustedVolume;
 
             // prevent volume reset
@@ -20,7 +18,6 @@ class SetDefaultVolumeDecorator extends Decorator {
                 if (!isVolumeChangedByUser) {
                     const video = event.currentTarget;
                     if (video.volume.toFixed(2) !== adjustedVolume.toFixed(2)) {
-                        console.log('2', video.volume, adjustedVolume);
                         video.volume = adjustedVolume;
                     }
                 }
