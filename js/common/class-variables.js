@@ -10,6 +10,7 @@ const APP_PLAYBACK_RATE_DISPLAY_CLASS = APP_NAME + '__playback-rate-display';
 const PRISM_PLAYER_CLASS = 'pzp-pc';
 const PLAYER_QUALITY_SETTING_PANE_VISIBLE_CLASS = 'pzp-pc--setting-quality';
 const PLAYER_PLAYBACK_RATE_SETTING_PANE_VISIBLE_CLASS = 'pzp-pc--setting-playbackrate';
+const PLAYER_VOLUME_CONTROL_ACTIVE_CLASS = 'pzp-pc--active-volume-control';
 const VIDEO_BEFORE_PLAY_CLASS = 'pzp-pc--beforeplay';
 const VIDEO_PLAYING_CLASS = 'pzp-pc--playing';
 const VIDEO_ENDED_CLASS = 'pzp-pc--ended';

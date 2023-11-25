@@ -8,6 +8,7 @@ class PrismPlayer extends VideoPlayer {
 
     isQualitySettingPaneVisible = () => this.element.classList.contains(PLAYER_QUALITY_SETTING_PANE_VISIBLE_CLASS);
     isPlaybackRateSettingPaneVisible = () => this.element.classList.contains(PLAYER_PLAYBACK_RATE_SETTING_PANE_VISIBLE_CLASS);
+    isVolumeControlActive = () => this.element.classList.contains(PLAYER_VOLUME_CONTROL_ACTIVE_CLASS);
     isVideoBeforePlay = () => this.element.classList.contains(VIDEO_BEFORE_PLAY_CLASS);
     isVideoPlaying = () => this.element.classList.contains(VIDEO_PLAYING_CLASS);
     isVideoEnded = () => this.element.classList.contains(VIDEO_ENDED_CLASS);
