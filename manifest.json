@@ -33,13 +33,7 @@
         "https://blog.naver.com/*"
       ],
       "all_frames": true,
-      "css": ["css/content-style.css"]
-    },
-    {
-      "matches": [
-        "https://cafe.naver.com/*",
-        "https://blog.naver.com/*"
-      ],
+      "css": ["css/content-style.css"],
       "js": [
         "js/common/class-variables.js",
         "js/common/util.js",

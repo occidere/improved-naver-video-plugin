@@ -1,27 +1,24 @@
-async function init() {
-    // create videoPlayerFinder
-    const videoPlayerFinder = getVideoPlayerFinder();
+function init() {
+    const videoPlayerFinder = getVideoPlayerFinderClass()?.create(document);
     if (!videoPlayerFinder) return;
 
-    // listen for setting change
+    updateCallback(videoPlayerFinder);
+
+    // receive setting change message
     chrome.runtime.onMessage.addListener((message) => {
         if (message.app === APP_NAME &&
             message.event === SETTING_CHANGED_EVENT) {
             updateCallback(videoPlayerFinder);
         }
     });
-
-    // update videoPlayerFinder and connect
-    await updateCallback(videoPlayerFinder);
-    videoPlayerFinder.connect(document);
 }
 
-function getVideoPlayerFinder() {
+function getVideoPlayerFinderClass() {
     switch (location.hostname) {
         case 'cafe.naver.com':
-            return new CafeVideoPlayerFinder;
+            return CafeVideoPlayerFinder
         case 'blog.naver.com':
-            return new BlogVideoPlayerFinder;
+            return BlogVideoPlayerFinder
     }
 }
 
@@ -29,7 +26,6 @@ async function updateCallback(videoPlayerFinder) {
     const decoratorsAsync = [];
     const decoratorsSync = [];
 
-    // get settings
     const settings = await chrome.storage.sync.get([
         'selectMaxQuality',
         'qualityDisplay',
@@ -62,8 +58,7 @@ async function updateCallback(videoPlayerFinder) {
         }
     }
 
-    // set callbacks
-    videoPlayerFinder.setCallback(async (videoPlayer) => {
+    videoPlayerFinder.applyCallback(async (videoPlayer) => {
         for (const decorator of decoratorsAsync) {
             try {
                 decorator.decorate(videoPlayer);

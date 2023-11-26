@@ -1,56 +1,31 @@
 class BlogVideoPlayerFinder extends VideoPlayerFinder {
 
-    // (1) [page]
-    //       iframe#mainFrame
-    //         >> [document]
-    async connect(document) {
-        const iframe = document.querySelector('iframe#mainFrame');
-        if (iframe) {
-            iframe.addEventListener('load', (event) => {
-                this.connectDocument(event.currentTarget.contentDocument);
-            });
-            if (iframe.contentDocument.readyState === 'complete') {
-                this.connectDocument(iframe.contentDocument);
-            }
-        } else {
-            this.connectDocument(document);
-        }
-    }
-
-    // (2) [document]
-    //       .se-module-video
-    //         >> .prismplayer-area
-    //              .pzp-pc
-    connectDocument(document) {
+    static create(document) {
+        // [document] -> .se-module-video
         const videoModules = document.querySelectorAll('.se-module-video');
-        if (videoModules.length > 0) {
-            for (const videoModule of videoModules) {
-                if (!this.findPlayer(videoModule)) {
-                    this.observeVideoModule(videoModule);
-                }
-            }
+        if (videoModules.length == 0) {
+            return null;
         }
+        return new this(videoModules);
     }
 
-    observeVideoModule(videoModule) {
-        new MutationObserver((mutationList, observer) => {
-            for (const mutation of mutationList) {
-                if (mutation.addedNodes.length > 0) {
-                    if (this.findPlayer(mutation.target)) {
-                        return observer.disconnect();
-                    }
-                }
-            }
-        }).observe(videoModule, { childList: true });
-    }
+    constructor(videoModules) {
+        super();
+        const findNext = getOrObserveChildByClassName; // shorten name
 
-    findPlayer(videoModule) {
-        const player = videoModule.querySelector('.pzp-pc');
-        if (player) {
-            const prismPlayer = new PrismPlayer(player);
-            this.onVideoPlayerFound?.(prismPlayer);
-            return true;
+        for (const videoModule of videoModules) {
+
+            // .se-module-video >> .prismplayer-area
+            findNext(videoModule, 'prismplayer-area', false, (prismPlayerArea) => {
+
+                // .prismplayer-area -> .pzp-pc (=> prismPlayer)
+                const pzpPc = prismPlayerArea.querySelector('.pzp-pc');
+                if (pzpPc) {
+                    const prismPlayer = new PrismPlayer(pzpPc);
+                    this.callback?.(prismPlayer);
+                    this.videoPlayers.push(prismPlayer);
+                }
+            });
         }
-        return false;
     }
 }
