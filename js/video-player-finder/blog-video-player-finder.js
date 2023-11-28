@@ -13,12 +13,9 @@ class BlogVideoPlayerFinder extends VideoPlayerFinder {
         super();
         const findNext = getOrObserveChildByClassName; // shorten name
 
+        // .se-module-video >> .prismplayer-area -> .pzp-pc (=> prismPlayer)
         for (const videoModule of videoModules) {
-
-            // .se-module-video >> .prismplayer-area
-            findNext(videoModule, 'prismplayer-area', false, (prismPlayerArea) => {
-
-                // .prismplayer-area -> .pzp-pc (=> prismPlayer)
+            findNext(videoModule, 'prismplayer-area').then((prismPlayerArea) => {
                 const pzpPc = prismPlayerArea.querySelector('.pzp-pc');
                 if (pzpPc) {
                     const prismPlayer = new PrismPlayer(pzpPc);

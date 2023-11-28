@@ -3,10 +3,9 @@ function sleep(ms) {
 }
 
 // parent: Element
-// keepObserving?: boolean
-// callback?: (Element) => void
-// return: Promise<Element> | void
-function getOrObserveChildByClassName(parent, className, keepObserving, callback) {
+// callback?: (child: Element) => void
+// return: Promise<child: Element> | void
+function getOrObserveChildByClassName(parent, className, callback) {
     if (callback) {
         return run(callback);
     }
@@ -26,14 +25,14 @@ function getOrObserveChildByClassName(parent, className, keepObserving, callback
             }
             return foundChild;
         }
-        if (!findChild() || keepObserving) {
+        if (!findChild() || callback) {
             new MutationObserver((mutationList, observer) => {
                 for (const mutation of mutationList) {
                     for (const node of mutation.addedNodes) {
                         if (node.classList?.contains(className)) {
                             // .className is added
                             if (findChild()) {
-                                if (!keepObserving) {
+                                if (!callback) {
                                     // end observing
                                     observer.disconnect();
                                 }

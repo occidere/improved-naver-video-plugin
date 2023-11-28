@@ -1,13 +1,14 @@
 class VideoPlayerFinder {
-    // (document: HTMLDocument) => VideoPlayerFinder | null
-    // return null if video player cannot exist in the document
+
+    // return: VideoPlayerFinder | null (video player cannot exist)
     static create(document) {
-        throw new Error("Static method 'create()' must be implemented.");
+        throw new Error("Static method 'create(...)' must be implemented.");
     }
 
+    callback = null;
     videoPlayers = [];
 
-    // callback: (videoPlayer: VideoPlayer) => void
+    // callback: (VideoPlayer) => void
     applyCallback(callback) {
         this.callback = callback;
         for (const videoPlayer of this.videoPlayers) {
