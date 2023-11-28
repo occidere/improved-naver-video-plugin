@@ -1,5 +1,6 @@
 const APP_NAME = 'improved-naver-video-plugin';
 const SETTING_CHANGED_EVENT = 'setting-changed';
+const DEFAULT_VOLUME_CHANGED_EVENT = 'default-volume-changed';
 
 // app element classes
 const APP_UI_BUTTON_CLASS = APP_NAME + '__pzp-pc-ui-button';

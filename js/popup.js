@@ -8,10 +8,10 @@ function init() {
             activateSetting(checkbox);
         });
         // update storage when clicked
-        checkbox.addEventListener('input', (event) => {
+        checkbox.addEventListener('change', (event) => {
             const checkbox = event.currentTarget;
             const items = { [checkbox.name]: checkbox.checked };
-            chrome.storage.sync.set(items, sendSettingChangedMessage);
+            chrome.storage.sync.set(items, () => sendSettingChangedMessage(SETTING_CHANGED_EVENT));
             activateSetting(checkbox);
         });
     }
@@ -37,7 +37,7 @@ function init() {
         range.addEventListener('change', (event) => {
             const range = event.currentTarget;
             const items = { [range.name]: range.value };
-            chrome.storage.sync.set(items);
+            chrome.storage.sync.set(items, () => sendSettingChangedMessage(DEFAULT_VOLUME_CHANGED_EVENT));
         });
         // activate by mousedown when it is disabled
         range.addEventListener('mousedown', (event) => {
@@ -50,8 +50,8 @@ function init() {
     }
 }
 
-async function sendSettingChangedMessage() {
-    const message = { app: APP_NAME, event: SETTING_CHANGED_EVENT };
+async function sendSettingChangedMessage(event) {
+    const message = { app: APP_NAME, event };
     const tabs = await chrome.tabs.query({});
     for (const tab of tabs) {
         try {

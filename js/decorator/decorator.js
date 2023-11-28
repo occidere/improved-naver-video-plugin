@@ -1,7 +1,11 @@
 class Decorator {
 
-    // videoPlayer: VideoPlayer
-    async decorate(videoPlayer) {
+    decorate(videoPlayer) {
         throw new Error("Method 'decorate(...)' must be implemented.");
+    }
+
+    // return true when cleared
+    clear(videoPlayer) {
+        // implement when needed
     }
 }
