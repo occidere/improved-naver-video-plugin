@@ -1,93 +1,114 @@
 class EasyClickToPlayDecorator extends Decorator {
 
-    async decorate(prismPlayer) {
-        const playPauseVideo = () => {
-            const video = prismPlayer.getVideo();
-            if (video.paused && prismPlayer.isVideoBeforePlay()) {
-                video.autoplay = true;
-                prismPlayer.getPlayButton().click();
+    decorate(prismPlayer) {
+        // click -> playPause
+        // dblclick -> fullscreen
+        // dblclick before play -> play & fullscreen
+        // => pause after playing
+        let isPlayAndFullscreen = false;
+
+        const onClickElement = () => {
+            if (prismPlayer.isState('playing')) {
+                prismPlayer.query('playPauseButton').click();
             } else {
-                prismPlayer.getPlayPauseButton().click();
+                prismPlayer.query('video').autoplay = true;
+                prismPlayer.query('playButton').click();
+                isPlayAndFullscreen = false; // interrupt playingObserver
             }
         };
-
-        const toggleFullScreen = () => {
-            prismPlayer.getFullScreenButton().click();
+        const onDoubleClickElement = () => {
+            prismPlayer.query('fullScreenButton').click();
+            if (!prismPlayer.isState('playing')) {
+                isPlayAndFullscreen = true;
+            }
         };
+        const playingObserver = new ClassChangeObserver(PrismPlayer.playerStateClassNames['playing'],
+            async (appeared) => {
+                if (appeared && isPlayAndFullscreen) {
+                    await sleep(10);
+                    prismPlayer.query('playPauseButton').click();
+                }
+            });
+        const header = prismPlayer.query('header');
+        const dim = prismPlayer.query('dim');
+        header.addEventListener('click', onClickElement);
+        header.addEventListener('dblclick', onDoubleClickElement);
+        dim.addEventListener('click', onClickElement);
+        dim.addEventListener('dblclick', onDoubleClickElement);
+        playingObserver.observe(prismPlayer.element);
 
-        const header = prismPlayer.getHeader();
-        header.addEventListener('click', playPauseVideo);
-        header.addEventListener('dblclick', toggleFullScreen);
+        // first click on not-playing, second click on playing -> play & no fullscreen
+        // => pause and fullscreen at second click
+        let isPlayerClickedOnPlaying = false;
+        let isSecondClickOnPlaying = false;
 
-        const dim = prismPlayer.getDim();
-        dim.addEventListener('click', playPauseVideo);
-        this.handleDoubleClickOnDimmed(prismPlayer);
-
-        if (prismPlayer.getVideo().paused && !prismPlayer.isVideoPlaying()) {
-            this.setupEasyClick(prismPlayer);
-        } else {
-            this.clearEasyClick(prismPlayer);
-        }
-    }
-
-    setupEasyClick(prismPlayer) {
-        prismPlayer.getHeader().style.cursor = 'pointer';
-        prismPlayer.getDim().style.cursor = 'pointer';
-        prismPlayer.getVideo().addEventListener('play',
-            () => this.clearEasyClick(prismPlayer),
-            { once: true });
-    }
-
-    clearEasyClick(prismPlayer) {
-        prismPlayer.getHeader().style.cursor = '';
-        prismPlayer.getDim().style.cursor = '';
-        prismPlayer.getVideo().addEventListener('ended',
-            () => this.setupEasyClick(prismPlayer),
-            { once: true });
-    }
-
-    handleDoubleClickOnDimmed(prismPlayer) {
-        const PAUSE_ICON = 'pzp-pc-playback-switch__pause-icon';
-        const isPauseIconVisible = () => prismPlayer.getPlayPauseButton().querySelector('span.' + PAUSE_ICON);
-
-        let isClickOnDim = false;
-        let isDblClickOnDim = false;
-        let isDblClickedOnDim = false;
         const onClickPlayer = (event) => {
             if (!event.isTrusted) return;
-            const wasClickOnDim = isClickOnDim;
-            isClickOnDim = !prismPlayer.isVideoPlaying();
-            isDblClickOnDim = wasClickOnDim && !isClickOnDim; // first on dim but second is not
-            isDblClickedOnDim = false; // interrupt double click
+            const wasPlayerClickedOnPlaying = isPlayerClickedOnPlaying;
+            isPlayerClickedOnPlaying = prismPlayer.isState('playing');
+            isSecondClickOnPlaying = !wasPlayerClickedOnPlaying && isPlayerClickedOnPlaying;
         };
-        const toggleFullScreenOnDimmed = (event) => {
-            if (isDblClickOnDim && !prismPlayer.getBottom().contains(event.target)) { // exclude control area
-                prismPlayer.getFullScreenButton().click();
-                if (prismPlayer.isVideoPlaying() && isPauseIconVisible()) {
-                    prismPlayer.getPlayPauseButton().click();
-                }
-                isDblClickedOnDim = true;
+        const onDoubleClickPlayer = (event) => {
+            if (!event.isTrusted) return;
+            if (isSecondClickOnPlaying &&
+                !prismPlayer.query('bottom').contains(event.target)) { // exclude control area
+                prismPlayer.query('playPauseButton').click();
+                prismPlayer.query('fullScreenButton').click();
             }
         };
-        prismPlayer.getDim().addEventListener('dblclick', () => {
-            prismPlayer.getFullScreenButton().click();
-            if (prismPlayer.getVideo().paused && !prismPlayer.isVideoPlaying()) {
-                prismPlayer.getPlayPauseButton().click(); // cancel double input of click
-            }
-            isDblClickedOnDim = true;
-        });
-        new MutationObserver((mutationList) => {
-            for (const mutation of mutationList) {
-                if (!mutation.oldValue.includes(VIDEO_PLAYING_CLASS) &&
-                    mutation.target.classList.contains(VIDEO_PLAYING_CLASS)) {
-                    if (isDblClickedOnDim && isPauseIconVisible()) {
-                        prismPlayer.getPlayPauseButton().click();
-                    }
-                }
-            }
-        }).observe(prismPlayer.element, { attributeOldValue: true, attributeFilter: ['class'] });
-
         prismPlayer.element.addEventListener('click', onClickPlayer);
-        prismPlayer.element.addEventListener('dblclick', toggleFullScreenOnDimmed);
+        prismPlayer.element.addEventListener('dblclick', onDoubleClickPlayer);
+
+        // beforePlay, ended -> cursor: pointer
+        // playing           -> cursor: none
+        const pointerOn = () => {
+            prismPlayer.query('header').style.cursor = 'pointer';
+            prismPlayer.query('dim').style.cursor = 'pointer';
+            prismPlayer.query('video').addEventListener('play', pointerOff, { once: true });
+        }
+        const pointerOff = () => {
+            prismPlayer.query('header').style.cursor = '';
+            prismPlayer.query('dim').style.cursor = '';
+            prismPlayer.query('video').addEventListener('ended', pointerOn, { once: true });
+        }
+        if (!prismPlayer.isState('playing')) {
+            pointerOn();
+        } else {
+            pointerOff();
+        }
+
+        // for clear()
+        prismPlayer.listeners[this.constructor.name]
+            = { onClickElement, onDoubleClickElement, onClickPlayer, onDoubleClickPlayer, pointerOn, pointerOff };
+        prismPlayer.observers[this.constructor.name] = { playingObserver };
+    }
+
+    clear(prismPlayer) {
+        const { onClickElement, onDoubleClickElement, onClickPlayer, onDoubleClickPlayer, pointerOn, pointerOff }
+            = prismPlayer.listeners[this.constructor.name];
+        const { playingObserver } = prismPlayer.observers[this.constructor.name];
+
+        if (!prismPlayer.isState('playing')) {
+            pointerOff();
+        }
+
+        const header = prismPlayer.query('header');
+        const dim = prismPlayer.query('dim');
+        header.removeEventListener('click', onClickElement);
+        header.removeEventListener('dblclick', onDoubleClickElement);
+        dim.removeEventListener('click', onClickElement);
+        dim.removeEventListener('dblclick', onDoubleClickElement);
+        playingObserver.disconnect();
+
+        prismPlayer.element.removeEventListener('click', onClickPlayer);
+        prismPlayer.element.removeEventListener('dblclick', onDoubleClickPlayer);
+
+        const video = prismPlayer.query('video');
+        video.removeEventListener('ended', pointerOn, { once: true });
+        video.removeEventListener('play', pointerOff, { once: true });
+
+        delete prismPlayer.listeners[this.constructor.name];
+        delete prismPlayer.observers[this.constructor.name];
+        return true;
     }
 }

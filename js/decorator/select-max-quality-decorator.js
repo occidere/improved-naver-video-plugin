@@ -1,16 +1,24 @@
 class SelectMaxQualityDecorator extends Decorator {
 
     async decorate(prismPlayer) {
-        prismPlayer.getQualitySettingItems((lis) => {
-            let maxQualityLi;
-            for (const li of lis) {
-                const span = PrismPlayer.getQualitySettingItemText(li);
-                if (!span.textContent.includes('자동')) {
-                    maxQualityLi = li;
-                    break;
-                }
+        const lis = await prismPlayer.getQualitySettingItems();
+        for (const li of lis) {
+            if (!this.isQualitySettingItemAuto(li)) {
+                return li.click();
             }
-            maxQualityLi?.click();
-        });
+        }
+    }
+
+    clear() {
+        return true;
+    }
+
+    isQualitySettingItemAuto(li) {
+        const span = this.getQualitySettingItemSpan(li);
+        return span.textContent.includes('자동');
+    }
+
+    getQualitySettingItemSpan(li) {
+        return li.querySelector('span.' + QUALITY_SETTING_ITEM_SPAN_CLASS);
     }
 }

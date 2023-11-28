@@ -1,64 +1,69 @@
 class SetDefaultVolumeDecorator extends Decorator {
 
     async decorate(prismPlayer) {
-        const defaultVolume = await this.getDefaultVolume();
-        if (defaultVolume === null) return;
+        const maxVolume = await prismPlayer.getMaxVolume();
 
         let isVolumeChangedByUser = false;
-        prismPlayer.getVideo().addEventListener('loadstart', (event) => {
+
+        let volumeChangeCount = 0; // prevent unwanted loop
+        const onVolumeChange = (event) => {
             const video = event.currentTarget;
-            const maxVolume = video.volume;
+            if (isVolumeChangedByUser || volumeChangeCount >= 100) {
+                video.removeEventListener('volumechange', onVolumeChange);
+                return;
+            }
+            this.setVolume(video, maxVolume);
+            volumeChangeCount++;
+        };
 
-            // 1.0 : defaultVolume = maxVolume : adjustedVolume
-            const adjustedVolume = maxVolume * defaultVolume;
-            video.volume = adjustedVolume;
+        // prevent volume reset
+        const video = prismPlayer.query('video');
+        video.addEventListener('volumechange', onVolumeChange);
 
-            // prevent volume reset
-            video.addEventListener('volumechange', (event) => {
-                if (!isVolumeChangedByUser) {
-                    const video = event.currentTarget;
-                    if (video.volume.toFixed(2) !== adjustedVolume.toFixed(2)) {
-                        video.volume = adjustedVolume;
-                    }
-                }
-            })
-        }, { once: true });
+        // apply now
+        this.setVolume(video, maxVolume);
 
         // detect user volume change
-        const volumeButton = prismPlayer.getVolumeButton();
-        const volumeSlider = prismPlayer.getVolumeSlider();
-        volumeButton.addEventListener('click', (event) => {
-            if (event.isTrusted) isVolumeChangedByUser = true;
-        }, { once: true });
-        volumeSlider.addEventListener('mousedown', (event) => {
-            if (event.isTrusted) isVolumeChangedByUser = true;
-        }, { once: true });
-        volumeSlider.addEventListener('pointerdown', (event) => {
-            if (event.isTrusted) isVolumeChangedByUser = true;
-        }, { once: true });
-        prismPlayer.element.addEventListener('keydown', (event) => {
-            if (event.isTrusted && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+        const onTrustedKeyDown = (event) => {
+            if (!event.isTrusted) return;
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
                 isVolumeChangedByUser = true;
             }
-        }, { once: true });
-        new MutationObserver((mutationList, observer) => {
-            for (const mutation of mutationList) {
-                if (prismPlayer.isVolumeControlActive()) {
+        };
+        const volumeControlObserver = new ClassChangeObserver(PrismPlayer.playerStateClassNames['volumeControlActive'],
+            (appeared, _, observer) => {
+                if (appeared) {
+                    observer.disconnect();
                     isVolumeChangedByUser = true;
-                    return observer.disconnect();
                 }
-            }
-        }).observe(prismPlayer.element, { attributeFilter: ['class'] });
+            });
+        prismPlayer.element.addEventListener('keydown', onTrustedKeyDown, { once: true });
+        volumeControlObserver.observe(prismPlayer.element);
+
+        // for clear()
+        prismPlayer.listeners[this.constructor.name]
+            = { onVolumeChange };
     }
 
-    async getDefaultVolume() {
-        try {
-            const items = await chrome.storage.sync.get('defaultVolume');
-            if (!items) return;
-            return parseFloat(items.defaultVolume);
-        } catch (e) {
-            console.warn(e);
+    clear(prismPlayer) {
+        const { onVolumeChange } = prismPlayer.listeners[this.constructor.name];
+
+        const video = prismPlayer.query('video');
+        video.removeEventListener('volumechange', onVolumeChange);
+
+        delete prismPlayer.listeners[this.constructor.name];
+        return true;
+    }
+
+    async setVolume(video, maxVolume) {
+        const items = await chrome.storage.sync.get('defaultVolume');
+        const defaultVolume = parseFloat(items.defaultVolume);
+
+        // 1.0 : defaultVolume = maxVolume : adjustedVolume
+        const adjustedVolume = maxVolume * defaultVolume;
+
+        if (!isNaN(adjustedVolume) && (video.volume.toFixed(2) !== adjustedVolume.toFixed(2))) {
+            video.volume = adjustedVolume;
         }
-        return null;
     }
 }

@@ -1,36 +1,28 @@
 class AutoPlayFirstVideoDecorator extends Decorator {
 
-    async decorate(prismPlayer) {
+    decorate(prismPlayer) {
         if (!prismPlayer.isFirstPrismPlayer()) return;
+        if (!prismPlayer.isState('beforePlay')) return;
 
-        const video = prismPlayer.getVideo();
+        const video = prismPlayer.query('video');
+        video.autoplay = true;
+
+        // if no user interaction -> unmute when user interacted
         if (!this.isUserActivated()) {
-            prismPlayer.getVolumeButton().click(); // for visual effect
-            video.muted = true; // autoplay policy
-            video.addEventListener('play', (event) => {
+            prismPlayer.query('volumeButton').click(); // autoplay policy
+            this.setUserActivationListener(prismPlayer.element.ownerDocument, () => {
                 if (this.isUserActivated()) {
-                    const video = event.currentTarget;
+                    const video = prismPlayer.query('video');
                     video.muted = false;
-                }
-            }, { once: true });
-            this.setUserActivationListener(video.ownerDocument, () => {
-                if (this.isUserActivated()) {
-                    prismPlayer.getVideo().muted = false;
                 }
             });
         }
-        video.autoplay = true;
-        new MutationObserver(async (mutationList, observer) => {
-            for (const mutation of mutationList) {
-                if (mutation.oldValue.includes(VIDEO_LOADING_CLASS) &&
-                    !prismPlayer.isVideoLoading()) {
-                    observer.disconnect();
-                    await sleep(100);
-                    prismPlayer.getPlayButton().click();
-                    return;
-                }
-            }
-        }).observe(prismPlayer.element, { attributeOldValue: true, attributeFilter: ['class'] });
+
+        // Ignore next error message:
+        // Uncaught (in promise) DOMException: The play() request was interrupted by a new load request.
+        if (!prismPlayer.loaded) {
+            video.play();
+        }
     }
 
     isUserActivated() {

@@ -1,77 +1,112 @@
 class QualityDisplayDecorator extends Decorator {
 
     async decorate(prismPlayer) {
-        prismPlayer.getQualitySettingItems((lis) => {
-            for (const li of lis) {
-                // update when item is clicked
-                li.addEventListener('click', (event) => {
-                    this.updateQualityDisplay(prismPlayer, event.currentTarget);
-                });
+        // create display
+        const qualityDisplay = this.createQualityDisplay();
+        const bottomRightButtons = prismPlayer.query('bottomRightButtons');
+        const settingButton = prismPlayer.query('settingButton');
+        bottomRightButtons.insertBefore(qualityDisplay, settingButton);
 
-                // update current selected item
-                if (PrismPlayer.isSettingItemChecked(li)) {
-                    this.updateQualityDisplay(prismPlayer, li);
-                }
-
-                // detect 'auto' item text changes
-                const span = PrismPlayer.getQualitySettingItemText(li);
-                if (span.textContent.includes('자동')) {
-                    const textNode = span.firstChild;
-                    new MutationObserver((mutationList) => {
-                        for (const mutation of mutationList) {
-                            const textNode = mutation.target;
-                            const li = textNode.parentElement.closest('li');
-                            if (PrismPlayer.isSettingItemChecked(li)) {
-                                this.updateQualityDisplay(prismPlayer, li);
-                                return;
-                            }
-                        }
-                    }).observe(textNode, { characterData: true });
-                }
+        // show setting pane when clicked
+        qualityDisplay.addEventListener('click', async () => {
+            if (prismPlayer.isState('qualitySettingPaneVisible')) {
+                prismPlayer.element.click(); // click player to close pane
+            } else {
+                await sleep(10);
+                prismPlayer.query('qualitySettingMenu').click();
             }
         });
-    }
 
-    updateQualityDisplay(prismPlayer, li) {
-        const span = PrismPlayer.getQualitySettingItemText(li);
-        const qualityText = span.textContent.trim();
-        let qualityDisplay = prismPlayer.getQualityDisplay();
-        if (qualityDisplay) {
-            const span = PrismPlayer.getQualitySettingItemText(qualityDisplay);
-            span.textContent = qualityText;
-        } else {
-            qualityDisplay = this.createQualityDisplay(qualityText, async () => {
-                if (prismPlayer.isQualitySettingPaneVisible()) {
-                    // close menu by clicking player when menu is already open
-                    prismPlayer.element.click();
-                } else {
-                    // open menu when clicked
-                    await sleep(10);
-                    prismPlayer.getQualitySettingMenu().click();
+        // detect item check
+        const checkObserver = new ClassChangeObserver(CHECKED_SETTING_ITEM_CLASS,
+            (appeared, li) => {
+                if (appeared) {
+                    const qualityDisplay = this.getQualityDisplay(prismPlayer);
+                    this.setTextFromItem(qualityDisplay, li);
                 }
             });
-            const bottomRightButtonsDiv = prismPlayer.getBottomRightButtons();
-            const settingButton = prismPlayer.getSettingButton();
-            bottomRightButtonsDiv.insertBefore(qualityDisplay, settingButton);
+
+        // detect 'auto' item text changes
+        const autoObserver = new TextChangeObserver(
+            (changedText, span) => {
+                const li = span.closest('li');
+                if (this.isSettingItemChecked(li)) {
+                    const qualityDisplay = this.getQualityDisplay(prismPlayer);
+                    this.setText(qualityDisplay, changedText);
+                }
+            });
+
+        // apply observers
+        const lis = await prismPlayer.getQualitySettingItems();
+        for (const li of lis) {
+            checkObserver.observe(li);
+            if (this.isQualitySettingItemAuto(li)) {
+                const span = this.getQualitySettingItemSpan(li);
+                autoObserver.observe(span);
+            }
+            // apply now
+            if (this.isSettingItemChecked(li)) {
+                this.setTextFromItem(qualityDisplay, li);
+            }
         }
+
+        // for clear()
+        prismPlayer.observers[this.constructor.name] = { checkObserver, autoObserver };
     }
 
-    createQualityDisplay(qualityText, clickListener) {
+    clear(prismPlayer) {
+        const { checkObserver, autoObserver } = prismPlayer.observers[this.constructor.name];
+
+        this.getQualityDisplay(prismPlayer).remove();
+        checkObserver.disconnect();
+        autoObserver.disconnect();
+
+        delete prismPlayer.observers[this.constructor.name];
+        return true;
+    }
+
+    createQualityDisplay() {
         const button = document.createElement('button');
               button.classList.add(PLAYER_BUTTON_CLASS,
                                    PLAYER_UI_BUTTON_CLASS,
                                    APP_UI_BUTTON_CLASS,
                                    APP_QUALITY_DISPLAY_CLASS);
-              button.addEventListener('click', clickListener);
         const tooltip = document.createElement('span');
               tooltip.classList.add(PLAYER_UI_TOOLTIP_CLASS,
                                     PLAYER_UI_TOOLTIP_TOP_CLASS);
               tooltip.textContent = '해상도 변경';
               button.appendChild(tooltip);
         const span = document.createElement('span');
-              span.classList.add(QUALITY_SETTING_ITEM_TEXT_CLASS);
-              span.textContent = qualityText;
+              span.classList.add(QUALITY_SETTING_ITEM_SPAN_CLASS);
               button.appendChild(span);
         return button;
+    }
+
+    getQualityDisplay(prismPlayer) {
+        return prismPlayer.element.querySelector('button.' + APP_QUALITY_DISPLAY_CLASS);
+    }
+
+    setText(qualityDisplay, qualityText) {
+        const span = this.getQualitySettingItemSpan(qualityDisplay);
+        span.textContent = qualityText.trim();
+    }
+
+    setTextFromItem(qualityDisplay, li) {
+        const span = this.getQualitySettingItemSpan(li);
+        const qualityText = span.textContent;
+        this.setText(qualityDisplay, qualityText);
+    }
+
+    isQualitySettingItemAuto(li) {
+        const span = this.getQualitySettingItemSpan(li);
+        return span.textContent.includes('자동');
+    }
+
+    getQualitySettingItemSpan(el) {
+        return el.querySelector('span.' + QUALITY_SETTING_ITEM_SPAN_CLASS);
+    }
+
+    isSettingItemChecked(li) {
+        return li.classList.contains(CHECKED_SETTING_ITEM_CLASS);
     }
 }
