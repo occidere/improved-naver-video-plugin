@@ -7,6 +7,7 @@ class PrismPlayer extends VideoPlayer {
         playButton: 'button.pzp-pc__brand-playback-button', // center play button
         bottom: '.pzp-pc__bottom',
         playPauseButton: 'button.pzp-pc__playback-switch',
+        volumeControl: '.pzp-pc__volume-control',
         volumeButton: 'button.pzp-pc__volume-button',
         volumeSlider: '.pzp-pc__volume-slider',
         bottomRightButtons: '.pzp-pc__bottom-buttons-right',
@@ -31,11 +32,13 @@ class PrismPlayer extends VideoPlayer {
     loaded = false;
 
     _maxVolume = 1.0;
+    isMaxVolumeExtended = false;
 
     constructor(videoPlayerElement) {
         super(videoPlayerElement);
         const onFirstLoaded = () => {
             const video = this.query('video');
+            video.crossOrigin = 'anonymous'; // CORS issue by extend-max-volume
             this._maxVolume = video.volume;
         };
 
@@ -114,6 +117,7 @@ class PrismPlayer extends VideoPlayer {
     .pzp-pc__bottom-buttons
       .pzp-pc__bottom-buttons-left
         button.pzp-pc__playback-switch                                          'playPauseButton'
+        .pzp-pc__volume-control                                                 'volumeControl'
           button.pzp-pc__volume-button                                          'volumeButton'
           .pzp-pc__volume-slider                                                'volumeSlider'
           .pzp-pc__bottom-buttons-right                                         'bottomRightButtons'

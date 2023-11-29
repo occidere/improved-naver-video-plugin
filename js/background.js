@@ -5,6 +5,7 @@ const defaultItems = {
     easyClickToPlay: true,
     autoPlayFirstVideo: false,
     setDefaultVolume: false,
+    extendMaxVolume: false,
     defaultVolume: '1.0'
 };
 

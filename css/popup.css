@@ -1,4 +1,6 @@
 .setting-checkbox {
+  display: flex;
+  user-select: none;
   height: 20px;
   width: 180px;
   outline: none;
@@ -7,8 +9,8 @@
 }
 /* align checkbox and label vertically */
 .setting-checkbox label {
-    /* align-items: center; */
     display: flex;
+    /* align-items: center; */
 }
 
 .setting-range {
@@ -22,12 +24,18 @@
 .setting-range input[type="range"] {
     min-width: 0;
     flex-grow: 1;
+    margin-left: 1px;
+    margin-right: 43px;
 }
 .setting-range input[type="range"].disabled {
     opacity: 0.35;
 }
+.setting-range input[type="range"].extended {
+    margin-right: 1px;
+}
 .setting-range span.indicator {
+    user-select: none;
     width: 35px;
     flex-shrink: 0;
-    text-align: right;
+    text-align: center;
 }

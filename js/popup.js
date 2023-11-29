@@ -16,6 +16,31 @@ function init() {
         });
     }
 
+    // extend-max-volume changes max value of default-volume range
+    const onChangeExtendMaxVolumeCheckbox = (checked) => {
+        const range = document.querySelector('#setDefaultVolumeRange');
+        if (checked) {
+            range.max = '1.5';
+            range.classList.add('extended');
+        } else {
+            if (parseFloat(range.value) > 1.0) {
+                range.value = '1.0'
+                range.dispatchEvent(new Event('input'));
+                range.dispatchEvent(new Event('change'));
+            }
+            range.max = '1.0';
+            range.classList.remove('extended');
+        }
+    };
+    const extendMaxVolumeCheckbox = document.querySelector('#extendMaxVolumeCheckbox');
+    extendMaxVolumeCheckbox.addEventListener('change', (event) => {
+        const checkbox = event.currentTarget;
+        onChangeExtendMaxVolumeCheckbox(checkbox.checked);
+    });
+    chrome.storage.sync.get('extendMaxVolume', (items) => {
+        onChangeExtendMaxVolumeCheckbox(items['extendMaxVolume']);
+    });
+
     // settings (range)
     for (const container of document.querySelectorAll('.setting-range')) {
         const range = container.querySelector('input');

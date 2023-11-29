@@ -2,14 +2,13 @@ function init() {
     const videoPlayerFinder = getVideoPlayerFinder();
     if (!videoPlayerFinder) return; // video player cannot exist
 
-    const decoratorMap = getDecoratorMap();
-    update(videoPlayerFinder, decoratorMap);
+    update(videoPlayerFinder);
     chrome.runtime.onMessage.addListener((message) => {
         if (message.app === APP_NAME) {
             if (message.event === SETTING_CHANGED_EVENT) {
-                update(videoPlayerFinder, decoratorMap);
+                update(videoPlayerFinder);
             } else if (message.event === DEFAULT_VOLUME_CHANGED_EVENT) {
-                updateDefaultVolume(videoPlayerFinder, decoratorMap);
+                updateDefaultVolume(videoPlayerFinder);
             }
         }
     });
@@ -24,18 +23,20 @@ function getVideoPlayerFinder() {
     }
 }
 
-function getDecoratorMap() {
+function getDecorators(settings) {
     switch (location.hostname) {
         case 'cafe.naver.com':
         case 'blog.naver.com':
-            return new Map([
-                ['selectMaxQuality', new SelectMaxQualityDecorator],
-                ['autoPlayFirstVideo', new AutoPlayFirstVideoDecorator],
-                ['easyClickToPlay', new EasyClickToPlayDecorator],
-                ['qualityDisplay', new QualityDisplayDecorator],
-                ['playbackRateDisplay', new PlaybackRateDisplayDecorator],
-                ['setDefaultVolume', new SetDefaultVolumeDecorator],
-            ]);
+            return [
+                [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
+                [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
+                [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
+                [new QualityDisplayDecorator, settings['qualityDisplay']],
+                [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
+                [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
+                [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
+                [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume'] || settings['extendMaxVolume']],
+            ];
     }
 }
 
@@ -47,24 +48,25 @@ async function getSettings() {
         'easyClickToPlay',
         'autoPlayFirstVideo',
         'setDefaultVolume',
+        'extendMaxVolume',
     ]);
 }
 
-async function update(videoPlayerFinder, decoratorMap) {
+async function update(videoPlayerFinder) {
     const settings = await getSettings();
+    const decorators = getDecorators(settings);
     videoPlayerFinder.applyCallback((videoPlayer) => {
-        for (const [key, decorator] of decoratorMap) {
+        for (const [decorator, isEnabled] of decorators) {
             const decoratorName = decorator.constructor.name;
             const isDecorated = videoPlayer.decorated[decoratorName];
-            const isEnabled = settings[key];
             try {
                 if (!isDecorated && isEnabled) {
-                    decorator.decorate(videoPlayer);
                     videoPlayer.decorated[decoratorName] = true;
+                    decorator.decorate(videoPlayer);
                 } else if (isDecorated && !isEnabled) {
-                    if (decorator.clear(videoPlayer)) {
-                        videoPlayer.decorated[decoratorName] = false;
-                    }
+                    decorator.clear(videoPlayer).then((res) => {
+                        if (res) videoPlayer.decorated[decoratorName] = false;
+                    });
                 }
             } catch (e) {
                 console.warn(e);
@@ -73,11 +75,11 @@ async function update(videoPlayerFinder, decoratorMap) {
     });
 }
 
-async function updateDefaultVolume(videoPlayerFinder, decoratorMap) {
+function updateDefaultVolume(videoPlayerFinder) {
     for (const video of videoPlayerFinder.videoPlayers) {
-        video.decorated[SetDefaultVolumeDecorator.name] = false; // reset decoration state
+        video.decorated['SetDefaultVolumeDecorator'] = false; // reset decoration state
     }
-    update(videoPlayerFinder, decoratorMap);
+    update(videoPlayerFinder);
 }
 
 init();

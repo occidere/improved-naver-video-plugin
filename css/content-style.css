@@ -1,15 +1,22 @@
-.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button {
+.pzp.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button {
     width: 36px;
     height: 36px;
     margin-right: 2px;
     opacity: 0;
     transition-property: opacity;
 }
-.pzp-pc.pzp-pc--controls button.improved-naver-video-plugin__pzp-pc-ui-button {
+.pzp.pzp-pc.pzp-pc--controls button.improved-naver-video-plugin__pzp-pc-ui-button {
     opacity: 1;
 }
-.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button span.pzp-pc-ui-setting-quality-item__prefix,
-.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button span.pzp-pc-ui-setting-playbackrate-item__value {
+.pzp.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button span.pzp-pc-ui-setting-quality-item__prefix,
+.pzp.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button span.pzp-pc-ui-setting-playbackrate-item__value {
     white-space: nowrap;
     font-size: 12px;
+}
+
+.pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume .pzp-pc__volume-button:focus ~ .pzp-pc__volume-slider,
+.pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume .pzp-pc__volume-slider:focus,
+.pzp.pzp-pc .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume:hover > .pzp-pc__volume-slider,
+.pzp.pzp-pc.pzp-pc--active-volume-control .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume .pzp-pc__volume-slider {
+    width: 120px;
 }

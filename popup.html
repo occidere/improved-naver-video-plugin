@@ -29,13 +29,16 @@
       </div>
       <hr>
       <div class="setting-checkbox">
+        <label><input type="checkbox" name="extendMaxVolume" id="extendMaxVolumeCheckbox">최대 볼륨 1.5배 확장</label>
+      </div>
+      <div class="setting-checkbox">
         <!--connected with range `#${checkbox.name}Range`-->
         <label><input type="checkbox" name="setDefaultVolume" id="defaultVolumeCheckbox" class="activate-range">기본 음량 설정</label>
       </div>
       <div class="setting-range">
+        <span class="indicator"></span>
         <!--connected with checkbox `#${range.name}Checkbox`-->
         <input type="range" name="defaultVolume" min="0" max="1" value="1" step="0.01" id="setDefaultVolumeRange">
-        <span class="indicator"></span>
       </div>
     </div>
     <script src="js/common/class-variables.js"></script>
