@@ -50,18 +50,17 @@ class QualityDisplayDecorator extends Decorator {
             }
         }
 
-        // for clear()
-        prismPlayer.observers[this.constructor.name] = { checkObserver, autoObserver };
+        prismPlayer.listeners[this.constructor.name] = { checkObserver, autoObserver };
     }
 
-    clear(prismPlayer) {
-        const { checkObserver, autoObserver } = prismPlayer.observers[this.constructor.name];
+    async clear(prismPlayer) {
+        const { checkObserver, autoObserver } = prismPlayer.listeners[this.constructor.name];
 
         this.getQualityDisplay(prismPlayer).remove();
         checkObserver.disconnect();
         autoObserver.disconnect();
 
-        delete prismPlayer.observers[this.constructor.name];
+        delete prismPlayer.listeners[this.constructor.name];
         return true;
     }
 

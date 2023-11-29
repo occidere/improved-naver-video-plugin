@@ -4,8 +4,8 @@ class Decorator {
         throw new Error("Method 'decorate(...)' must be implemented.");
     }
 
-    // return true when cleared
-    clear(videoPlayer) {
+    // return true when cleared or enable re-decoration
+    async clear(videoPlayer) {
         // implement when needed
     }
 }

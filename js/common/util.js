@@ -2,6 +2,32 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function isUserActivated() {
+    return navigator.userActivation.hasBeenActive;
+}
+
+function setUserActivationListener(ownerDocument, listener) {
+    const userActivationEvents = ['keydown', 'mousedown', 'pointerdown', 'pointerup', 'touchend'];
+    const userActivationListener = (event) => {
+        if (event.isTrusted && isUserActivated()) {
+            listener();
+            // clear userActivationListener
+            for (const userActivationEvent of userActivationEvents) {
+                document.removeEventListener(userActivationEvent, userActivationListener);
+                if (ownerDocument !== document) {
+                    ownerDocument.removeEventListener(userActivationEvent, userActivationListener);
+                }
+            }
+        }
+    };
+    for (const userActivationEvent of userActivationEvents) {
+        document.addEventListener(userActivationEvent, userActivationListener);
+        if (ownerDocument !== document) {
+            ownerDocument.addEventListener(userActivationEvent, userActivationListener);
+        }
+    }
+}
+
 // parent: Element
 // callback?: (child: Element) => void
 // return: Promise<child: Element> | void

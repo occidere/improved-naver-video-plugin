@@ -77,16 +77,19 @@ class EasyClickToPlayDecorator extends Decorator {
             pointerOff();
         }
 
-        // for clear()
-        prismPlayer.listeners[this.constructor.name]
-            = { onClickElement, onDoubleClickElement, onClickPlayer, onDoubleClickPlayer, pointerOn, pointerOff };
-        prismPlayer.observers[this.constructor.name] = { playingObserver };
+        prismPlayer.listeners[this.constructor.name] = {
+            onClickElement, onDoubleClickElement,
+            onClickPlayer, onDoubleClickPlayer,
+            pointerOn, pointerOff, playingObserver
+        };
     }
 
-    clear(prismPlayer) {
-        const { onClickElement, onDoubleClickElement, onClickPlayer, onDoubleClickPlayer, pointerOn, pointerOff }
-            = prismPlayer.listeners[this.constructor.name];
-        const { playingObserver } = prismPlayer.observers[this.constructor.name];
+    async clear(prismPlayer) {
+        const {
+            onClickElement, onDoubleClickElement,
+            onClickPlayer, onDoubleClickPlayer,
+            pointerOn, pointerOff, playingObserver
+        } = prismPlayer.listeners[this.constructor.name];
 
         if (!prismPlayer.isState('playing')) {
             pointerOff();
@@ -108,7 +111,6 @@ class EasyClickToPlayDecorator extends Decorator {
         video.removeEventListener('play', pointerOff, { once: true });
 
         delete prismPlayer.listeners[this.constructor.name];
-        delete prismPlayer.observers[this.constructor.name];
         return true;
     }
 }

@@ -4,12 +4,13 @@ class SelectMaxQualityDecorator extends Decorator {
         const lis = await prismPlayer.getQualitySettingItems();
         for (const li of lis) {
             if (!this.isQualitySettingItemAuto(li)) {
-                return li.click();
+                li.click();
+                break;
             }
         }
     }
 
-    clear() {
+    async clear() {
         return true;
     }
 

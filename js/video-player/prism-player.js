@@ -28,18 +28,23 @@ class PrismPlayer extends VideoPlayer {
         loading: 'pzp-pc--loading',
     };
 
-    _maxVolume = null;
     loaded = false;
+
+    _maxVolume = 1.0;
 
     constructor(videoPlayerElement) {
         super(videoPlayerElement);
+        const onFirstLoaded = () => {
+            const video = this.query('video');
+            this._maxVolume = video.volume;
+        };
 
         // this code should be run before first loading of video
+        this.addEventListener('firstloaded', onFirstLoaded, { once: true });
         const loadingObserver = new ClassChangeObserver(PrismPlayer.playerStateClassNames['loading'],
             (appeared, _, observer) => {
                 if (!appeared) {
                     observer.disconnect();
-                    this._maxVolume = this.query('video').volume;
                     this.loaded = true;
                     this.dispatchEvent(new Event('firstloaded'));
                 }
@@ -58,13 +63,12 @@ class PrismPlayer extends VideoPlayer {
     }
 
     getMaxVolume() {
-        if (this._maxVolume !== null) {
+        if (this.loaded) {
             return Promise.resolve(this._maxVolume);
         }
         return new Promise((resolve) => {
-            this.addEventListener('firstloaded', (event) => {
-                const prismPlayer = event.currentTarget;
-                resolve(prismPlayer.maxVolume);
+            this.addEventListener('firstloaded', () => {
+                resolve(this._maxVolume);
             }, { once: true });
         });
     }
@@ -110,7 +114,6 @@ class PrismPlayer extends VideoPlayer {
     .pzp-pc__bottom-buttons
       .pzp-pc__bottom-buttons-left
         button.pzp-pc__playback-switch                                          'playPauseButton'
-        .pzp-pc__volume-control
           button.pzp-pc__volume-button                                          'volumeButton'
           .pzp-pc__volume-slider                                                'volumeSlider'
           .pzp-pc__bottom-buttons-right                                         'bottomRightButtons'

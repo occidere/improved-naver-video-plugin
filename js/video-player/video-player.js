@@ -1,8 +1,7 @@
 class VideoPlayer extends EventTarget {
 
     decorated = {}; // { decoratorName: true/false, ... }
-    listeners = {}; // { decoratorName: { listener, ... }, ... }
-    observers = {}; // { decoratorName: { observer, ... }, ... }
+    listeners = {}; // { decoratorName: { listener | observer, ... }, ... }
 
     constructor(videoPlayerElement) {
         super();
