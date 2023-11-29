@@ -36,23 +36,33 @@ class PrismPlayer extends VideoPlayer {
 
     constructor(videoPlayerElement) {
         super(videoPlayerElement);
-        const onFirstLoaded = () => {
+
+        this.addEventListener('firstloaded', () => {
+            this._maxVolume = this.query('video').volume;
+        }, { once: true });
+
+        this.addEventListener('srcloaded', () => {
             const video = this.query('video');
-            video.crossOrigin = 'anonymous'; // CORS issue by extend-max-volume
-            this._maxVolume = video.volume;
-        };
+            const srcUrl = new URL(video.src);
+            if (srcUrl.origin !== location.origin) {
+                video.crossOrigin = 'anonymous'; // CORS issue by extend-max-volume
+            }
+        }, { once: true });
 
         // this code should be run before first loading of video
-        this.addEventListener('firstloaded', onFirstLoaded, { once: true });
-        const loadingObserver = new ClassChangeObserver(PrismPlayer.playerStateClassNames['loading'],
+        new ClassChangeObserver(PrismPlayer.playerStateClassNames['loading'],
             (appeared, _, observer) => {
                 if (!appeared) {
                     observer.disconnect();
                     this.loaded = true;
                     this.dispatchEvent(new Event('firstloaded'));
                 }
-            });
-        loadingObserver.observe(this.element);
+            }).observe(this.element);
+
+        new MutationObserver((_, observer) => {
+            observer.disconnect();
+            this.dispatchEvent(new Event('srcloaded'));
+        }).observe(this.query('video'), { attributeFilter: ['src'] });
     }
 
     query(key) {
