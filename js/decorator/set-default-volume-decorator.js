@@ -20,7 +20,7 @@ class SetDefaultVolumeDecorator extends Decorator {
         }
         if (!isNaN(adjustedVolume)) {
             if (isDecoratedBeforeLoaded) {
-                await sleep(100); // to fix volume slider bug
+                await sleep(100); // fix volume slider bug
             }
             prismPlayer.query('video').volume = adjustedVolume;
         }

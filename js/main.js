@@ -1,6 +1,8 @@
 function init() {
     const videoPlayerFinder = getVideoPlayerFinder();
-    if (!videoPlayerFinder) return; // video player cannot exist
+    if (!videoPlayerFinder) {
+        return; // video player cannot exist
+    }
 
     update(videoPlayerFinder);
     chrome.runtime.onMessage.addListener((message) => {
@@ -65,7 +67,9 @@ async function update(videoPlayerFinder) {
                     decorator.decorate(videoPlayer);
                 } else if (isDecorated && !isEnabled) {
                     decorator.clear(videoPlayer).then((res) => {
-                        if (res) videoPlayer.decorated[decoratorName] = false;
+                        if (res) {
+                            videoPlayer.decorated[decoratorName] = false;
+                        }
                     });
                 }
             } catch (e) {
@@ -77,7 +81,7 @@ async function update(videoPlayerFinder) {
 
 function updateDefaultVolume(videoPlayerFinder) {
     for (const video of videoPlayerFinder.videoPlayers) {
-        video.decorated['SetDefaultVolumeDecorator'] = false; // reset decoration state
+        video.decorated['SetDefaultVolumeDecorator'] = false; // enable re-decoration
     }
     update(videoPlayerFinder);
 }

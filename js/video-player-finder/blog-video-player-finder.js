@@ -11,7 +11,7 @@ class BlogVideoPlayerFinder extends VideoPlayerFinder {
 
     constructor(videoModules) {
         super();
-        const findNext = getOrObserveChildByClassName; // shorten name
+        const findNext = getOrObserveChildByClassName;
 
         // .se-module-video >> .prismplayer-area -> .pzp-pc (=> prismPlayer)
         for (const videoModule of videoModules) {

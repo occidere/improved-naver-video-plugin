@@ -2,25 +2,31 @@ function init() {
     // settings (checkbox)
     for (const container of document.querySelectorAll('.setting-checkbox')) {
         const checkbox = container.querySelector('input');
-        // initialize
+        // initialize checkbox
         chrome.storage.sync.get(checkbox.name, (items) => {
             checkbox.checked = items[checkbox.name];
-            activateSetting(checkbox);
         });
-        // update storage when clicked
+        // update storage when checkbox is changed
         checkbox.addEventListener('change', (event) => {
             const checkbox = event.currentTarget;
             const items = { [checkbox.name]: checkbox.checked };
             chrome.storage.sync.set(items, () => sendSettingChangedMessage(SETTING_CHANGED_EVENT));
-            activateSetting(checkbox);
         });
     }
 
-    // extend-max-volume changes max value of default-volume range
-    const onChangeExtendMaxVolumeCheckbox = (checked) => {
-        const range = document.querySelector('#setDefaultVolumeRange');
+    // set-default-volume disables default-volume range
+    connectCheckboxAndRange('setDefaultVolume', 'defaultVolume', (checked, range) => {
         if (checked) {
-            range.max = '1.5';
+            range.classList.remove('disabled');
+        } else {
+            range.classList.add('disabled');
+        }
+    });
+
+    // extend-max-volume changes max value of default-volume range
+    connectCheckboxAndRange('extendMaxVolume', 'defaultVolume', (checked, range) => {
+        if (checked) {
+            range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
             range.classList.add('extended');
         } else {
             if (parseFloat(range.value) > 1.0) {
@@ -31,48 +37,41 @@ function init() {
             range.max = '1.0';
             range.classList.remove('extended');
         }
-    };
-    const extendMaxVolumeCheckbox = document.querySelector('#extendMaxVolumeCheckbox');
-    extendMaxVolumeCheckbox.addEventListener('change', (event) => {
-        const checkbox = event.currentTarget;
-        onChangeExtendMaxVolumeCheckbox(checkbox.checked);
-    });
-    chrome.storage.sync.get('extendMaxVolume', (items) => {
-        onChangeExtendMaxVolumeCheckbox(items['extendMaxVolume']);
     });
 
     // settings (range)
     for (const container of document.querySelectorAll('.setting-range')) {
         const range = container.querySelector('input');
         const indicator = container.querySelector('span.indicator');
-        const setIndicator = (value) => {
-            indicator.textContent = (parseFloat(value) * 100).toFixed() + '%';
-        };
-        // initialize
+        // initialize range
         chrome.storage.sync.get(range.name, (items) => {
             range.value = items[range.name];
-            setIndicator(range.value);
+            setIndicator(indicator, range.value);
         });
-        // update indicator when dragged
+        // update indicator when range is dragged
         range.addEventListener('input', (event) => {
             const range = event.currentTarget;
-            setIndicator(range.value);
+            const indicator = range.closest('.setting-range').querySelector('span.indicator');
+            setIndicator(indicator, range.value);
         });
-        // update storage when value is changed
+        // update storage when range value is changed
         range.addEventListener('change', (event) => {
             const range = event.currentTarget;
             const items = { [range.name]: range.value };
             chrome.storage.sync.set(items, () => sendSettingChangedMessage(DEFAULT_VOLUME_CHANGED_EVENT));
         });
-        // activate by mousedown when it is disabled
-        range.addEventListener('mousedown', (event) => {
-            const range = event.currentTarget;
-            if (range.classList.contains('disabled')) {
-                const checkbox = document.querySelector(`#${range.name}Checkbox`);
-                checkbox.click();
-            }
-        });
     }
+
+    // pressing default-volume range enables set-default-volume checkbox
+    const defaultVolumeRange = document.querySelector('#defaultVolumeRange');
+    defaultVolumeRange.addEventListener('mousedown', (event) => {
+        const range = event.currentTarget;
+        if (range.classList.contains('disabled')) {
+            const checkbox = document.querySelector('#setDefaultVolumeCheckbox');
+            checkbox.checked = true;
+            checkbox.dispatchEvent(new Event('change'));
+        }
+    });
 }
 
 async function sendSettingChangedMessage(event) {
@@ -87,15 +86,23 @@ async function sendSettingChangedMessage(event) {
     }
 }
 
-function activateSetting(checkbox) {
-    if (checkbox.classList.contains('activate-range')) {
-        const range = document.querySelector(`#${checkbox.name}Range`);
-        if (checkbox.checked) {
-            range.classList.remove('disabled');
-        } else {
-            range.classList.add('disabled');
-        }
-    }
+// callback: (checked: boolean, range: HTMLInputElement) => void
+function connectCheckboxAndRange(checkboxName, rangeName, callback) {
+    const checkbox = document.querySelector(`#${checkboxName}Checkbox`);
+    // apply current state of checkbox
+    chrome.storage.sync.get(checkboxName, (items) => {
+        const range = document.querySelector(`#${rangeName}Range`);
+        callback(items[checkboxName], range);
+    });
+    // apply callback when checkbox changes
+    checkbox.addEventListener('change', (event) => {
+        const range = document.querySelector(`#${rangeName}Range`);
+        callback(event.currentTarget.checked, range);
+    });
+}
+
+function setIndicator(indicator, value) {
+    indicator.textContent = (parseFloat(value) * 100).toFixed() + '%';
 }
 
 document.addEventListener('DOMContentLoaded', init);

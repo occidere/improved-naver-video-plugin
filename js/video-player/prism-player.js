@@ -4,7 +4,7 @@ class PrismPlayer extends VideoPlayer {
         video: 'video',
         dim: '.pzp-pc__dimmed',
         header: '.pzp-pc__header',
-        playButton: 'button.pzp-pc__brand-playback-button', // center play button
+        playButton: 'button.pzp-pc__brand-playback-button',
         bottom: '.pzp-pc__bottom',
         playPauseButton: 'button.pzp-pc__playback-switch',
         volumeControl: '.pzp-pc__volume-control',
@@ -30,6 +30,7 @@ class PrismPlayer extends VideoPlayer {
     };
 
     loaded = false;
+    source = null; // MediaElementAudioSourceNode
 
     _maxVolume = 1.0;
     isMaxVolumeExtended = false;
@@ -37,31 +38,38 @@ class PrismPlayer extends VideoPlayer {
     constructor(videoPlayerElement) {
         super(videoPlayerElement);
 
-        this.addEventListener('firstloaded', () => {
+        // initialize maxVolume
+        const onFirstLoaded = () => {
+            this.loaded = true;
             this._maxVolume = this.query('video').volume;
-        }, { once: true });
+        };
 
-        this.addEventListener('srcloaded', () => {
+        // initialize crossOrigin
+        const onSrcLoaded = () => {
             const video = this.query('video');
             const srcUrl = new URL(video.src);
             if (srcUrl.origin !== location.origin) {
-                video.crossOrigin = 'anonymous'; // CORS issue by extend-max-volume
+                video.crossOrigin = 'anonymous'; // CORS issue in blog.naver.com
             }
-        }, { once: true });
+        };
 
-        // this code should be run before first loading of video
+        // observing should be before first loading of video
         new ClassChangeObserver(PrismPlayer.playerStateClassNames['loading'],
             (appeared, _, observer) => {
                 if (!appeared) {
                     observer.disconnect();
-                    this.loaded = true;
+                    onFirstLoaded();
                     this.dispatchEvent(new Event('firstloaded'));
                 }
             }).observe(this.element);
 
-        new MutationObserver((_, observer) => {
-            observer.disconnect();
-            this.dispatchEvent(new Event('srcloaded'));
+        new MutationObserver((mutationList, observer) => {
+            for (const mutation of mutationList) {
+                if (mutation.target.src) {
+                    observer.disconnect();
+                    onSrcLoaded();
+                }
+            }
         }).observe(this.query('video'), { attributeFilter: ['src'] });
     }
 
@@ -97,10 +105,11 @@ class PrismPlayer extends VideoPlayer {
     async getQualitySettingItems() {
         const QUALITY_SETTING_ITEM_CLASS = 'pzp-pc-ui-setting-quality-item';
         const lis = this.element.querySelectorAll('li.' + QUALITY_SETTING_ITEM_CLASS);
-        if (lis.length > 0) return lis;
+        if (lis.length > 0) {
+            return lis;
+        }
 
-        const QUALITY_SETTING_LIST_SELECTOR = 'ul.pzp-pc-setting-quality-pane__list-container';
-        const ul = this.element.querySelector(QUALITY_SETTING_LIST_SELECTOR);
+        const ul = this.element.querySelector('ul.pzp-pc-setting-quality-pane__list-container');
         await getOrObserveChildByClassName(ul, QUALITY_SETTING_ITEM_CLASS);
         return ul.querySelectorAll('li.' + QUALITY_SETTING_ITEM_CLASS);
     }

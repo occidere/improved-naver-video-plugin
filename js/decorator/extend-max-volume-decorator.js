@@ -1,6 +1,6 @@
 class ExtendMaxVolumeDecorator extends Decorator {
 
-    static AMPLIFY_FACTOR = 1.5;
+    static AMPLIFY_FACTOR = 2; // sync with popup.js
 
     static audioContext;
     static gainNode;
@@ -32,9 +32,8 @@ class ExtendMaxVolumeDecorator extends Decorator {
         const onUserActivation = () => {
             const audioContext = ExtendMaxVolumeDecorator.getAudioContext();
             const gainNode = ExtendMaxVolumeDecorator.getGainNode(audioContext);
-            const video = prismPlayer.query('video');
             if (!prismPlayer.source) {
-                prismPlayer.source = audioContext.createMediaElementSource(video);
+                prismPlayer.source = audioContext.createMediaElementSource(prismPlayer.query('video'));
             }
             prismPlayer.source.disconnect();
             prismPlayer.source.connect(gainNode);
@@ -50,7 +49,7 @@ class ExtendMaxVolumeDecorator extends Decorator {
         const video = prismPlayer.query('video');
         const currentVolume = video.volume;
         if (isDecoratedBeforeLoaded) {
-            await sleep(100); // to fix volume slider bug
+            await sleep(100); // fix volume slider bug
         }
         if (!prismPlayer.isMaxVolumeExtended) { // prevent conflict
             video.volume = currentVolume / ExtendMaxVolumeDecorator.AMPLIFY_FACTOR;

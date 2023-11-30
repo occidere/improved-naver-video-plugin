@@ -11,7 +11,7 @@ class CafeVideoPlayerFinder extends VideoPlayerFinder {
 
     constructor(app) {
         super();
-        const findNext = getOrObserveChildByClassName; // shorten name
+        const findNext = getOrObserveChildByClassName;
 
         // #app >> .Article
         findNext(app, 'Article', async (article) => {
