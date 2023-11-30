@@ -38,6 +38,7 @@ function getDecorators(settings) {
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
                 [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
                 [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume'] || settings['extendMaxVolume']],
+                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
             ];
     }
 }
@@ -49,6 +50,7 @@ async function getSettings() {
         'playbackRateDisplay',
         'easyClickToPlay',
         'autoPlayFirstVideo',
+        'autoPauseLastVideo',
         'setDefaultVolume',
         'extendMaxVolume',
     ]);

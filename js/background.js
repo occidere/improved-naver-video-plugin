@@ -4,6 +4,7 @@ const defaultItems = {
     playbackRateDisplay: true,
     easyClickToPlay: true,
     autoPlayFirstVideo: false,
+    autoPauseLastVideo: false,
     setDefaultVolume: false,
     extendMaxVolume: false,
     defaultVolume: '1.0'
