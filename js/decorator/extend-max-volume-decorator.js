@@ -36,6 +36,7 @@ class ExtendMaxVolumeDecorator extends Decorator {
             if (!prismPlayer.source) {
                 prismPlayer.source = audioContext.createMediaElementSource(video);
             }
+            prismPlayer.source.disconnect();
             prismPlayer.source.connect(gainNode);
         };
         if (isUserActivated()) {
