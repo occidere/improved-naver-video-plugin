@@ -34,6 +34,7 @@ function getDecorators(settings) {
                 [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
                 [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
                 [new QualityDisplayDecorator, settings['qualityDisplay']],
+                [new DividePlaybackRateDecorator, settings['dividePlaybackRate']],
                 [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
                 [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
@@ -49,6 +50,7 @@ async function getSettings() {
     return await chrome.storage.sync.get([
         'selectMaxQuality',
         'qualityDisplay',
+        'dividePlaybackRate',
         'playbackRateDisplay',
         'easyClickToPlay',
         'autoPlayFirstVideo',

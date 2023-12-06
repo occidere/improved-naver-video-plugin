@@ -45,6 +45,7 @@
         "js/decorator/decorator.js",
         "js/decorator/select-max-quality-decorator.js",
         "js/decorator/quality-display-decorator.js",
+        "js/decorator/divide-playback-rate-decorator.js",
         "js/decorator/playback-rate-display-decorator.js",
         "js/decorator/easy-click-to-play-decorator.js",
         "js/decorator/auto-play-first-video-decorator.js",

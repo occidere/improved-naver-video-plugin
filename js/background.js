@@ -1,6 +1,7 @@
 const defaultItems = {
     selectMaxQuality: true,
     qualityDisplay: true,
+    dividePlaybackRate: false,
     playbackRateDisplay: true,
     easyClickToPlay: true,
     autoPlayFirstVideo: false,
