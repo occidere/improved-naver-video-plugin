@@ -16,10 +16,22 @@ function init() {
 
     // set-default-volume disables default-volume range
     connectCheckboxAndRange('setDefaultVolume', 'defaultVolume', (checked, range) => {
+        const indicator = document.querySelector('#defaultVolumeIndicator');
         if (checked) {
             range.classList.remove('disabled');
+            indicator.classList.remove('disabled');
         } else {
             range.classList.add('disabled');
+            indicator.classList.add('disabled');
+        }
+    });
+
+    // extend-volume-slider changes length of default-volume range
+    connectCheckboxAndRange('extendVolumeSlider', 'defaultVolume', (checked, range) => {
+        if (checked) {
+            range.classList.add('extended');
+        } else {
+            range.classList.remove('extended');
         }
     });
 
@@ -27,7 +39,6 @@ function init() {
     connectCheckboxAndRange('extendMaxVolume', 'defaultVolume', (checked, range) => {
         if (checked) {
             range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
-            range.classList.add('extended');
         } else {
             if (parseFloat(range.value) > 1.0) {
                 range.value = '1.0'
@@ -35,14 +46,13 @@ function init() {
                 range.dispatchEvent(new Event('change'));
             }
             range.max = '1.0';
-            range.classList.remove('extended');
         }
     });
 
     // settings (range)
     for (const container of document.querySelectorAll('.setting-range')) {
         const range = container.querySelector('input');
-        const indicator = container.querySelector('span.indicator');
+        const indicator = document.querySelector(`#${range.name}Indicator`);
         // initialize range
         chrome.storage.sync.get(range.name, (items) => {
             range.value = items[range.name];
@@ -51,7 +61,7 @@ function init() {
         // update indicator when range is dragged
         range.addEventListener('input', (event) => {
             const range = event.currentTarget;
-            const indicator = range.closest('.setting-range').querySelector('span.indicator');
+            const indicator = document.querySelector(`#${range.name}Indicator`);
             setIndicator(indicator, range.value);
         });
         // update storage when range value is changed
@@ -102,7 +112,8 @@ function connectCheckboxAndRange(checkboxName, rangeName, callback) {
 }
 
 function setIndicator(indicator, value) {
-    indicator.textContent = (parseFloat(value) * 100).toFixed() + '%';
+    const percentage = (parseFloat(value) * 100).toFixed();
+    indicator.textContent = `${percentage}%`;
 }
 
 document.addEventListener('DOMContentLoaded', init);

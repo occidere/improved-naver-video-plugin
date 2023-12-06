@@ -48,13 +48,13 @@
         "js/decorator/divide-playback-rate-decorator.js",
         "js/decorator/playback-rate-display-decorator.js",
         "js/decorator/easy-click-to-play-decorator.js",
-        "js/decorator/auto-play-first-video-decorator.js",
         "js/decorator/auto-pause-last-video-decorator.js",
-        "js/decorator/preserve-volume-after-replay-decorator.js",
-        "js/decorator/set-default-volume-decorator.js",
+        "js/decorator/auto-play-first-video-decorator.js",
         "js/decorator/easy-open-volume-slider-decorator.js",
         "js/decorator/extend-volume-slider-decorator.js",
         "js/decorator/extend-max-volume-decorator.js",
+        "js/decorator/set-default-volume-decorator.js",
+        "js/decorator/preserve-volume-after-replay-decorator.js",
         "js/main.js"
       ]
     }

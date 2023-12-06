@@ -11,35 +11,61 @@
     </div>
     <hr>
     <div id="settings">
-      <!--Sync with background.js, main.js-->
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="selectMaxQuality">최고 화질 기본 사용</label>
+      <div class="setting-group">
+        <span class="group-title">화질</span>
+        <div class="setting-checkbox" title="가장 높은 화질이 자동으로 선택됩니다.">
+          <label><input type="checkbox" name="selectMaxQuality">최고 화질 기본 사용</label>
+        </div>
+        <div class="setting-checkbox" title="현재 화질을 보여주는 버튼이 추가됩니다.
+클릭 시 화질을 변경할 수 있습니다.">
+          <label><input type="checkbox" name="qualityDisplay">화질 표시</label>
+        </div>
       </div>
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="qualityDisplay">화질 표시</label>
+      <div class="setting-group">
+        <span class="group-title">배속</span>
+        <div class="setting-checkbox" title="0.25x 단위의 배속이 추가됩니다.
+키보드 단축키 '<', '>'가 추가됩니다.">
+          <label><input type="checkbox" name="dividePlaybackRate">배속 세분화</label>
+        </div>
+        <div class="setting-checkbox" title="현재 배속을 보여주는 버튼이 추가됩니다.
+클릭 시 배속을 변경할 수 있습니다.">
+          <label><input type="checkbox" name="playbackRateDisplay">배속 표시</label>
+        </div>
       </div>
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="playbackRateDisplay">배속 표시</label>
+      <div class="setting-group">
+        <span class="group-title">재생</span>
+        <div class="setting-checkbox" title="시작 화면을 누르면 재생이 시작됩니다.
+로딩 중에 클릭하면 로딩이 끝나는 대로 재생됩니다.
+(+ 클릭 관련 편의성이 개선됩니다.)">
+          <label><input type="checkbox" name="easyClickToPlay">아무데나 눌러 재생</label>
+        </div>
+        <div class="setting-checkbox" title="여러 동영상이 동시에 재생되지 않도록 합니다.">
+          <label><input type="checkbox" name="autoPauseLastVideo">이전 영상 자동 중지</label>
+        </div>
+        <div class="setting-checkbox" title="게시글의 맨 위에 있는 동영상을 자동으로 재생합니다.">
+          <label><input type="checkbox" name="autoPlayFirstVideo">첫 번째 영상 자동 재생</label>
+        </div>
       </div>
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="easyClickToPlay">아무데나 눌러 재생</label>
-      </div>
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="autoPlayFirstVideo">첫번째 영상 자동 재생</label>
-      </div>
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="autoPauseLastVideo">이전 동영상 자동 중지</label>
-      </div>
-      <hr>
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="extendMaxVolume" id="extendMaxVolumeCheckbox">최대 볼륨 확장</label>
-      </div>
-      <div class="setting-checkbox">
-        <label><input type="checkbox" name="setDefaultVolume" id="setDefaultVolumeCheckbox">기본 음량 설정</label>
-      </div>
-      <div class="setting-range">
-        <span class="indicator"></span>
-        <input type="range" name="defaultVolume" min="0" max="1" value="1" step="0.01" id="defaultVolumeRange">
+      <div class="setting-group">
+        <span class="group-title">소리</span>
+        <div class="setting-checkbox" title="마우스를 볼륨 바 영역에 가져가면 볼륨 바가 열립니다.">
+          <label><input type="checkbox" name="easyOpenVolumeSlider">볼륨 바 잘 뜨게 하기</label>
+        </div>
+        <div class="setting-checkbox" title="볼륨 바가 2배로 길어져 세밀한 음량 조절이 가능해집니다.">
+          <label><input type="checkbox" name="extendVolumeSlider" id="extendVolumeSliderCheckbox">볼륨 바 확장</label>
+        </div>
+        <div class="setting-checkbox" title="최대 볼륨이 200%로 늘어납니다.
+시작 볼륨은 유지됩니다.">
+          <label><input type="checkbox" name="extendMaxVolume" id="extendMaxVolumeCheckbox">볼륨 최대치 확장</label>
+        </div>
+        <div class="setting-checkbox" title="동영상이 시작될 때의 음량을 설정합니다.
+여기에서 변경하면 열려있는 모든 동영상에 즉시 적용됩니다.">
+          <label><input type="checkbox" name="setDefaultVolume" id="setDefaultVolumeCheckbox">시작 볼륨</label>
+          <span id="defaultVolumeIndicator"></span>
+        </div>
+        <div class="setting-range">
+          <input type="range" name="defaultVolume" min="0" max="1" value="1" step="0.01" id="defaultVolumeRange">
+        </div>
       </div>
     </div>
     <script src="js/common/class-variables.js"></script>

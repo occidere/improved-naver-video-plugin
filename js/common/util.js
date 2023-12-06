@@ -77,7 +77,7 @@ class ClassChangeObserver extends MutationObserver {
 
     static options = { attributeOldValue: true, attributeFilter: ['class'] };
 
-    // callback: (appeared: boolean, target: Element, observer) => void
+    // callback: (appeared: boolean, target: Element, observer: MutationObserver) => void
     constructor(className, callback) {
         super((mutationList, observer) => {
             for (const mutation of mutationList) {

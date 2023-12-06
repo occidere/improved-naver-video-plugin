@@ -4,15 +4,21 @@ class PlaybackRateDisplayDecorator extends Decorator {
         // create display
         const playbackRateDisplay = this.createPlaybackRateDisplay();
         const bottomRightButtons = prismPlayer.query('bottomRightButtons');
-        bottomRightButtons.prepend(playbackRateDisplay);
+        const qualityDisplay = this.getQualityDisplay(prismPlayer);
+        if (qualityDisplay) {
+            bottomRightButtons.insertBefore(playbackRateDisplay, qualityDisplay);
+        } else {
+            const settingButton = prismPlayer.query('settingButton');
+            bottomRightButtons.insertBefore(playbackRateDisplay, settingButton);
+        }
 
         // show setting pane when clicked
         playbackRateDisplay.addEventListener('click', async () => {
             if (prismPlayer.isState('playbackRateSettingPaneVisible')) {
-                prismPlayer.element.click(); // click player to close pane
+                prismPlayer.element.click(); // close setting pane
             } else {
                 await sleep(10);
-                prismPlayer.query('playbackRateSettingMenu').click();
+                prismPlayer.query('playbackRateSettingMenu').click(); // open setting pane
             }
         });
 
@@ -91,5 +97,9 @@ class PlaybackRateDisplayDecorator extends Decorator {
 
     isSettingItemChecked(li) {
         return li.classList.contains(CHECKED_SETTING_ITEM_CLASS);
+    }
+
+    getQualityDisplay(prismPlayer) {
+        return prismPlayer.element.querySelector('button.' + APP_QUALITY_DISPLAY_CLASS);
     }
 }

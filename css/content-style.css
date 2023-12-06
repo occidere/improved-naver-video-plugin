@@ -1,19 +1,21 @@
-.pzp.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button {
+/* Button UI */
+.pzp.pzp-pc button.improved-naver-video-plugin__ui-button {
     width: 36px;
     height: 36px;
     margin-right: 2px;
     opacity: 0;
     transition-property: opacity;
 }
-.pzp.pzp-pc.pzp-pc--controls button.improved-naver-video-plugin__pzp-pc-ui-button {
+.pzp.pzp-pc.pzp-pc--controls button.improved-naver-video-plugin__ui-button {
     opacity: 1;
 }
-.pzp.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button span.pzp-pc-ui-setting-quality-item__prefix,
-.pzp.pzp-pc button.improved-naver-video-plugin__pzp-pc-ui-button span.pzp-pc-ui-setting-playbackrate-item__value {
+.pzp.pzp-pc button.improved-naver-video-plugin__ui-button span.pzp-pc-ui-setting-quality-item__prefix,
+.pzp.pzp-pc button.improved-naver-video-plugin__ui-button span.pzp-pc-ui-setting-playbackrate-item__value {
     white-space: nowrap;
     font-size: 12px;
 }
 
+/* Volume Slider */
 .pzp.pzp-pc .pzp-pc__volume-control .improved-naver-video-plugin__volume-slider-hover-helper {
     position: absolute;
     width: 90px; /* 80px + margin(10px) */

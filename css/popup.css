@@ -1,39 +1,48 @@
-.setting-checkbox {
-  height: 20px;
-  width: 180px;
-  margin: 1px;
+/* Settings General */
+#settings {
+    width: 150px;
 }
-.setting-checkbox label {
-    display: flex; /* align checkbox and label vertically */
-    width: fit-content;
+.setting-group {
+    margin-top: 6px;
     user-select: none;
 }
+.setting-group span.group-title {
+    display: block;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 2px;
+}
 
-.setting-range {
+/* Checkbox Settings */
+.setting-checkbox {
     display: flex;
-    height: 20px;
-    width: 180px;
-    margin: 1px;
     align-items: center;
 }
+.setting-checkbox label {
+    display: inline-flex; /* align checkbox and label vertically */
+}
+.setting-checkbox input[type="checkbox"] {
+    flex-basis: content; /* prevent growing */
+}
+#defaultVolumeIndicator {
+    margin-left: 2px;
+    font-weight: bold;
+}
+#defaultVolumeIndicator.disabled {
+    opacity: 0.35;
+}
+
+/* Range Settings */
 .setting-range input[type="range"] {
     min-width: 0;
-    margin-left: 0;
-    margin-right: 0;
-    flex-grow: 1;
+    margin: 2px;
 }
 .setting-range input[type="range"].disabled {
     opacity: 0.35;
 }
-.setting-range span.indicator {
-    width: 35px;
-    flex-shrink: 0;
-    text-align: center;
-    user-select: none;
-}
 #defaultVolumeRange {
-    margin-right: 64px;
+    width: calc(50% + 6px);
 }
 #defaultVolumeRange.extended {
-    margin-right: 0;
+    width: calc(100% - 4px);
 }

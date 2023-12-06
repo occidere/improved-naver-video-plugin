@@ -4,12 +4,12 @@ const defaultItems = {
     dividePlaybackRate: false,
     playbackRateDisplay: true,
     easyClickToPlay: true,
-    autoPlayFirstVideo: false,
     autoPauseLastVideo: false,
-    setDefaultVolume: false,
+    autoPlayFirstVideo: false,
     easyOpenVolumeSlider: true,
     extendVolumeSlider: false,
     extendMaxVolume: false,
+    setDefaultVolume: false,
     defaultVolume: '1.0'
 };
 

@@ -3,7 +3,7 @@ const SETTING_CHANGED_EVENT = 'setting-changed';
 const DEFAULT_VOLUME_CHANGED_EVENT = 'default-volume-changed';
 
 // app element classes
-const APP_UI_BUTTON_CLASS = APP_NAME + '__pzp-pc-ui-button';
+const APP_UI_BUTTON_CLASS = APP_NAME + '__ui-button';
 const APP_QUALITY_DISPLAY_CLASS = APP_NAME + '__quality-display';
 const APP_PLAYBACK_RATE_DISPLAY_CLASS = APP_NAME + '__playback-rate-display';
 const APP_EXTEND_VOLUME_SLIDER_CLASS = APP_NAME + '__extend-volume-slider';

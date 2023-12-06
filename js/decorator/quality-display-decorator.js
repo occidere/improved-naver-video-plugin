@@ -10,10 +10,10 @@ class QualityDisplayDecorator extends Decorator {
         // show setting pane when clicked
         qualityDisplay.addEventListener('click', async () => {
             if (prismPlayer.isState('qualitySettingPaneVisible')) {
-                prismPlayer.element.click(); // click player to close pane
+                prismPlayer.element.click(); // close setting pane
             } else {
                 await sleep(10);
-                prismPlayer.query('qualitySettingMenu').click();
+                prismPlayer.query('qualitySettingMenu').click(); // open setting pane
             }
         });
 

@@ -31,17 +31,17 @@ function getDecorators(settings) {
         case 'blog.naver.com':
             return [
                 [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
-                [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
-                [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
                 [new QualityDisplayDecorator, settings['qualityDisplay']],
                 [new DividePlaybackRateDecorator, settings['dividePlaybackRate']],
                 [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
+                [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
+                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
+                [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
                 [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
                 [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
                 [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume'] || settings['extendMaxVolume']],
-                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
             ];
     }
 }
@@ -53,12 +53,12 @@ async function getSettings() {
         'dividePlaybackRate',
         'playbackRateDisplay',
         'easyClickToPlay',
-        'autoPlayFirstVideo',
         'autoPauseLastVideo',
-        'setDefaultVolume',
+        'autoPlayFirstVideo',
         'easyOpenVolumeSlider',
         'extendVolumeSlider',
         'extendMaxVolume',
+        'setDefaultVolume',
     ]);
 }
 
