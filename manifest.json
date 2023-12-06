@@ -54,6 +54,7 @@
         "js/decorator/hide-setting-button-decorator.js",
         "js/decorator/easy-open-volume-slider-decorator.js",
         "js/decorator/full-screen-shortcut-decorator.js",
+        "js/decorator/precise-volume-shortcut-decorator.js",
         "js/decorator/extend-volume-slider-decorator.js",
         "js/decorator/extend-max-volume-decorator.js",
         "js/decorator/set-default-volume-decorator.js",

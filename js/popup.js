@@ -82,6 +82,31 @@ function init() {
             checkbox.dispatchEvent(new Event('change'));
         }
     });
+
+    // volumeNumberInput
+    const volumeNumberInput = document.querySelector('#volumeNumberInput');
+    chrome.storage.sync.get(volumeNumberInput.name, (items) => {
+        volumeNumberInput.value = items[volumeNumberInput.name];
+    });
+    volumeNumberInput.addEventListener('change', (event) => {
+        const numberInput = event.currentTarget;
+        let value = parseInt(numberInput.value);
+        value = Math.min(20, value);
+        value = Math.max(1, value);
+        const items = { [numberInput.name]: value.toFixed() };
+        chrome.storage.sync.set(items, () => sendSettingChangedMessage(VOLUME_NUMBER_CHANGED_EVENT));
+    });
+
+    // connect checkbox and volumeNumberInput
+    const preciseVolumeShortcutCheckbox = document.querySelector('#preciseVolumeShortcutCheckbox');
+    chrome.storage.sync.get(preciseVolumeShortcutCheckbox.name, (items) => {
+        const volumeNumberInput = document.querySelector('#volumeNumberInput');
+        volumeNumberInput.disabled = !items[preciseVolumeShortcutCheckbox.name];
+    });
+    preciseVolumeShortcutCheckbox.addEventListener('change', (event) => {
+        const volumeNumberInput = document.querySelector('#volumeNumberInput');
+        volumeNumberInput.disabled = !event.currentTarget.checked;
+    });
 }
 
 async function sendSettingChangedMessage(event) {

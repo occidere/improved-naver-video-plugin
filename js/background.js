@@ -10,10 +10,12 @@ const defaultItems = {
     hideSettingButton: false,
     easyOpenVolumeSlider: true,
     fullScreenShortcut: true,
+    preciseVolumeShortcut: true,
     extendVolumeSlider: true,
     extendMaxVolume: false,
     setDefaultVolume: true,
     defaultVolume: '0.5',
+    volumeNumber: '5',
 };
 
 chrome.runtime.onInstalled.addListener(async (details) => {

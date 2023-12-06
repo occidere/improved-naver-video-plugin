@@ -41,10 +41,13 @@ function getDecorators(settings) {
                 [new HideSettingButtonDecorator, settings['hideSettingButton']],
                 [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
                 [new FullScreenShortcutDecorator, settings['fullScreenShortcut']],
+                [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
                 [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
-                [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume'] || settings['extendMaxVolume']],
+                [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume']
+                                                      || settings['extendMaxVolume']
+                                                      || settings['preciseVolumeShortcut']],
             ];
     }
 }
@@ -62,6 +65,7 @@ async function getSettings() {
         'hideSettingButton',
         'easyOpenVolumeSlider',
         'fullScreenShortcut',
+        'preciseVolumeShortcut',
         'extendVolumeSlider',
         'extendMaxVolume',
         'setDefaultVolume',

@@ -59,6 +59,11 @@
         <div class="setting-checkbox" title="전체화면 전환 단축키 'F'가 추가됩니다.">
           <label><input type="checkbox" name="fullScreenShortcut">전체화면 전환 단축키 (F)</label>
         </div>
+        <div class="setting-checkbox" title="위, 아래 방향키로 볼륨을 조절할 때 얼마만큼 변경할 지 설정합니다. (기존 20%)">
+          <label><input type="checkbox" name="preciseVolumeShortcut" id="preciseVolumeShortcutCheckbox">방향키 볼륨 조절량</label>
+          <div class="margin"></div>
+          <input type="number" value="5" min="1" max="20" name="volumeNumber" id="volumeNumberInput">
+        </div>
       </div>
       <div class="setting-group">
         <span class="group-title">소리</span>
