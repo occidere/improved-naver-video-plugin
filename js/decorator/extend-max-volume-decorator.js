@@ -24,10 +24,6 @@ class ExtendMaxVolumeDecorator extends Decorator {
     async decorate(prismPlayer) {
         const isDecoratedBeforeLoaded = !prismPlayer.loaded;
 
-        // extend slider
-        const volumeControl = prismPlayer.query('volumeControl');
-        volumeControl.classList.add(APP_EXTEND_MAX_VOLUME_CLASS);
-
         // connect source to gainNode
         const onUserActivation = () => {
             const audioContext = ExtendMaxVolumeDecorator.getAudioContext();
@@ -58,10 +54,6 @@ class ExtendMaxVolumeDecorator extends Decorator {
     }
 
     async clear(prismPlayer) {
-        // restore slider
-        const volumeControl = prismPlayer.query('volumeControl');
-        volumeControl.classList.remove(APP_EXTEND_MAX_VOLUME_CLASS);
-
         // reconnect source
         if (prismPlayer.source) {
             const audioContext = ExtendMaxVolumeDecorator.getAudioContext();

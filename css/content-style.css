@@ -14,9 +14,9 @@
     font-size: 12px;
 }
 
-.pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume .pzp-pc__volume-button:focus ~ .pzp-pc__volume-slider,
-.pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume .pzp-pc__volume-slider:focus,
-.pzp.pzp-pc .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume:hover > .pzp-pc__volume-slider,
-.pzp.pzp-pc.pzp-pc--active-volume-control .pzp-pc__volume-control.improved-naver-video-plugin__extend-max-volume .pzp-pc__volume-slider {
+.pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .pzp-pc__volume-button:focus ~ .pzp-pc__volume-slider,
+.pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .pzp-pc__volume-slider:focus,
+.pzp.pzp-pc .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider:hover > .pzp-pc__volume-slider,
+.pzp.pzp-pc.pzp-pc--active-volume-control .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .pzp-pc__volume-slider {
     width: 160px; /* original width: 80px */
 }
