@@ -2,10 +2,10 @@ class EasyClickToPlayDecorator extends Decorator {
 
     decorate(prismPlayer) {
         // click -> playPause
-        // dblclick -> fullscreen
-        // dblclick before play -> play & fullscreen
+        // dblclick -> fullScreen
+        // dblclick before play -> play & fullScreen
         // => pause after playing
-        let isPlayAndFullscreen = false;
+        let isPlayAndFullScreen = false;
 
         const onClickElement = () => {
             if (prismPlayer.isState('playing')) {
@@ -13,18 +13,18 @@ class EasyClickToPlayDecorator extends Decorator {
             } else {
                 prismPlayer.query('video').autoplay = true;
                 prismPlayer.query('playButton').click();
-                isPlayAndFullscreen = false; // interrupt playingObserver
+                isPlayAndFullScreen = false; // interrupt playingObserver
             }
         };
         const onDoubleClickElement = () => {
             prismPlayer.query('fullScreenButton').click();
             if (!prismPlayer.isState('playing')) {
-                isPlayAndFullscreen = true;
+                isPlayAndFullScreen = true;
             }
         };
         const playingObserver = new ClassChangeObserver(PrismPlayer.playerStateClassNames['playing'],
             async (appeared) => {
-                if (appeared && isPlayAndFullscreen) {
+                if (appeared && isPlayAndFullScreen) {
                     await sleep(10);
                     prismPlayer.query('playPauseButton').click();
                 }
@@ -37,8 +37,8 @@ class EasyClickToPlayDecorator extends Decorator {
         dim.addEventListener('dblclick', onDoubleClickElement);
         playingObserver.observe(prismPlayer.element);
 
-        // first click on not-playing, second click on playing -> play & no fullscreen
-        // => pause and fullscreen at second click
+        // first click on not-playing, second click on playing -> play & no fullScreen
+        // => pause and fullScreen at second click
         let isPlayerClickedOnPlaying = false;
         let isSecondClickOnPlaying = false;
 

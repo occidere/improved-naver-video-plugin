@@ -31,7 +31,7 @@ class DividePlaybackRateDecorator extends Decorator {
                 return;
             }
             const allItems = prismPlayer.queryAll('playbackRateSettingItems');
-            const checkedItem = allItems[this.getCheckedSettingItemIndex(allItems)];
+            const checkedItem = this.getCheckedSettingItem(allItems);
             if (clickedItem === checkedItem) {
                 return;
             }
@@ -48,27 +48,13 @@ class DividePlaybackRateDecorator extends Decorator {
         // reset when original item is clicked
         const originalItemClickListener = (event) => {
             const clickedItem = event.currentTarget;
-            const addedItems = prismPlayer.element.querySelectorAll('.' + APP_ADDED_PLAYBACK_RATE_ITEM_CLASS);
-            const checkedItem = addedItems[this.getCheckedSettingItemIndex(addedItems)];
+            const addedItems = this.getAddedSettingItems(prismPlayer);
+            const checkedItem = this.getCheckedSettingItem(addedItems);
             currentPlaybackRate = null;
             checkedItem?.classList.remove(CHECKED_SETTING_ITEM_CLASS); // uncheck
             clickedItem.classList.add(CHECKED_SETTING_ITEM_CLASS); // force check
         };
         originalItems.forEach((item) => item.addEventListener('click', originalItemClickListener));
-
-        // shortcuts for changing playback rate
-        const playerKeyDownListener = (event) => {
-            if (!event.isTrusted) return;
-            if (event.key !== '<' && event.key !== '>') return;
-            const items = prismPlayer.queryAll('playbackRateSettingItems');
-            const index = this.getCheckedSettingItemIndex(items);
-            if (event.key === '<') {
-                items[index - 1]?.click();
-            } else if (event.key === '>') {
-                items[index + 1]?.click();
-            }
-        };
-        prismPlayer.element.addEventListener('keydown', playerKeyDownListener);
 
         // playback-rate-display compatible
         if (prismPlayer.decorated['PlaybackRateDisplayDecorator']) {
@@ -77,21 +63,17 @@ class DividePlaybackRateDecorator extends Decorator {
             }
         }
 
-        prismPlayer.listeners[this.constructor.name] = { rateChangeListener, originalItemClickListener, playerKeyDownListener };
+        prismPlayer.listeners[this.constructor.name] = { rateChangeListener, originalItemClickListener };
     }
 
     async clear(prismPlayer) {
-        const { rateChangeListener, originalItemClickListener, playerKeyDownListener } = prismPlayer.listeners[this.constructor.name];
+        const { rateChangeListener, originalItemClickListener } = prismPlayer.listeners[this.constructor.name];
 
-        const addedItems = prismPlayer.element.querySelectorAll('.' + APP_ADDED_PLAYBACK_RATE_ITEM_CLASS);
-        addedItems.forEach((item) => item.remove());
+        this.getAddedSettingItems(prismPlayer).forEach((item) => item.remove());
+        prismPlayer.query('video').removeEventListener('ratechange', rateChangeListener);
 
         const originalItems = prismPlayer.queryAll('playbackRateSettingItems');
         originalItems.forEach((item) => item.removeEventListener('click', originalItemClickListener));
-
-        prismPlayer.query('video').removeEventListener('ratechange', rateChangeListener);
-
-        prismPlayer.element.removeEventListener('keydown', playerKeyDownListener);
 
         // select default playback rate
         const defaultItem = this.getPlaybackRateSettingItemByText(originalItems, '1.0x');
@@ -129,10 +111,10 @@ class DividePlaybackRateDecorator extends Decorator {
         return li.querySelector('span.' + PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS);
     }
 
-    getCheckedSettingItemIndex(lis) {
-        for (let index = 0; index < lis.length; index++) {
-            if (this.isSettingItemChecked(lis[index])) {
-                return index;
+    getCheckedSettingItem(lis) {
+        for (const li of lis) {
+            if (this.isSettingItemChecked(li)) {
+                return li;
             }
         }
     }
@@ -141,7 +123,7 @@ class DividePlaybackRateDecorator extends Decorator {
         return li.classList.contains(CHECKED_SETTING_ITEM_CLASS);
     }
 
-    isSettingItemAdded(li) {
-        return li.classList.contains(APP_ADDED_PLAYBACK_RATE_ITEM_CLASS);
+    getAddedSettingItems(prismPlayer) {
+        return prismPlayer.element.querySelectorAll('.' + APP_ADDED_PLAYBACK_RATE_ITEM_CLASS);
     }
 }
