@@ -14,9 +14,29 @@
     font-size: 12px;
 }
 
+.pzp.pzp-pc .pzp-pc__volume-control .improved-naver-video-plugin__volume-slider-hover-helper {
+    position: absolute;
+    width: 90px; /* 80px + margin(10px) */
+    height: 36px;
+    transform: translateX(44px); /* button(36px) + margin(8px) */
+}
+.pzp.pzp-pc .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .improved-naver-video-plugin__volume-slider-hover-helper {
+    width: 170px; /* 160px + margin(10px) */
+}
+.pzp.pzp-pc .pzp-pc__volume-control .improved-naver-video-plugin__volume-slider-hover-helper:hover ~ .pzp-pc__volume-slider,
+.pzp.pzp-pc .pzp-pc__volume-control:has(~ .pzp-pc__vod-time:hover) .improved-naver-video-plugin__volume-slider-hover-helper ~ .pzp-pc__volume-slider {
+    width: 80px;
+}
+.pzp.pzp-pc .pzp-pc__bottom-buttons-right .improved-naver-video-plugin__volume-slider-hover-helper-blocker {
+    position: absolute;
+    height: 36px;
+    transform: translateX(23px); /* margin-right */
+}
 .pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .pzp-pc__volume-button:focus ~ .pzp-pc__volume-slider,
 .pzp.pzp-pc.pzp-pc--keyboard .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .pzp-pc__volume-slider:focus,
 .pzp.pzp-pc .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider:hover > .pzp-pc__volume-slider,
-.pzp.pzp-pc.pzp-pc--active-volume-control .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .pzp-pc__volume-slider {
+.pzp.pzp-pc.pzp-pc--active-volume-control .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .pzp-pc__volume-slider,
+.pzp.pzp-pc .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider .improved-naver-video-plugin__volume-slider-hover-helper:hover ~ .pzp-pc__volume-slider,
+.pzp.pzp-pc .pzp-pc__volume-control.improved-naver-video-plugin__extend-volume-slider:has(~ .pzp-pc__vod-time:hover) .improved-naver-video-plugin__volume-slider-hover-helper ~ .pzp-pc__volume-slider {
     width: 160px; /* original width: 80px */
 }

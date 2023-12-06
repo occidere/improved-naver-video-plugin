@@ -6,6 +6,7 @@ const defaultItems = {
     autoPlayFirstVideo: false,
     autoPauseLastVideo: false,
     setDefaultVolume: false,
+    easyOpenVolumeSlider: true,
     extendVolumeSlider: false,
     extendMaxVolume: false,
     defaultVolume: '1.0'

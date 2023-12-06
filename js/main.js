@@ -35,6 +35,7 @@ function getDecorators(settings) {
                 [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
                 [new QualityDisplayDecorator, settings['qualityDisplay']],
                 [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
+                [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
                 [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
@@ -53,6 +54,7 @@ async function getSettings() {
         'autoPlayFirstVideo',
         'autoPauseLastVideo',
         'setDefaultVolume',
+        'easyOpenVolumeSlider',
         'extendVolumeSlider',
         'extendMaxVolume',
     ]);

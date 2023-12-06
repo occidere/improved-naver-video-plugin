@@ -51,6 +51,7 @@
         "js/decorator/auto-pause-last-video-decorator.js",
         "js/decorator/preserve-volume-after-replay-decorator.js",
         "js/decorator/set-default-volume-decorator.js",
+        "js/decorator/easy-open-volume-slider-decorator.js",
         "js/decorator/extend-volume-slider-decorator.js",
         "js/decorator/extend-max-volume-decorator.js",
         "js/main.js"
