@@ -1,6 +1,6 @@
 /* Settings General */
 #settings {
-    width: 160px;
+    width: 180px;
 }
 .setting-group {
     margin-top: 6px;
@@ -27,16 +27,17 @@
 .setting-checkbox .margin {
     flex-grow: 1;
 }
+#volumeNumberInput {
+    font-size: 0.9em;
+    width: 30px;
+}
 #defaultVolumeIndicator {
     margin-left: 2px;
+    margin-bottom: 1px;
     font-weight: bold;
 }
 #defaultVolumeIndicator.disabled {
     opacity: 0.35;
-}
-#volumeNumberInput {
-    font-size: 0.9em;
-    width: 30px;
 }
 
 /* Range Settings */
