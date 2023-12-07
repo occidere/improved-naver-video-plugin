@@ -16,11 +16,17 @@ class DividePlaybackRateDecorator extends Decorator {
 
         // create and insert items
         const originalItems = prismPlayer.queryAll('playbackRateSettingItems');
+        const referenceItem = this.getPlaybackRateSettingItemByText(originalItems, '2.0x');
         const addedItems = [
             this.insertPlaybackRateSettingItem(originalItems, '0.25', '0.5'),
             this.insertPlaybackRateSettingItem(originalItems, '0.75', '1.0'),
             this.insertPlaybackRateSettingItem(originalItems, '1.25', '1.5'),
             this.insertPlaybackRateSettingItem(originalItems, '1.75', '2.0'),
+            this.appendPlaybackRateSettingItem(referenceItem, '2.25'),
+            this.appendPlaybackRateSettingItem(referenceItem, '2.5'),
+            this.appendPlaybackRateSettingItem(referenceItem, '3.0'),
+            this.appendPlaybackRateSettingItem(referenceItem, '3.5'),
+            this.appendPlaybackRateSettingItem(referenceItem, '4.0'),
         ];
 
         // set playback rate value when added item is clicked
@@ -84,17 +90,28 @@ class DividePlaybackRateDecorator extends Decorator {
         return true;
     }
 
-    // newItemPlaybackRate: string, referenceItemPlaybackRate: string
+    // newItemPlaybackRate: string, referenceItemPlaybackRate: string (without 'x')
     insertPlaybackRateSettingItem(originalItems, newItemPlaybackRate, referenceItemPlaybackRate) {
         const referenceItem = this.getPlaybackRateSettingItemByText(originalItems, referenceItemPlaybackRate + 'x');
+        const newItem = this.clonePlaybackRateSettingItem(referenceItem, newItemPlaybackRate);
+        referenceItem.parentElement.insertBefore(newItem, referenceItem);
+        return newItem;
+    }
+
+    appendPlaybackRateSettingItem(referenceItem, newItemPlaybackRate) {
+        const newItem = this.clonePlaybackRateSettingItem(referenceItem, newItemPlaybackRate);
+        referenceItem.parentElement.appendChild(newItem);
+        return newItem;
+    }
+
+    clonePlaybackRateSettingItem(referenceItem, newItemPlaybackRate) {
         const newItem = referenceItem.cloneNode(true);
-              newItem.classList.remove(CHECKED_SETTING_ITEM_CLASS);
+              newItem.classList.remove(CHECKED_SETTING_ITEM_CLASS); // clear check
               newItem.classList.add(APP_ADDED_PLAYBACK_RATE_ITEM_CLASS);
               newItem.ariaLabel = newItemPlaybackRate;
               newItem.setAttribute('playback-rate', newItemPlaybackRate);
         const newItemSpan = this.getPlaybackRateSettingItemSpan(newItem);
               newItemSpan.textContent = newItemPlaybackRate + 'x';
-              referenceItem.parentElement.insertBefore(newItem, referenceItem);
         return newItem;
     }
 
