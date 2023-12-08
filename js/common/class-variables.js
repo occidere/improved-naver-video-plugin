@@ -2,6 +2,7 @@ const APP_NAME = 'improved-naver-video-plugin';
 const SETTING_CHANGED_EVENT = 'setting-changed';
 const DEFAULT_VOLUME_CHANGED_EVENT = 'default-volume-changed';
 const VOLUME_NUMBER_CHANGED_EVENT = 'volume-number-changed';
+const MORE_PRECISE_IN_LOW_VOLUME_SETTING_CHANGED = 'move-precise-in-low-volume-setting-changed';
 
 // app element classes
 const APP_UI_BUTTON_CLASS = APP_NAME + '__ui-button';

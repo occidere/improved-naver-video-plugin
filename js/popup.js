@@ -120,11 +120,28 @@ async function init() {
         });
     }
 
+    // connect precise-volume-shortcut checkbox & more-precise-in-low-volume wrapper
     {
+        const checkbox = document.querySelector('#preciseVolumeShortcutCheckbox');
+        const wrapper = document.querySelector('#morePreciseInLowVolumeWrapper');
+        if (!settings[checkbox.name]) {
+            wrapper.classList.add('disabled');
         }
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                wrapper.classList.remove('disabled');
+            } else {
+                wrapper.classList.add('disabled');
+            }
+        });
+    }
 }
 
 function getEventFromCheckbox(checkboxName) {
+    switch (checkboxName) {
+        case 'morePreciseInLowVolume':
+            return MORE_PRECISE_IN_LOW_VOLUME_SETTING_CHANGED;
+    }
     return SETTING_CHANGED_EVENT;
 }
 

@@ -13,6 +13,10 @@
     margin-bottom: 2px;
 }
 
+.setting-subitem {
+    margin-left: 10px;
+}
+
 /* Checkbox Settings */
 .setting-checkbox {
     display: flex;
@@ -26,6 +30,9 @@
 }
 .setting-checkbox .margin {
     flex-grow: 1;
+}
+.setting-checkbox.disabled {
+    display: none;
 }
 #volumeNumberInput {
     font-size: 0.9em;

@@ -12,6 +12,7 @@ const defaultItems = {
     fullScreenShortcut: true,
     preciseVolumeShortcut: true,
     extendVolumeSlider: true,
+    morePreciseInLowVolume: true,
     extendMaxVolume: false,
     setDefaultVolume: true,
     defaultVolume: '0.5',
