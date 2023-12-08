@@ -17,6 +17,7 @@ const APP_ADDED_PLAYBACK_RATE_ITEM_CLASS = APP_NAME + '__added-playback-rate-ite
 const CHECKED_SETTING_ITEM_CLASS = 'pzp-pc-ui-setting-item--checked';
 const QUALITY_SETTING_ITEM_SPAN_CLASS = 'pzp-pc-ui-setting-quality-item__prefix';
 const PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS = 'pzp-pc-ui-setting-playbackrate-item__value';
+const SETTING_MENU_VALUE_SPAN_CLASS = 'pzp-pc-ui-setting-intro-panel__value';
 const PLAYER_BUTTON_CLASS = 'pzp-button';
 const PLAYER_UI_BUTTON_CLASS = 'pzp-pc-ui-button';
 const PLAYER_UI_TOOLTIP_CLASS = 'pzp-pc-ui-button__tooltip';

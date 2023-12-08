@@ -39,7 +39,6 @@
     width: 30px;
 }
 #defaultVolumeIndicator {
-    align-self: center;
     margin-left: 2px;
     font-weight: bold;
 }
@@ -56,7 +55,7 @@
     opacity: 0.35;
 }
 #defaultVolumeRange {
-    width: calc(50% + 6px);
+    width: calc(66% + 6px);
 }
 #defaultVolumeRange.extended {
     width: calc(100% - 4px);

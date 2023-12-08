@@ -152,6 +152,9 @@ class PrismPlayer extends VideoPlayer {
       .pzp-pc-ui-setting-intro-panel__left
         span.pzp-pc-ui-setting-intro-panel__name
           "재생 속도"
+      .pzp-pc-ui-setting-intro-panel__right
+        span.pzp-pc-ui-setting-intro-panel__value
+          "1.0x (기본)"
   .pzp-pc__setting-quality-pane
     .pzp-pc-setting-quality-pane
       .pzp-pc-setting-quality-pane__list

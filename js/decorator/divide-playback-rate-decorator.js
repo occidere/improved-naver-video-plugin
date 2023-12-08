@@ -32,7 +32,8 @@ class DividePlaybackRateDecorator extends Decorator {
         // set playback rate value when added item is clicked
         const addedItemClickListener = (event) => {
             const clickedItem = event.currentTarget;
-            const playbackRate = parseFloat(clickedItem.getAttribute('playback-rate'));
+            const playbackRateText = clickedItem.getAttribute('playback-rate');
+            const playbackRate = parseFloat(playbackRateText);
             if (isNaN(playbackRate)) {
                 return;
             }
@@ -41,12 +42,15 @@ class DividePlaybackRateDecorator extends Decorator {
             if (clickedItem === checkedItem) {
                 return;
             }
+
             checkedItem?.classList.remove(CHECKED_SETTING_ITEM_CLASS); // uncheck
             clickedItem.classList.add(CHECKED_SETTING_ITEM_CLASS); // check
             if (Math.abs(playbackRate - currentPlaybackRate) > 0.01) {
                 currentPlaybackRate = playbackRate;
-                prismPlayer.query('video').dispatchEvent(new Event('ratechange'));
+                prismPlayer.query('video').dispatchEvent(new Event('ratechange')); // change playback rate
             }
+            const menu = prismPlayer.query('playbackRateSettingMenu');
+            this.getSettingMenuValueSpan(menu).textContent = playbackRateText + 'x'; // change menu text
             prismPlayer.element.click(); // close setting pane
         };
         addedItems.forEach((item) => item.addEventListener('click', addedItemClickListener));
@@ -143,5 +147,9 @@ class DividePlaybackRateDecorator extends Decorator {
 
     getAddedSettingItems(prismPlayer) {
         return prismPlayer.element.querySelectorAll('.' + APP_ADDED_PLAYBACK_RATE_ITEM_CLASS);
+    }
+
+    getSettingMenuValueSpan(li) {
+        return li.querySelector('span.' + SETTING_MENU_VALUE_SPAN_CLASS);
     }
 }
