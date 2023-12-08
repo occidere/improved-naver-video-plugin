@@ -1,22 +1,22 @@
 const defaultItems = {
     selectMaxQuality: true,
     qualityDisplay: true,
-    dividePlaybackRate: true,
+    dividePlaybackRate: false,
     playbackRateDisplay: true,
-    playbackRateShortcut: true,
+    playbackRateShortcut: false,
     easyClickToPlay: true,
-    autoPauseLastVideo: true,
+    autoPauseLastVideo: false,
     autoPlayFirstVideo: false,
     hideSettingButton: false,
     easyOpenVolumeSlider: true,
     fullScreenShortcut: true,
-    preciseVolumeShortcut: true,
-    extendVolumeSlider: true,
+    preciseVolumeShortcut: false,
     morePreciseInLowVolume: true,
+    extendVolumeSlider: false,
     extendMaxVolume: false,
     setDefaultVolume: true,
     defaultVolume: '0.5',
-    volumeNumber: '5',
+    volumeNumber: '10',
 };
 
 chrome.runtime.onInstalled.addListener(async (details) => {
