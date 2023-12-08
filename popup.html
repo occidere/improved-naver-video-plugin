@@ -68,6 +68,7 @@
           <label><input type="checkbox" name="preciseVolumeShortcut" id="preciseVolumeShortcutCheckbox">방향키 볼륨 조절량</label>
           <div class="margin"></div>
           <input type="number" value="5" min="1" max="20" name="volumeNumber" id="volumeNumberInput">
+          <span>%</span>
         </div>
         <div class="setting-checkbox" title="볼륨 바가 2배로 길어져 세밀한 음량 조절이 가능해집니다.">
           <label><input type="checkbox" name="extendVolumeSlider" id="extendVolumeSliderCheckbox">볼륨 바 확장</label>
@@ -78,8 +79,7 @@
         </div>
         <div class="setting-checkbox" title="동영상이 시작될 때의 음량을 설정합니다.
 여기에서 변경하면 열려있는 모든 동영상에 즉시 적용됩니다.">
-          <label><input type="checkbox" name="setDefaultVolume" id="setDefaultVolumeCheckbox">시작 볼륨</label>
-          <span id="defaultVolumeIndicator"></span>
+          <label><input type="checkbox" name="setDefaultVolume" id="setDefaultVolumeCheckbox">시작 볼륨<span id="defaultVolumeIndicator"></span></label>
         </div>
         <div class="setting-range">
           <input type="range" name="defaultVolume" min="0" max="1" value="1" step="0.01" id="defaultVolumeRange">

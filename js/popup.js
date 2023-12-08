@@ -1,144 +1,150 @@
-function init() {
-    // settings (checkbox)
-    for (const container of document.querySelectorAll('.setting-checkbox')) {
-        const checkbox = container.querySelector('input');
-        // initialize checkbox
-        chrome.storage.sync.get(checkbox.name, (items) => {
-            checkbox.checked = items[checkbox.name];
-        });
-        // update storage when checkbox is changed
-        checkbox.addEventListener('change', (event) => {
-            const checkbox = event.currentTarget;
-            const items = { [checkbox.name]: checkbox.checked };
-            chrome.storage.sync.set(items, () => sendSettingChangedMessage(SETTING_CHANGED_EVENT));
+async function init() {
+    const settings = await chrome.storage.sync.get(null); // get all items
+
+    // checkbox settings
+    for (const wrapper of document.querySelectorAll('.setting-checkbox')) {
+        const checkbox = wrapper.querySelector('input[type=checkbox]');
+        checkbox.checked = settings[checkbox.name];
+        checkbox.addEventListener('change', () => {
+            saveSetting(checkbox.name, checkbox.checked, getEventFromCheckbox(checkbox.name));
         });
     }
 
-    // set-default-volume disables default-volume range
-    connectCheckboxAndRange('setDefaultVolume', 'defaultVolume', (checked, range) => {
+    // default-volume range setting
+    {
+        const range = document.querySelector('#defaultVolumeRange');
+        const setIndicator = (value) => {
+            const indicator = document.querySelector('#defaultVolumeIndicator');
+            const percentage = (parseFloat(value) * 100).toFixed();
+            indicator.textContent = `${percentage}%`;
+        };
+        range.value = settings[range.name];
+        setIndicator(range.value);
+        range.addEventListener('input', () => { // range is dragged
+            setIndicator(range.value);
+        });
+        range.addEventListener('change', () => { // range is released
+            saveSetting(range.name, range.value, DEFAULT_VOLUME_CHANGED_EVENT);
+        });
+    }
+
+    // volume-number input setting
+    {
+        const input = document.querySelector('#volumeNumberInput');
+        input.value = settings[input.name];
+        input.addEventListener('change', () => {
+            let value = parseInt(input.value);
+            value = Math.max(value, 1);  // value >= 1
+            value = Math.min(value, 20); // value <= 20
+            saveSetting(input.name, value.toFixed(), VOLUME_NUMBER_CHANGED_EVENT);
+        });
+    }
+
+    // connect set-default-volume checkbox & default-volume range
+    {
+        const checkbox = document.querySelector('#setDefaultVolumeCheckbox');
+        const range = document.querySelector('#defaultVolumeRange');
         const indicator = document.querySelector('#defaultVolumeIndicator');
-        if (checked) {
-            range.classList.remove('disabled');
-            indicator.classList.remove('disabled');
-        } else {
+        if (!settings[checkbox.name]) {
             range.classList.add('disabled');
             indicator.classList.add('disabled');
         }
-    });
-
-    // extend-volume-slider changes length of default-volume range
-    connectCheckboxAndRange('extendVolumeSlider', 'defaultVolume', (checked, range) => {
-        if (checked) {
-            range.classList.add('extended');
-        } else {
-            range.classList.remove('extended');
-        }
-    });
-
-    // extend-max-volume changes max value of default-volume range
-    connectCheckboxAndRange('extendMaxVolume', 'defaultVolume', (checked, range) => {
-        if (checked) {
-            range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
-        } else {
-            if (parseFloat(range.value) > 1.0) {
-                range.value = '1.0'
-                range.dispatchEvent(new Event('input'));
-                range.dispatchEvent(new Event('change'));
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                range.classList.remove('disabled');
+                indicator.classList.remove('disabled');
+            } else {
+                range.classList.add('disabled');
+                indicator.classList.add('disabled');
             }
-            range.max = '1.0';
-        }
-    });
-
-    // settings (range)
-    for (const container of document.querySelectorAll('.setting-range')) {
-        const range = container.querySelector('input');
-        const indicator = document.querySelector(`#${range.name}Indicator`);
-        // initialize range
-        chrome.storage.sync.get(range.name, (items) => {
-            range.value = items[range.name];
-            setIndicator(indicator, range.value);
-        });
-        // update indicator when range is dragged
-        range.addEventListener('input', (event) => {
-            const range = event.currentTarget;
-            const indicator = document.querySelector(`#${range.name}Indicator`);
-            setIndicator(indicator, range.value);
-        });
-        // update storage when range value is changed
-        range.addEventListener('change', (event) => {
-            const range = event.currentTarget;
-            const items = { [range.name]: range.value };
-            chrome.storage.sync.set(items, () => sendSettingChangedMessage(DEFAULT_VOLUME_CHANGED_EVENT));
         });
     }
 
-    // pressing default-volume range enables set-default-volume checkbox
-    const defaultVolumeRange = document.querySelector('#defaultVolumeRange');
-    defaultVolumeRange.addEventListener('mousedown', (event) => {
-        const range = event.currentTarget;
-        if (range.classList.contains('disabled')) {
-            const checkbox = document.querySelector('#setDefaultVolumeCheckbox');
-            checkbox.checked = true;
-            checkbox.dispatchEvent(new Event('change'));
+    // connect extend-volume-slider checkbox & default-volume range
+    {
+        const checkbox = document.querySelector('#extendVolumeSliderCheckbox');
+        const range = document.querySelector('#defaultVolumeRange');
+        if (settings[checkbox.name]) {
+            range.classList.add('extended');
         }
-    });
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                range.classList.add('extended');
+            } else {
+                range.classList.remove('extended');
+            }
+        });
+    }
 
-    // volumeNumberInput
-    const volumeNumberInput = document.querySelector('#volumeNumberInput');
-    chrome.storage.sync.get(volumeNumberInput.name, (items) => {
-        volumeNumberInput.value = items[volumeNumberInput.name];
-    });
-    volumeNumberInput.addEventListener('change', (event) => {
-        const numberInput = event.currentTarget;
-        let value = parseInt(numberInput.value);
-        value = Math.min(20, value);
-        value = Math.max(1, value);
-        const items = { [numberInput.name]: value.toFixed() };
-        chrome.storage.sync.set(items, () => sendSettingChangedMessage(VOLUME_NUMBER_CHANGED_EVENT));
-    });
+    // connect extend-max-volume checkbox & default-volume range
+    {
+        const checkbox = document.querySelector('#extendMaxVolumeCheckbox');
+        const range = document.querySelector('#defaultVolumeRange');
+        if (settings[checkbox.name]) {
+            range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
+        }
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
+            } else {
+                if (parseFloat(range.value) > 1.0) {
+                    range.value = '1.0'
+                    range.dispatchEvent(new Event('input'));
+                    range.dispatchEvent(new Event('change'));
+                }
+                range.max = '1.0';
+            }
+        });
+    }
 
-    // connect checkbox and volumeNumberInput
-    const preciseVolumeShortcutCheckbox = document.querySelector('#preciseVolumeShortcutCheckbox');
-    chrome.storage.sync.get(preciseVolumeShortcutCheckbox.name, (items) => {
-        const volumeNumberInput = document.querySelector('#volumeNumberInput');
-        volumeNumberInput.disabled = !items[preciseVolumeShortcutCheckbox.name];
-    });
-    preciseVolumeShortcutCheckbox.addEventListener('change', (event) => {
-        const volumeNumberInput = document.querySelector('#volumeNumberInput');
-        volumeNumberInput.disabled = !event.currentTarget.checked;
-    });
+    // connect default-volume range & set-default-volume checkbox
+    // mouse down range -> enable checkbox
+    {
+        const range = document.querySelector('#defaultVolumeRange');
+        const checkbox = document.querySelector('#setDefaultVolumeCheckbox');
+        range.addEventListener('mousedown', () => {
+            if (range.classList.contains('disabled')) {
+                checkbox.checked = true;
+                checkbox.dispatchEvent(new Event('change'));
+            }
+        });
+    }
+
+    // connect precise-volume-shortcut checkbox & volume-number input
+    {
+        const checkbox = document.querySelector('#preciseVolumeShortcutCheckbox');
+        const input = document.querySelector('#volumeNumberInput');
+        input.disabled = !settings[checkbox.name];
+        checkbox.addEventListener('change', () => {
+            input.disabled = !checkbox.checked;
+        });
+    }
+
+    {
+        }
 }
 
-async function sendSettingChangedMessage(event) {
-    const message = { app: APP_NAME, event };
-    const tabs = await chrome.tabs.query({});
+function getEventFromCheckbox(checkboxName) {
+    return SETTING_CHANGED_EVENT;
+}
+
+async function saveSetting(key, value, event) {
+    await chrome.storage.sync.set({ [key]: value });
+    if (event) {
+        sendAppMessage(event)
+    }
+}
+
+async function sendAppMessage(event) {
+    const message = { app: APP_NAME, event: event };
+    const tabs = await chrome.tabs.query({}); // query all tabs
     for (const tab of tabs) {
         try {
             chrome.tabs.sendMessage(tab.id, message);
         } catch (e) {
-            console.warn(`sendMessage failed: ${e}`);
+            console.warn(e);
         }
     }
-}
-
-// callback: (checked: boolean, range: HTMLInputElement) => void
-function connectCheckboxAndRange(checkboxName, rangeName, callback) {
-    const checkbox = document.querySelector(`#${checkboxName}Checkbox`);
-    // apply current state of checkbox
-    chrome.storage.sync.get(checkboxName, (items) => {
-        const range = document.querySelector(`#${rangeName}Range`);
-        callback(items[checkboxName], range);
-    });
-    // apply callback when checkbox changes
-    checkbox.addEventListener('change', (event) => {
-        const range = document.querySelector(`#${rangeName}Range`);
-        callback(event.currentTarget.checked, range);
-    });
-}
-
-function setIndicator(indicator, value) {
-    const percentage = (parseFloat(value) * 100).toFixed();
-    indicator.textContent = `${percentage}%`;
 }
 
 document.addEventListener('DOMContentLoaded', init);

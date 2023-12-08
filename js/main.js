@@ -5,13 +5,17 @@ function init() {
     }
 
     update(videoPlayerFinder);
+
     chrome.runtime.onMessage.addListener((message) => {
-        if (message.app === APP_NAME) {
-            if (message.event === SETTING_CHANGED_EVENT) {
+        if (message.app !== APP_NAME) return;
+        switch (message.event) {
+            case SETTING_CHANGED_EVENT:
                 update(videoPlayerFinder);
-            } else if (message.event === DEFAULT_VOLUME_CHANGED_EVENT) {
-                updateDefaultVolume(videoPlayerFinder);
-            }
+                break;
+            case DEFAULT_VOLUME_CHANGED_EVENT:
+                videoPlayerFinder.forceRedecorate('SetDefaultVolumeDecorator');
+                update(videoPlayerFinder);
+                break;
         }
     });
 }
@@ -52,28 +56,8 @@ function getDecorators(settings) {
     }
 }
 
-async function getSettings() {
-    return await chrome.storage.sync.get([
-        'selectMaxQuality',
-        'qualityDisplay',
-        'dividePlaybackRate',
-        'playbackRateDisplay',
-        'playbackRateShortcut',
-        'easyClickToPlay',
-        'autoPauseLastVideo',
-        'autoPlayFirstVideo',
-        'hideSettingButton',
-        'easyOpenVolumeSlider',
-        'fullScreenShortcut',
-        'preciseVolumeShortcut',
-        'extendVolumeSlider',
-        'extendMaxVolume',
-        'setDefaultVolume',
-    ]);
-}
-
 async function update(videoPlayerFinder) {
-    const settings = await getSettings();
+    const settings = await chrome.storage.sync.get(null); // get all items
     const decorators = getDecorators(settings);
     videoPlayerFinder.applyCallback((videoPlayer) => {
         for (const [decorator, isEnabled] of decorators) {
@@ -95,13 +79,6 @@ async function update(videoPlayerFinder) {
             }
         }
     });
-}
-
-function updateDefaultVolume(videoPlayerFinder) {
-    for (const video of videoPlayerFinder.videoPlayers) {
-        video.decorated['SetDefaultVolumeDecorator'] = false; // enable re-decoration
-    }
-    update(videoPlayerFinder);
 }
 
 init();

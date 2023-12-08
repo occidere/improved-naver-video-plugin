@@ -63,9 +63,10 @@ class DividePlaybackRateDecorator extends Decorator {
         originalItems.forEach((item) => item.addEventListener('click', originalItemClickListener));
 
         // playback-rate-display compatible
-        if (prismPlayer.decorated['PlaybackRateDisplayDecorator']) {
+        const checkObserver = prismPlayer.listeners['PlaybackRateDisplayDecorator']?.['checkObserver'];
+        if (checkObserver) {
             for (const item of addedItems) {
-                prismPlayer.listeners['PlaybackRateDisplayDecorator']['checkObserver'].observe(item);
+                checkObserver.observe(item);
             }
         }
 

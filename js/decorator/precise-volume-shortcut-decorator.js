@@ -3,17 +3,20 @@ class PreciseVolumeShortcutDecorator extends Decorator {
     static volumeNumber; // int
 
     static {
+        this.updateVolumeNumber();
         chrome.runtime.onMessage.addListener((message) => {
-            if (message.app === APP_NAME && message.event === VOLUME_NUMBER_CHANGED_EVENT) {
-                this.updateVolumeNumber();
+            if (message.app !== APP_NAME) return;
+            switch (message.event) {
+                case VOLUME_NUMBER_CHANGED_EVENT:
+                    this.updateVolumeNumber();
+                    break;
             }
         });
-        this.updateVolumeNumber();
     }
 
     static async updateVolumeNumber() {
-        const items = await chrome.storage.sync.get('volumeNumber');
-        this.volumeNumber = parseInt(items['volumeNumber']);
+        const settings = await chrome.storage.sync.get('volumeNumber');
+        this.volumeNumber = parseInt(settings['volumeNumber']);
     }
 
     async decorate(prismPlayer) {
@@ -57,14 +60,9 @@ class PreciseVolumeShortcutDecorator extends Decorator {
         if (prismPlayer.isMaxVolumeExtended) {
             amount /= ExtendMaxVolumeDecorator.AMPLIFY_FACTOR;
         }
-        const currentRatio = currentVolume / maxVolume;
-        let addedVolume = maxVolume * (currentRatio + amount / 100);
-        if (addedVolume > maxVolume) {
-            addedVolume = maxVolume;
-        }
-        if (addedVolume < 0) {
-            addedVolume = 0;
-        }
-        prismPlayer.query('video').volume = addedVolume;
+        let volume = currentVolume + maxVolume * (amount / 100);
+        volume = Math.max(volume, 0);         // volume >= 0
+        volume = Math.min(volume, maxVolume); // volume <= maxVolume
+        prismPlayer.query('video').volume = volume;
     }
 }

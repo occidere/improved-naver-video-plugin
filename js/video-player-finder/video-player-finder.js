@@ -15,4 +15,10 @@ class VideoPlayerFinder {
             callback(videoPlayer);
         }
     }
+
+    forceRedecorate(decoratorName) {
+        for (const video of this.videoPlayers) {
+            video.decorated[decoratorName] = false;
+        }
+    }
 }

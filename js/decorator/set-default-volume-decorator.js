@@ -5,11 +5,11 @@ class SetDefaultVolumeDecorator extends Decorator {
         const isDecoratedBeforeLoaded = !prismPlayer.loaded;
 
         // get defaultVolume (volume that user can see in popup.html)
-        const items = await chrome.storage.sync.get(['defaultVolume', 'extendMaxVolume']);
-        const defaultVolume = parseFloat(items['defaultVolume']);
+        const settings = await chrome.storage.sync.get(['defaultVolume', 'extendMaxVolume']);
+        const defaultVolume = parseFloat(settings['defaultVolume']);
 
         // extend-max-volume should be checked before setting volume
-        prismPlayer.isMaxVolumeExtended = items['extendMaxVolume'];
+        prismPlayer.isMaxVolumeExtended = settings['extendMaxVolume'];
 
         // 1.0 : userVolume = maxVolume : adjustedVolume
         const maxVolume = await prismPlayer.getMaxVolume();
