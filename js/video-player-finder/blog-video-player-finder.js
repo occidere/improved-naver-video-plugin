@@ -1,17 +1,11 @@
 class BlogVideoPlayerFinder extends VideoPlayerFinder {
 
-    static create(document) {
+    connect(document) {
+        const findNext = getOrObserveChildByClassName;
+
         // [document] -> .se-module-video
         const videoModules = document.querySelectorAll('.se-module-video');
-        if (videoModules.length == 0) {
-            return null;
-        }
-        return new this(videoModules);
-    }
-
-    constructor(videoModules) {
-        super();
-        const findNext = getOrObserveChildByClassName;
+        if (videoModules.length == 0) return false;
 
         // .se-module-video >> .prismplayer-area -> .pzp-pc (=> prismPlayer)
         for (const videoModule of videoModules) {
@@ -24,5 +18,6 @@ class BlogVideoPlayerFinder extends VideoPlayerFinder {
                 }
             });
         }
+        return true;
     }
 }

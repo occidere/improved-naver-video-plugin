@@ -50,7 +50,7 @@ function getOrObserveChildByClassName(parent, className, callback) {
                 caller(foundChild);
             }
             return foundChild;
-        }
+        };
         if (!findChild() || callback) {
             new MutationObserver((mutationList, observer) => {
                 for (const mutation of mutationList) {
@@ -70,7 +70,7 @@ function getOrObserveChildByClassName(parent, className, callback) {
                 }
             }).observe(parent, { childList: true });
         }
-    };
+    }
 }
 
 class ClassChangeObserver extends MutationObserver {

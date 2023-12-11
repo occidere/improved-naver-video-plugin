@@ -110,7 +110,7 @@ class PrismPlayer extends VideoPlayer {
         }
 
         const ul = this.element.querySelector('ul.pzp-pc-setting-quality-pane__list-container');
-        await getOrObserveChildByClassName(ul, QUALITY_SETTING_ITEM_CLASS);
+        await getOrObserveChildByClassName(ul, QUALITY_SETTING_ITEM_CLASS); // wait until items are loaded
         return ul.querySelectorAll('li.' + QUALITY_SETTING_ITEM_CLASS);
     }
 }

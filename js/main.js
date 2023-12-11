@@ -1,6 +1,6 @@
 function init() {
     const videoPlayerFinder = getVideoPlayerFinder();
-    if (!videoPlayerFinder) {
+    if (!videoPlayerFinder?.connect(document)) {
         return; // video player cannot exist
     }
 
@@ -13,7 +13,7 @@ function init() {
                 update(videoPlayerFinder);
                 break;
             case DEFAULT_VOLUME_CHANGED_EVENT:
-                videoPlayerFinder.forceRedecorate('SetDefaultVolumeDecorator');
+                forceRedecorate(videoPlayerFinder.videoPlayers, 'SetDefaultVolumeDecorator');
                 update(videoPlayerFinder);
                 break;
         }
@@ -23,9 +23,9 @@ function init() {
 function getVideoPlayerFinder() {
     switch (location.hostname) {
         case 'cafe.naver.com':
-            return CafeVideoPlayerFinder.create(document);
+            return new CafeVideoPlayerFinder;
         case 'blog.naver.com':
-            return BlogVideoPlayerFinder.create(document);
+            return new BlogVideoPlayerFinder;
     }
 }
 
@@ -79,6 +79,12 @@ async function update(videoPlayerFinder) {
             }
         }
     });
+}
+
+function forceRedecorate(videoPlayers, decoratorName) {
+    for (const video of videoPlayers) {
+        video.decorated[decoratorName] = false;
+    }
 }
 
 init();

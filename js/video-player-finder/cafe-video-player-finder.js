@@ -1,17 +1,11 @@
 class CafeVideoPlayerFinder extends VideoPlayerFinder {
 
-    static create(document) {
+    connect(document) {
+        const findNext = getOrObserveChildByClassName;
+
         // [document] -> #app
         const app = document.querySelector('#app');
-        if (!app) {
-            return null;
-        }
-        return new this(app);
-    }
-
-    constructor(app) {
-        super();
-        const findNext = getOrObserveChildByClassName;
+        if (!app) return false;
 
         // #app >> .Article
         findNext(app, 'Article', async (article) => {
@@ -33,5 +27,6 @@ class CafeVideoPlayerFinder extends VideoPlayerFinder {
                 });
             }
         });
+        return true;
     }
 }
