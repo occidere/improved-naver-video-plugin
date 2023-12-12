@@ -10,6 +10,7 @@ const defaultItems = {
     hideSettingButton: false,
     easyOpenVolumeSlider: true,
     fullScreenShortcut: true,
+    muteShortcut: false,
     preciseVolumeShortcut: true,
     morePreciseInLowVolume: true,
     volumeNumber: '10',

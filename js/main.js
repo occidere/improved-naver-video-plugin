@@ -45,6 +45,7 @@ function getDecorators(settings) {
                 [new HideSettingButtonDecorator, settings['hideSettingButton']],
                 [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
                 [new FullScreenShortcutDecorator, settings['fullScreenShortcut']],
+                [new MuteShortcutDecorator, settings['muteShortcut']],
                 [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
