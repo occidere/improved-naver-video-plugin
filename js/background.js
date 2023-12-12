@@ -5,7 +5,7 @@ const defaultItems = {
     playbackRateDisplay: true,
     playbackRateShortcut: true,
     easyClickToPlay: true,
-    autoPauseLastVideo: true,
+    autoPauseLastVideo: false,
     autoPlayFirstVideo: false,
     hideSettingButton: false,
     easyOpenVolumeSlider: true,
