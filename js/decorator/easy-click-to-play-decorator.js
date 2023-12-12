@@ -77,11 +77,11 @@ class EasyClickToPlayDecorator extends Decorator {
             pointerOff();
         }
 
-        prismPlayer.listeners[this.constructor.name] = {
+        prismPlayer.attachListeners(this, {
             onClickElement, onDoubleClickElement,
             onClickPlayer, onDoubleClickPlayer,
             pointerOn, pointerOff, playingObserver
-        };
+        });
     }
 
     async clear(prismPlayer) {
@@ -89,7 +89,7 @@ class EasyClickToPlayDecorator extends Decorator {
             onClickElement, onDoubleClickElement,
             onClickPlayer, onDoubleClickPlayer,
             pointerOn, pointerOff, playingObserver
-        } = prismPlayer.listeners[this.constructor.name];
+        } = prismPlayer.getAttachedListeners(this);
 
         if (!prismPlayer.isState('playing')) {
             pointerOff();
@@ -110,7 +110,7 @@ class EasyClickToPlayDecorator extends Decorator {
         video.removeEventListener('ended', pointerOn, { once: true });
         video.removeEventListener('play', pointerOff, { once: true });
 
-        delete prismPlayer.listeners[this.constructor.name];
+        prismPlayer.detachListeners(this);
         return true;
     }
 }

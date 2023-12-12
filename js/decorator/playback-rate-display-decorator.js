@@ -41,16 +41,16 @@ class PlaybackRateDisplayDecorator extends Decorator {
             }
         }
 
-        prismPlayer.listeners[this.constructor.name] = { checkObserver };
+        prismPlayer.attachListeners(this, { checkObserver });
     }
 
     async clear(prismPlayer) {
-        const { checkObserver } = prismPlayer.listeners[this.constructor.name];
+        const { checkObserver } = prismPlayer.getAttachedListeners(this);
 
         this.getPlaybackRateDisplay(prismPlayer).remove();
         checkObserver.disconnect();
 
-        delete prismPlayer.listeners[this.constructor.name];
+        prismPlayer.detachListeners(this);
         return true;
     }
 

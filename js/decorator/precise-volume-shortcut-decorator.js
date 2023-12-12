@@ -53,16 +53,16 @@ class PreciseVolumeShortcutDecorator extends Decorator {
         };
         prismPlayer.element.addEventListener('keydown', playerKeyDownListener);
 
-        prismPlayer.listeners[this.constructor.name] = { volumeChangeListener, playerKeyDownListener };
+        prismPlayer.attachListeners(this, { volumeChangeListener, playerKeyDownListener });
     }
 
     async clear(prismPlayer) {
-        const { volumeChangeListener, playerKeyDownListener } = prismPlayer.listeners[this.constructor.name];
+        const { volumeChangeListener, playerKeyDownListener } = prismPlayer.getAttachedListeners(this);
 
         prismPlayer.query('video').removeEventListener('volumechange', volumeChangeListener);
         prismPlayer.element.removeEventListener('keydown', playerKeyDownListener);
 
-        delete prismPlayer.listeners[this.constructor.name];
+        prismPlayer.detachListeners(this);
         return true;
     }
 

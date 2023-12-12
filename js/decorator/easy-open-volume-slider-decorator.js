@@ -20,18 +20,18 @@ class EasyOpenVolumeSliderDecorator extends Decorator {
         // apply now
         this.setBlockerWidth(blocker, bottomRightButtons.clientWidth);
 
-        prismPlayer.listeners[this.constructor.name] = { resizeObserver };
+        prismPlayer.attachListeners(this, { resizeObserver });
     }
 
     async clear(prismPlayer) {
-        const { resizeObserver } = prismPlayer.listeners[this.constructor.name];
+        const { resizeObserver } = prismPlayer.getAttachedListeners(this);
 
         this.getVolumeSliderHoverHelper(prismPlayer).remove();
         this.getVolumeSliderHoverHelperBlocker(prismPlayer).remove();
 
         resizeObserver.disconnect();
 
-        delete prismPlayer.listeners[this.constructor.name];
+        prismPlayer.detachListeners(this);
         return true;
     }
 

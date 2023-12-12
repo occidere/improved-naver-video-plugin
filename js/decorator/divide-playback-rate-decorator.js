@@ -74,11 +74,11 @@ class DividePlaybackRateDecorator extends Decorator {
             }
         }
 
-        prismPlayer.listeners[this.constructor.name] = { rateChangeListener, originalItemClickListener };
+        prismPlayer.attachListeners(this, { rateChangeListener, originalItemClickListener });
     }
 
     async clear(prismPlayer) {
-        const { rateChangeListener, originalItemClickListener } = prismPlayer.listeners[this.constructor.name];
+        const { rateChangeListener, originalItemClickListener } = prismPlayer.getAttachedListeners(this);
 
         this.getAddedSettingItems(prismPlayer).forEach((item) => item.remove());
         prismPlayer.query('video').removeEventListener('ratechange', rateChangeListener);
@@ -91,7 +91,7 @@ class DividePlaybackRateDecorator extends Decorator {
         defaultItem.click();
         defaultItem.classList.add(CHECKED_SETTING_ITEM_CLASS); // force check
 
-        delete prismPlayer.listeners[this.constructor.name];
+        prismPlayer.detachListeners(this);
         return true;
     }
 

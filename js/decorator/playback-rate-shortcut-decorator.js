@@ -16,15 +16,15 @@ class PlaybackRateShortcutDecorator extends Decorator {
         };
         prismPlayer.element.addEventListener('keydown', playerKeyDownListener);
 
-        prismPlayer.listeners[this.constructor.name] = { playerKeyDownListener };
+        prismPlayer.attachListeners(this, { playerKeyDownListener });
     }
 
     async clear(prismPlayer) {
-        const { playerKeyDownListener } = prismPlayer.listeners[this.constructor.name];
+        const { playerKeyDownListener } = prismPlayer.getAttachedListeners(this);
 
         prismPlayer.element.removeEventListener('keydown', playerKeyDownListener);
 
-        delete prismPlayer.listeners[this.constructor.name];
+        prismPlayer.detachListeners(this);
         return true;
     }
 

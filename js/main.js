@@ -29,6 +29,7 @@ function getVideoPlayerFinder() {
     }
 }
 
+// [ [decorator, isEnabled], ... ]
 function getDecorators(settings) {
     switch (location.hostname) {
         case 'cafe.naver.com':

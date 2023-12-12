@@ -13,15 +13,15 @@ class AutoPauseLastVideoDecorator extends Decorator {
 
         prismPlayer.query('video').addEventListener('play', onPlayVideo);
 
-        prismPlayer.listeners[this.constructor.name] = { onPlayVideo };
+        prismPlayer.attachListeners(this, { onPlayVideo });
     }
 
     async clear(prismPlayer) {
-        const { onPlayVideo } = prismPlayer.listeners[this.constructor.name];
+        const { onPlayVideo } = prismPlayer.getAttachedListeners(this);
 
         prismPlayer.query('video').removeEventListener('play', onPlayVideo);
 
-        delete prismPlayer.listeners[this.constructor.name];
+        prismPlayer.detachListeners(this);
         return true;
     }
 }
