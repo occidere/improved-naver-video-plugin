@@ -1,25 +1,31 @@
 #version {
-    float: right;
+    position: absolute;
+    right: 8px;
     font-size: 0.8em;
 }
 
 /* Settings General */
 #settings {
-    width: 180px;
+    width: 210px;
 }
 .setting-group {
+    display: flex;
     margin-top: 6px;
     user-select: none;
 }
 .setting-group span.group-title {
     display: block;
-    font-weight: bold;
-    font-size: 0.9em;
-    margin-bottom: 2px;
+    width: 30px;
+    text-align: right;
+    color: gray;
+    font-size: 0.85em;
+}
+.setting-group .group-items {
+    width: 180px;
 }
 
 .setting-subitem {
-    margin-left: 10px;
+    /* margin-left: 10px; */
 }
 
 /* Checkbox Settings */
@@ -60,7 +66,7 @@
     opacity: 0.35;
 }
 #defaultVolumeRange {
-    width: calc(66% + 6px);
+    width: calc(67% + 6px);
 }
 #defaultVolumeRange.extended {
     width: calc(100% - 4px);
