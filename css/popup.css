@@ -19,6 +19,7 @@
     text-align: right;
     color: gray;
     font-size: 0.85em;
+    text-wrap: nowrap;
 }
 .setting-group .group-items {
     width: 180px;
