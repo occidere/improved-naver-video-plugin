@@ -1,23 +1,25 @@
 class AutoPlayFirstVideoDecorator extends Decorator {
 
-    playListener = (event) => {
-        const videoMedia = event.currentTarget;
-        videoMedia.autoplay = false;
-        videoMedia.muted = false;
-        // Without user interaction, unmuting will be failed and video will be paused.
-    };
+    decorate(prismPlayer) {
+        if (!prismPlayer.isFirstPrismPlayer()) return;
+        if (!prismPlayer.isState('beforePlay')) return;
 
-    async decorate(video) {
-        try {
-            if (!isFirstVideo(video)) return;
-            const videoMedia = video.querySelector('video');
-            if (videoMedia?.paused) {
-                videoMedia.muted = true; // autoplay policy
-                videoMedia.autoplay = true;
-                videoMedia.addEventListener('play', this.playListener, { once: true });
-            }
-        } catch (e) {
-            console.warn(`Failed to auto play video: ${e}`);
+        // if no user interaction -> unmute when user interacted
+        if (!isUserActivated()) {
+            prismPlayer.query('volumeButton').click(); // mute video (autoplay policy)
+            setUserActivationListener(prismPlayer.element.ownerDocument, () => {
+                prismPlayer.query('video').muted = false;
+            });
+        }
+
+        const video = prismPlayer.query('video');
+        video.autoplay = true;
+
+        // ignore this after first load
+        if (!prismPlayer.loaded) {
+            // Ignore next error message:
+            // Uncaught (in promise) DOMException: The play() request was interrupted by a new load request.
+            video.play();
         }
     }
 }

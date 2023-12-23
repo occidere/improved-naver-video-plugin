@@ -1,0 +1,74 @@
+#version {
+    position: absolute;
+    right: 8px;
+    font-size: 0.8em;
+}
+
+/* Settings General */
+#settings {
+    width: 210px;
+}
+.setting-group {
+    display: flex;
+    margin-top: 6px;
+    user-select: none;
+}
+.setting-group span.group-title {
+    display: block;
+    width: 30px;
+    text-align: right;
+    color: gray;
+    font-size: 0.85em;
+    text-wrap: nowrap;
+}
+.setting-group .group-items {
+    width: 180px;
+}
+
+.setting-subitem {
+    /* margin-left: 10px; */
+}
+
+/* Checkbox Settings */
+.setting-checkbox {
+    display: flex;
+    align-items: center;
+}
+.setting-checkbox label {
+    display: inline-flex; /* align checkbox and label vertically */
+}
+.setting-checkbox input[type="checkbox"] {
+    flex-basis: content; /* prevent growing */
+}
+.setting-checkbox .margin {
+    flex-grow: 1;
+}
+.setting-checkbox.disabled {
+    display: none;
+}
+#volumeNumberInput {
+    font-size: 0.9em;
+    width: 30px;
+}
+#defaultVolumeIndicator {
+    margin-left: 2px;
+    font-weight: bold;
+}
+#defaultVolumeIndicator.disabled {
+    opacity: 0.35;
+}
+
+/* Range Settings */
+.setting-range input[type="range"] {
+    min-width: 0;
+    margin: 2px;
+}
+.setting-range input[type="range"].disabled {
+    opacity: 0.35;
+}
+#defaultVolumeRange {
+    width: calc(67% + 6px);
+}
+#defaultVolumeRange.extended {
+    width: calc(100% - 4px);
+}

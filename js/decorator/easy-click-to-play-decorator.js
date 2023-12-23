@@ -1,75 +1,116 @@
-// 기존: play 버튼을 눌러야 재생됨, 로딩 중에는 클릭이 무시됨
-// 적용시: 로딩중이더라도 video 아무 곳이나 클릭했을 때 재생이 시작됨
 class EasyClickToPlayDecorator extends Decorator {
 
-    playPauseVideo = (event) => {
-        const video = getClosestVideo(event.currentTarget);
-        const videoMedia = video.querySelector('video');
-        if (videoMedia?.paused && video.querySelector('.' + VIDEO_BEFORE_PLAY_CLASS)) {
-            videoMedia.autoplay = true;
-            videoMedia.addEventListener('play', (event) => {
-                const videoMedia = event.currentTarget;
-                videoMedia.autoplay = false;
-            }, { once: true });
-            const playButton = video.querySelector('.' + VIDEO_PLAY_BUTTON_CLASS);
-            playButton?.click();
-        } else {
-            const playPauseButton = video.querySelector('.' + VIDEO_PLAY_PAUSE_BUTTON_CLASS);
-            playPauseButton?.click();
-        }
-    };
+    decorate(prismPlayer) {
+        // click -> playPause
+        // dblclick -> fullScreen
+        // dblclick before play -> play & fullScreen
+        // => pause after playing
+        let isPlayAndFullScreen = false;
 
-    toggleFullScreen = (event) => {
-        const video = getClosestVideo(event.currentTarget);
-        const fullScreenButton = video.querySelector('.' + VIDEO_FULL_SCREEN_BUTTON_CLASS);
-        fullScreenButton?.click();
-    };
-
-    setupEasyClick(video) {
-        const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
-        const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
-        const videoMedia = video.querySelector('video');
-
-        // set styles
-        if (dim) dim.style.cursor = 'pointer';
-        if (header) header.style.cursor = 'pointer';
-
-        // add one-shot listener
-        dim?.addEventListener('click', this.playPauseVideo);
-
-        videoMedia?.addEventListener('play', () => this.clearEasyClick(video), { once: true });
-    }
-
-    clearEasyClick(video) {
-        const dim = video.querySelector('.' + VIDEO_DIM_CLASS);
-        const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
-        const videoMedia = video.querySelector('video');
-
-        // reset styles
-        if (dim) dim.style.cursor = '';
-        if (header) header.style.cursor = '';
-
-        // remove one-shot listener
-        dim?.removeEventListener('click', this.playPauseVideo);
-
-        videoMedia?.addEventListener('ended', () => this.setupEasyClick(video), { once: true });
-    }
-
-    async decorate(video) {
-        try {
-            // 부가 기능: 비디오 윗 부분(header) 클릭 활성화
-            const header = video.querySelector('.' + VIDEO_HEADER_CLASS);
-            header?.addEventListener('click', this.playPauseVideo);
-            header?.addEventListener('dblclick', this.toggleFullScreen);
-
-            const videoMedia = video.querySelector('video');
-            if (videoMedia?.paused && !video.querySelector('.' + VIDEO_PLAYING_CLASS)) {
-                this.setupEasyClick(video);
+        const onClickElement = () => {
+            if (prismPlayer.isState('playing')) {
+                prismPlayer.query('playPauseButton').click();
             } else {
-                this.clearEasyClick(video); // for video 'ended' listener
+                prismPlayer.query('video').autoplay = true;
+                prismPlayer.query('playButton').click();
+                isPlayAndFullScreen = false; // interrupt playingObserver
             }
-        } catch (e) {
-            console.warn(`Failed to click play button: ${e}`);
+        };
+        const onDoubleClickElement = () => {
+            prismPlayer.query('fullScreenButton').click();
+            if (!prismPlayer.isState('playing')) {
+                isPlayAndFullScreen = true;
+            }
+        };
+        const playingObserver = new ClassChangeObserver(PrismPlayer.playerStateClassNames['playing'],
+            async (appeared) => {
+                if (appeared && isPlayAndFullScreen) {
+                    await sleep(10);
+                    prismPlayer.query('playPauseButton').click();
+                }
+            });
+        const header = prismPlayer.query('header');
+        const dim = prismPlayer.query('dim');
+        header.addEventListener('click', onClickElement);
+        header.addEventListener('dblclick', onDoubleClickElement);
+        dim.addEventListener('click', onClickElement);
+        dim.addEventListener('dblclick', onDoubleClickElement);
+        playingObserver.observe(prismPlayer.element);
+
+        // first click on not-playing, second click on playing -> play & no fullScreen
+        // => pause and fullScreen at second click
+        let isPlayerClickedOnPlaying = false;
+        let isSecondClickOnPlaying = false;
+
+        const onClickPlayer = (event) => {
+            if (!event.isTrusted) return;
+            const wasPlayerClickedOnPlaying = isPlayerClickedOnPlaying;
+            isPlayerClickedOnPlaying = prismPlayer.isState('playing');
+            isSecondClickOnPlaying = !wasPlayerClickedOnPlaying && isPlayerClickedOnPlaying;
+        };
+        const onDoubleClickPlayer = (event) => {
+            if (!event.isTrusted) return;
+            if (isSecondClickOnPlaying &&
+                !prismPlayer.query('bottom').contains(event.target)) { // exclude control area
+                prismPlayer.query('playPauseButton').click();
+                prismPlayer.query('fullScreenButton').click();
+            }
+        };
+        prismPlayer.element.addEventListener('click', onClickPlayer);
+        prismPlayer.element.addEventListener('dblclick', onDoubleClickPlayer);
+
+        // beforePlay, ended -> cursor: pointer
+        // playing           -> cursor: none
+        const pointerOn = () => {
+            prismPlayer.query('header').style.cursor = 'pointer';
+            prismPlayer.query('dim').style.cursor = 'pointer';
+            prismPlayer.query('video').addEventListener('play', pointerOff, { once: true });
         }
+        const pointerOff = () => {
+            prismPlayer.query('header').style.cursor = '';
+            prismPlayer.query('dim').style.cursor = '';
+            prismPlayer.query('video').addEventListener('ended', pointerOn, { once: true });
+        }
+        if (!prismPlayer.isState('playing')) {
+            pointerOn();
+        } else {
+            pointerOff();
+        }
+
+        prismPlayer.attachListeners(this, {
+            onClickElement, onDoubleClickElement,
+            onClickPlayer, onDoubleClickPlayer,
+            pointerOn, pointerOff, playingObserver
+        });
+    }
+
+    async clear(prismPlayer) {
+        const {
+            onClickElement, onDoubleClickElement,
+            onClickPlayer, onDoubleClickPlayer,
+            pointerOn, pointerOff, playingObserver
+        } = prismPlayer.getAttachedListeners(this);
+
+        if (!prismPlayer.isState('playing')) {
+            pointerOff();
+        }
+
+        const header = prismPlayer.query('header');
+        const dim = prismPlayer.query('dim');
+        header.removeEventListener('click', onClickElement);
+        header.removeEventListener('dblclick', onDoubleClickElement);
+        dim.removeEventListener('click', onClickElement);
+        dim.removeEventListener('dblclick', onDoubleClickElement);
+        playingObserver.disconnect();
+
+        prismPlayer.element.removeEventListener('click', onClickPlayer);
+        prismPlayer.element.removeEventListener('dblclick', onDoubleClickPlayer);
+
+        const video = prismPlayer.query('video');
+        video.removeEventListener('ended', pointerOn, { once: true });
+        video.removeEventListener('play', pointerOff, { once: true });
+
+        prismPlayer.detachListeners(this);
+        return true;
     }
 }

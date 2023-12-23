@@ -1,71 +1,105 @@
 class PlaybackRateDisplayDecorator extends Decorator {
 
-    async decorate(video) {
-        try {
-            // Show current playback rate
-            const checkedLi = video.querySelector('.' + PLAYBACK_RATE_SETTING_LI_CLASS + '.' + SETTING_CHECKED_LI_CLASS);
-            this.updatePlaybackRateDisplay(video, checkedLi);
-
-            // playback rate setting click listener
-            const lis = video.getElementsByClassName(PLAYBACK_RATE_SETTING_LI_CLASS);
-            for (const li of lis) {
-                li.addEventListener('click', (event) => {
-                    const li = event.currentTarget;
-                    const video = getClosestVideo(li);
-                    this.updatePlaybackRateDisplay(video, li);
-                });
-            }
-        } catch (e) {
-            console.warn(`Failed to display current playback rate: ${e}`);
-        }
-    }
-
-    getPlaybackRateTextSpan(element) {
-        return element.querySelector('.' + PLAYBACK_RATE_TEXT_SPAN_CLASS);
-    }
-
-    updatePlaybackRateDisplay(video, li) {
-        if (!video) return;
-        const span = this.getPlaybackRateTextSpan(li);
-        if (!span) return;
-        const playbackRateText = span.textContent.trim().replace(/[^A-Za-z0-9.]/g, '');
-        const playbackRateDisplay = video.querySelector('.' + PLAYBACK_RATE_DISPLAY_CLASS);
-        if (playbackRateDisplay) {
-            playbackRateDisplay.firstElementChild.textContent = playbackRateText;
+    decorate(prismPlayer) {
+        // create display
+        const playbackRateDisplay = this.createPlaybackRateDisplay();
+        const bottomRightButtons = prismPlayer.query('bottomRightButtons');
+        const qualityDisplay = this.getQualityDisplay(prismPlayer);
+        if (qualityDisplay) {
+            bottomRightButtons.insertBefore(playbackRateDisplay, qualityDisplay);
         } else {
-            const bottomRightButtonDiv = video.querySelector('.' + BOTTOM_RIGHT_BUTTON_CLASS);
-            bottomRightButtonDiv?.prepend(this.createPlaybackRateDisplay(playbackRateText));
+            const settingButton = prismPlayer.query('settingButton');
+            bottomRightButtons.insertBefore(playbackRateDisplay, settingButton);
         }
-    }
 
-    createPlaybackRateDisplay(playbackRateText) {
-        const element = document.createElement('div');
-        element.className = BOTTOM_RIGHT_BUTTON_STYLE_CLASSES + ' ' + PLAYBACK_RATE_DISPLAY_CLASS;
-        element.innerHTML = `<span class="${PLAYBACK_RATE_TEXT_SPAN_CLASS}" style="white-space: nowrap; font-size: 12px">${playbackRateText}</span>`;
-        // 클릭했을 때 재생 속도 설정 메뉴를 보여줌
-        element.addEventListener('click', async (event) => {
-            const video = getClosestVideo(event.currentTarget);
-            if (video.querySelector('.' + VIDEO_PLAYBACK_RATE_PANE_VISIBLE_CLASS)) {
-                // 재생 속도 설정 메뉴가 이미 떠 있는 상황이면 아무 곳이나 클릭함으로써 메뉴를 끔
-                video.click();
+        // show setting pane when clicked
+        playbackRateDisplay.addEventListener('click', async () => {
+            if (prismPlayer.isState('playbackRateSettingPaneVisible')) {
+                prismPlayer.element.click(); // close setting pane
             } else {
-                await sleep(10); // 없으면 동작 안 함
-                this.getPlaybackRateSettingMenuItem(video)?.click();
+                await sleep(10);
+                prismPlayer.query('playbackRateSettingMenu').click(); // open setting pane
             }
         });
-        return element;
+
+        // detect item check
+        const checkObserver = new ClassChangeObserver(CHECKED_SETTING_ITEM_CLASS,
+            (appeared, li) => {
+                if (appeared) {
+                    const playbackRateDisplay = this.getPlaybackRateDisplay(prismPlayer);
+                    this.setTextFromItem(playbackRateDisplay, li);
+                }
+            });
+
+        // apply observer
+        const lis = prismPlayer.queryAll('playbackRateSettingItems');
+        for (const li of lis) {
+            checkObserver.observe(li);
+            // apply now
+            if (this.isSettingItemChecked(li)) {
+                this.setTextFromItem(playbackRateDisplay, li);
+            }
+        }
+
+        prismPlayer.attachListeners(this, { checkObserver });
     }
 
-    getPlaybackRateSettingMenuItem(element) {
-        if (location.hostname === 'kin.naver.com') {
-            const menuItems = element.getElementsByClassName(VIDEO_SETTING_MENU_ITEM_CLASS);
-            for (const menuItem of menuItems) {
-                if (menuItem.querySelector('.' + VIDEO_SETTING_MENU_ITEM_SPAN_CLASS)?.textContent.includes('재생 속도')) {
-                    return menuItem;
-                }
-            }
-        } else {
-            return element.querySelector('.' + PLAYBACK_RATE_SETTING_MENU_ITEM_CLASS);
-        }
+    async clear(prismPlayer) {
+        const { checkObserver } = prismPlayer.getAttachedListeners(this);
+
+        this.getPlaybackRateDisplay(prismPlayer).remove();
+        checkObserver.disconnect();
+
+        prismPlayer.detachListeners(this);
+        return true;
+    }
+
+    createPlaybackRateDisplay() {
+        const button = document.createElement('button');
+              button.classList.add(PLAYER_BUTTON_CLASS,
+                                   PLAYER_UI_BUTTON_CLASS,
+                                   APP_UI_BUTTON_CLASS,
+                                   APP_PLAYBACK_RATE_DISPLAY_CLASS);
+        const tooltip = document.createElement('span');
+              tooltip.classList.add(PLAYER_UI_TOOLTIP_CLASS,
+                                    PLAYER_UI_TOOLTIP_TOP_CLASS);
+              tooltip.textContent = '배속 변경';
+              button.appendChild(tooltip);
+        const span = document.createElement('span');
+              span.classList.add(PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS);
+              button.appendChild(span);
+        return button;
+    }
+
+    getPlaybackRateDisplay(prismPlayer) {
+        return prismPlayer.element.querySelector('button.' + APP_PLAYBACK_RATE_DISPLAY_CLASS);
+    }
+
+    setText(playbackRateDisplay, playbackRateText) {
+        const span = this.getPlaybackRateSettingItemSpan(playbackRateDisplay);
+        span.textContent = playbackRateText.trim().replace(/[^0-9.x]/g, '');
+    }
+
+    setTextFromItem(playbackRateDisplay, li) {
+        const span = this.getPlaybackRateSettingItemSpan(li);
+        const playbackRateText = span.textContent;
+        this.setText(playbackRateDisplay, playbackRateText);
+    }
+
+    isPlaybackRateSettingItemDefault(li) {
+        const span = this.getPlaybackRateSettingItemSpan(li);
+        return span.textContent.includes('1.0x');
+    }
+
+    getPlaybackRateSettingItemSpan(el) {
+        return el.querySelector('span.' + PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS);
+    }
+
+    isSettingItemChecked(li) {
+        return li.classList.contains(CHECKED_SETTING_ITEM_CLASS);
+    }
+
+    getQualityDisplay(prismPlayer) {
+        return prismPlayer.element.querySelector('button.' + APP_QUALITY_DISPLAY_CLASS);
     }
 }

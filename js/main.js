@@ -1,84 +1,92 @@
-async function init() {
-    // create videoFinder
-    const videoFinder = getVideoFinder();
-    if (!videoFinder) return;
+function init() {
+    const videoPlayerFinder = getVideoPlayerFinder();
+    if (!videoPlayerFinder?.connect(document)) {
+        return; // video player cannot exist
+    }
 
-    // set option change listener
+    update(videoPlayerFinder);
+
     chrome.runtime.onMessage.addListener((message) => {
-        if (message.event === 'optionChanged') {
-            updateCallbacks(videoFinder);
+        if (message.app !== APP_NAME) return;
+        switch (message.event) {
+            case SETTING_CHANGED_EVENT:
+                update(videoPlayerFinder);
+                break;
+            case DEFAULT_VOLUME_CHANGED_EVENT:
+                forceRedecorate(videoPlayerFinder.videoPlayers, 'SetDefaultVolumeDecorator');
+                update(videoPlayerFinder);
+                break;
         }
     });
-
-    // update videoFinder and connect
-    await updateCallbacks(videoFinder);
-    videoFinder.connect(document);
 }
 
-function getVideoFinder() {
+function getVideoPlayerFinder() {
     switch (location.hostname) {
         case 'cafe.naver.com':
-            return new CafeVideoFinder;
+            return new CafeVideoPlayerFinder;
         case 'blog.naver.com':
-            return new BlogVideoFinder;
-        case 'kin.naver.com':
-            return new KinVideoFinder;
+            return new BlogVideoPlayerFinder;
     }
 }
 
-async function updateCallbacks(videoFinder) {
-    const decoratorsOnVideoFoundAsync = [];
-    const decoratorsOnVideoFound = [];
-    const decoratorsOnVideoQualityFoundAsync = [];
-    const decoratorsOnVideoQualityFound = [];
-
-    // get options
-    const options = await chrome.storage.sync.get([
-        'selectMaxQuality',
-        'playbackRateDisplay',
-        'autoPlayFirstVideo'
-    ]);
-
-    // create callbacks
-    switch (videoFinder.constructor) {
-        case CafeVideoFinder:
-        case BlogVideoFinder:
-        case KinVideoFinder:
-            push(decoratorsOnVideoFoundAsync,
-                [new AutoPlayFirstVideoDecorator, options.autoPlayFirstVideo],
-                [new EasyClickToPlayDecorator, true]);
-            push(decoratorsOnVideoQualityFound,
-                [new QualityDisplayDecorator, true],
-                [new SelectMaxQualityDecorator, options.selectMaxQuality],
-                [new PlaybackRateDisplayDecorator, options.playbackRateDisplay],
-                [new DefaultVolumeDecorator, true]);
+// [ [decorator, isEnabled], ... ]
+function getDecorators(settings) {
+    switch (location.hostname) {
+        case 'cafe.naver.com':
+        case 'blog.naver.com':
+            return [
+                [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
+                [new QualityDisplayDecorator, settings['qualityDisplay']],
+                [new DividePlaybackRateDecorator, settings['dividePlaybackRate']],
+                [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
+                [new PlaybackRateShortcutDecorator, settings['playbackRateShortcut']],
+                [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
+                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
+                [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
+                [new HideSettingButtonDecorator, settings['hideSettingButton']],
+                [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
+                [new FullScreenShortcutDecorator, settings['fullScreenShortcut']],
+                [new MuteShortcutDecorator, settings['muteShortcut']],
+                [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
+                [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
+                [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
+                [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
+                [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume']
+                                                      || settings['extendMaxVolume']
+                                                      || settings['preciseVolumeShortcut']],
+            ];
     }
-    // utility function (item = [decorator, isEnabled])
-    function push(array, ...items) {
-        for (const item of items) {
-            if (item[1]) array.push(item[0]);
-        }
-    }
+}
 
-    // set callbacks
-    videoFinder.setCallbacks({
-        onVideoFound: async (video) => {
-            for (const decorator of decoratorsOnVideoFoundAsync) {
-                decorator.decorate(video);
-            }
-            for (const decorator of decoratorsOnVideoFound) {
-                await decorator.decorate(video);
-            }
-        },
-        onVideoQualityFound: async (video) => {
-            for (const decorator of decoratorsOnVideoQualityFoundAsync) {
-                decorator.decorate(video);
-            }
-            for (const decorator of decoratorsOnVideoQualityFound) {
-                await decorator.decorate(video);
+async function update(videoPlayerFinder) {
+    const settings = await chrome.storage.sync.get(null); // get all items
+    const decorators = getDecorators(settings);
+    videoPlayerFinder.applyCallback((videoPlayer) => {
+        for (const [decorator, isEnabled] of decorators) {
+            const decoratorName = decorator.constructor.name;
+            const isDecorated = videoPlayer.decorated[decoratorName];
+            try {
+                if (!isDecorated && isEnabled) {
+                    videoPlayer.decorated[decoratorName] = true;
+                    decorator.decorate(videoPlayer);
+                } else if (isDecorated && !isEnabled) {
+                    decorator.clear(videoPlayer).then((res) => {
+                        if (res) {
+                            videoPlayer.decorated[decoratorName] = false;
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn(e);
             }
         }
     });
+}
+
+function forceRedecorate(videoPlayers, decoratorName) {
+    for (const video of videoPlayers) {
+        video.decorated[decoratorName] = false;
+    }
 }
 
 init();
