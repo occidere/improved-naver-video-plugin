@@ -3,7 +3,7 @@ class FullScreenShortcutDecorator extends Decorator {
     decorate(prismPlayer) {
         const playerKeyDownListener = (event) => {
             if (!event.isTrusted) return;
-            if (event.key !== 'f' && event.key !== 'F') return;
+            if (event.code !== 'KeyF') return;
             prismPlayer.query('fullScreenButton').click();
         };
         prismPlayer.element.addEventListener('keydown', playerKeyDownListener);

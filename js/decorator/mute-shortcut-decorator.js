@@ -3,7 +3,7 @@ class MuteShortcutDecorator extends Decorator {
     decorate(prismPlayer) {
         const playerKeyDownListener = (event) => {
             if (!event.isTrusted) return;
-            if (event.key !== 'm' && event.key !== 'M') return;
+            if (event.code !== 'KeyM') return;
             prismPlayer.query('volumeButton').click();
         };
         prismPlayer.element.addEventListener('keydown', playerKeyDownListener);
