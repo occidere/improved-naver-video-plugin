@@ -42,12 +42,12 @@ class PreciseVolumeShortcutDecorator extends Decorator {
 
         const playerKeyDownListener = (event) => {
             if (!event.isTrusted) return;
-            if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+            if (event.code !== 'ArrowUp' && event.code !== 'ArrowDown') return;
             prismPlayer.query('video').volume = currentVolume; // ignore default action
             const amount = PreciseVolumeShortcutDecorator.volumeNumber;
-            if (event.key === 'ArrowUp') {
+            if (event.code === 'ArrowUp') {
                 this.addVolume(prismPlayer, currentVolume, amount);
-            } else if (event.key === 'ArrowDown') {
+            } else if (event.code === 'ArrowDown') {
                 this.addVolume(prismPlayer, currentVolume, -amount);
             }
         };

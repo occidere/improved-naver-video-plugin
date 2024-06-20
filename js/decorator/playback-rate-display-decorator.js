@@ -57,7 +57,6 @@ class PlaybackRateDisplayDecorator extends Decorator {
     createPlaybackRateDisplay() {
         const button = document.createElement('button');
               button.classList.add(PLAYER_BUTTON_CLASS,
-                                   PLAYER_UI_BUTTON_CLASS,
                                    APP_UI_BUTTON_CLASS,
                                    APP_PLAYBACK_RATE_DISPLAY_CLASS);
         const tooltip = document.createElement('span');

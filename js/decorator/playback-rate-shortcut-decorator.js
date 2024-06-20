@@ -3,14 +3,14 @@ class PlaybackRateShortcutDecorator extends Decorator {
     decorate(prismPlayer) {
         const playerKeyDownListener = (event) => {
             if (!event.isTrusted) return;
-            if (event.key !== '<' && event.key !== '>' && event.key !== '?') return;
+            if (event.code !== 'BracketLeft' && event.code !== 'BracketRight' && event.code !== 'Backslash') return;
             const items = prismPlayer.queryAll('playbackRateSettingItems');
             const index = this.getCheckedSettingItemIndex(items);
-            if (event.key === '<') {
+            if (event.code === 'BracketLeft') {
                 items[index - 1]?.click();
-            } else if (event.key === '>') {
+            } else if (event.code === 'BracketRight') {
                 items[index + 1]?.click();
-            } else if (event.key === '?') {
+            } else if (event.code === 'Backslash') {
                 this.getPlaybackRateSettingItemByText(items, '1.0x').click();
             }
         };
