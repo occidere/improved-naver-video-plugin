@@ -9,8 +9,8 @@
 .pzp.pzp-pc.pzp-pc--controls button.improved-naver-video-plugin__ui-button {
     opacity: 1;
 }
-.pzp.pzp-pc button.improved-naver-video-plugin__ui-button span.pzp-pc-ui-setting-quality-item__prefix,
-.pzp.pzp-pc button.improved-naver-video-plugin__ui-button span.pzp-pc-ui-setting-playbackrate-item__value {
+.pzp.pzp-pc button.improved-naver-video-plugin__ui-button span.pzp-ui-setting-quality-item__prefix,
+.pzp.pzp-pc button.improved-naver-video-plugin__ui-button span.pzp-ui-setting-playbackrate-item__value {
     white-space: nowrap;
     font-size: 12px;
 }

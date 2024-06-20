@@ -67,7 +67,6 @@ class QualityDisplayDecorator extends Decorator {
     createQualityDisplay() {
         const button = document.createElement('button');
               button.classList.add(PLAYER_BUTTON_CLASS,
-                                   PLAYER_UI_BUTTON_CLASS,
                                    APP_UI_BUTTON_CLASS,
                                    APP_QUALITY_DISPLAY_CLASS);
         const tooltip = document.createElement('span');

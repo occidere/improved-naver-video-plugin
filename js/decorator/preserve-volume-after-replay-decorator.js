@@ -13,7 +13,7 @@ class PreserveVolumeAfterReplayDecorator extends Decorator {
         };
         const onSpacebarDown = (event) => {
             if (!event.isTrusted) return;
-            if (event.key !== ' ') return;
+            if (event.code !== 'Space') return;
             preserveVolumeAfterPlay();
         };
         const preserveVolumeAfterPlay = () => {
