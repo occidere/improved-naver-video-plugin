@@ -11,7 +11,7 @@
 
 [![사용법 예시](https://postfiles.pstatic.net/MjAyMzA2MDZfMjMz/MDAxNjg2MDU3NDcwNDI0.FBoAG5kdDaIxp9oqvfL7NIcb4gswH2iVMZzLloVrO64g.Rd1_b0MHhcxtsxtyxqk87wj-WmIVMev9fdPpJd4y6m8g.PNG.occidere/youtube.png?type=w773)](https://www.youtube.com/watch?v=UL6zXFaOtqU)
 
-![image](https://github.com/occidere/improved-naver-video-plugin/assets/20942871/b13756cb-4f49-44fd-a21d-45539b34c5c6)
+![image](https://github.com/occidere/improved-naver-video-plugin/assets/20942871/2afb8cdc-54c3-4bce-a087-10e4bbdd3bfc)
 
 
 ### 2.1. 동영상의 기본 화질을 최대 해상도로 적용
