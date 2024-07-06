@@ -1,6 +1,21 @@
 class BlogVideoPlayerFinder extends VideoPlayerFinder {
 
     connect(document) {
+        const iframe = document.getElementById('mainFrame');
+        if (iframe) {
+            iframe.addEventListener('load', (event) => {
+                this.connectDocument(event.target.contentDocument);
+            });
+            if (iframe.contentDocument.readyState === 'complete') {
+                this.connectDocument(iframe.contentDocument);
+            }
+        } else {
+            return this.connectDocument(document);
+        }
+        return true;
+    }
+
+    connectDocument(document) {
         const findNext = getOrObserveChildByClassName;
 
         // [document] -> .se-module-video

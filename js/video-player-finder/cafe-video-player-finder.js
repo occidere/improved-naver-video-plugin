@@ -1,6 +1,21 @@
 class CafeVideoPlayerFinder extends VideoPlayerFinder {
 
     connect(document) {
+        const iframe = document.getElementById('cafe_main');
+        if (iframe) {
+            iframe.addEventListener('load', (event) => {
+                this.connectDocument(event.target.contentDocument);
+            });
+            if (iframe.contentDocument.readyState === 'complete') {
+                this.connectDocument(iframe.contentDocument);
+            }
+        } else {
+            return this.connectDocument(document);
+        }
+        return true;
+    }
+
+    connectDocument(document) {
         const findNext = getOrObserveChildByClassName;
 
         // [document] -> #app

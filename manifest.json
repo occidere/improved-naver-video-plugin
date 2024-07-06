@@ -32,7 +32,6 @@
         "https://cafe.naver.com/*",
         "https://blog.naver.com/*"
       ],
-      "all_frames": true,
       "css": ["css/content-style.css"],
       "js": [
         "js/common/class-variables.js",
