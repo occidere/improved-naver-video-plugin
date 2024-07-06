@@ -58,6 +58,13 @@ function getDecorators(settings) {
 
 async function update(videoPlayerFinder) {
     const settings = await chrome.storage.sync.get(null); // get all items
+    if (!settings['enableApp']) {
+        for (const item in settings) {
+            if (settings[item] === true) {
+                settings[item] = false;
+            }
+        }
+    }
     const decorators = getDecorators(settings);
     videoPlayerFinder.applyCallback((videoPlayer) => {
         for (const [decorator, isEnabled] of decorators) {

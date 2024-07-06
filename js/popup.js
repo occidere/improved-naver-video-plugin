@@ -10,6 +10,22 @@ async function init() {
         });
     }
 
+    // enable-app switch
+    {
+        const checkbox = document.querySelector('#enableSwitch');
+        const contents = document.querySelector('#settingContents');
+        if (!settings[checkbox.name]) {
+            contents.style.display = 'none';
+        }
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                contents.style.display = 'block';
+            } else {
+                contents.style.display = 'none';
+            }
+        });
+    }
+
     // default-volume range setting
     {
         const range = document.querySelector('#defaultVolumeRange');

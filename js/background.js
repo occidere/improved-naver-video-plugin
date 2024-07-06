@@ -1,4 +1,5 @@
 const defaultItems = {
+    enableApp: true,
     selectMaxQuality: true,
     qualityDisplay: true,
     dividePlaybackRate: true,
