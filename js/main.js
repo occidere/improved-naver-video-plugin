@@ -40,7 +40,7 @@ function getDecorators(settings) {
                 [new DividePlaybackRateDecorator, settings['dividePlaybackRate']],
                 [new PlaybackRateShortcutDecorator, settings['dividePlaybackRate']],
                 [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
-                [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
+                [new FixMouseActionDecorator, settings['fixMouseAction']],
                 [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
                 [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
                 [new HideSettingButtonDecorator, settings['hideSettingButton']],

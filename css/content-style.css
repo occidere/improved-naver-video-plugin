@@ -38,3 +38,9 @@
 .pzp .INVP__easy-open-volume-slider:hover .INVP__extend-volume-slider .pzp-pc__volume-slider {
     width: 120px;
 }
+
+/* Mouse Pointer */
+.pzp .pzp-pc__dimmed.INVP__mouse-pointer,
+.pzp:not(.pzp-pc--playing) .pzp-pc__header.INVP__mouse-pointer {
+    cursor: pointer;
+}

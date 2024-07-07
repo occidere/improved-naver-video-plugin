@@ -12,6 +12,7 @@ const APP_ADDED_PLAYBACK_RATE_ITEM_CLASS = APP_NAME + '__added-playback-rate-ite
 const APP_EXTEND_VOLUME_SLIDER_CLASS = APP_NAME + '__extend-volume-slider';
 const APP_EASY_OPEN_VOLUME_SLIDER_CLASS = APP_NAME + '__easy-open-volume-slider';
 const APP_REMOVE_VOLUME_SLIDER_ANIMATION_CLASS = APP_NAME + '__remove-volume-slider-animation';
+const APP_MOUSE_POINTER_CLASS = APP_NAME + '__mouse-pointer';
 
 // prism player related classes
 const CHECKED_SETTING_ITEM_CLASS = 'pzp-ui-setting-pane-item--checked';

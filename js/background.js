@@ -4,7 +4,7 @@ const defaultItems = {
     qualityDisplay: true,
     dividePlaybackRate: true,
     playbackRateDisplay: true,
-    easyClickToPlay: true,
+    fixMouseAction: true,
     autoPauseLastVideo: false,
     autoPlayFirstVideo: false,
     hideSettingButton: false,
