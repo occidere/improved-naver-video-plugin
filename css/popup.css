@@ -47,7 +47,7 @@
 .setting-checkbox.disabled {
     display: none;
 }
-#volumeNumberInput {
+.setting-checkbox input[type="number"] {
     font-size: 0.9em;
     width: 30px;
 }

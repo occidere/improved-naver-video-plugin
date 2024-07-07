@@ -17,6 +17,8 @@ const defaultItems = {
     extendMaxVolume: true,
     setDefaultVolume: true,
     defaultVolume: '0.50',
+    leftRightShortcut: true,
+    timeNumber: '2',
 };
 
 chrome.runtime.onInstalled.addListener(async (details) => {

@@ -50,6 +50,7 @@ function getDecorators(settings) {
                 [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
                 [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
+                [new LeftRightShortcutDecorator, settings['leftRightShortcut']],
                 [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume']
                                                       || settings['extendMaxVolume']
                                                       || settings['preciseVolumeShortcut']],

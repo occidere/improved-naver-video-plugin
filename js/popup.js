@@ -44,18 +44,6 @@ async function init() {
         });
     }
 
-    // volume-number input setting
-    {
-        const input = document.querySelector('#volumeNumberInput');
-        input.value = settings[input.name];
-        input.addEventListener('change', () => {
-            let value = parseInt(input.value);
-            value = Math.max(value, 1);  // value >= 1
-            value = Math.min(value, 20); // value <= 20
-            saveSetting(input.name, value.toFixed(), VOLUME_NUMBER_CHANGED_EVENT);
-        });
-    }
-
     // connect set-default-volume checkbox & default-volume range
     {
         const checkbox = document.querySelector('#setDefaultVolumeCheckbox');
@@ -115,6 +103,18 @@ async function init() {
         });
     }
 
+    // volume-number input setting
+    {
+        const input = document.querySelector('#volumeNumberInput');
+        input.value = settings[input.name];
+        input.addEventListener('change', () => {
+            let value = parseInt(input.value);
+            value = Math.max(value, 1);  // value >= 1
+            value = Math.min(value, 20); // value <= 20
+            saveSetting(input.name, value.toFixed(), VOLUME_NUMBER_CHANGED_EVENT);
+        });
+    }
+
     // connect precise-volume-shortcut checkbox & more-precise-in-low-volume wrapper
     {
         const checkbox = document.querySelector('#preciseVolumeShortcutCheckbox');
@@ -128,6 +128,28 @@ async function init() {
             } else {
                 wrapper.classList.add('disabled');
             }
+        });
+    }
+
+    // connect left-right-shortcut checkbox & time-number input
+    {
+        const checkbox = document.querySelector('#leftRightShortcutCheckbox');
+        const input = document.querySelector('#timeNumberInput');
+        input.disabled = !settings[checkbox.name];
+        checkbox.addEventListener('change', () => {
+            input.disabled = !checkbox.checked;
+        });
+    }
+
+    // time-number input setting
+    {
+        const input = document.querySelector('#timeNumberInput');
+        input.value = settings[input.name];
+        input.addEventListener('change', () => {
+            let value = parseInt(input.value);
+            value = Math.max(value, 1);  // value >= 1
+            value = Math.min(value, 15); // value <= 15
+            saveSetting(input.name, value.toFixed(), TIME_NUMBER_CHANGED_EVENT);
         });
     }
 }
