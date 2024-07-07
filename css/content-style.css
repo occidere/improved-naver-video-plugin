@@ -15,8 +15,6 @@
 }
 
 /* Volume Slider */
-/* .pzp.pzp-pc .pzp-pc__volume-control:has(~ .pzp-pc__vod-time:hover) .pzp-pc__volume-slider { */
-/* width: 72px; */
 .pzp.pzp-pc--keyboard .pzp-pc__volume-control.INVP__extend-volume-slider .pzp-pc__volume-button:focus ~ .pzp-pc__volume-slider,
 .pzp.pzp-pc--keyboard .pzp-pc__volume-control.INVP__extend-volume-slider .pzp-pc__volume-slider:focus,
 .pzp.pzp-pc .pzp-pc__volume-control.INVP__extend-volume-slider:hover > .pzp-pc__volume-slider,
@@ -31,4 +29,12 @@
 .pzp.pzp-pc .pzp-pc__volume-control.INVP__remove-volume-slider-animation:hover > .pzp-pc__volume-slider,
 .pzp.pzp-pc--active-volume-control .pzp-pc__volume-control.INVP__remove-volume-slider-animation .pzp-pc__volume-slider {
     transition-property: none;
+}
+.pzp .INVP__easy-open-volume-slider:hover .pzp-pc__volume-slider {
+    overflow: visible;
+    width: 72px;
+    margin-right: 13px;
+}
+.pzp .INVP__easy-open-volume-slider:hover .INVP__extend-volume-slider .pzp-pc__volume-slider {
+    width: 120px;
 }
