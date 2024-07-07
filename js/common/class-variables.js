@@ -6,6 +6,7 @@ const MORE_PRECISE_IN_LOW_VOLUME_SETTING_CHANGED = 'move-precise-in-low-volume-s
 
 // app element classes
 const APP_UI_BUTTON_CLASS = APP_NAME + '__ui-button';
+const APP_UI_LABEL_CLASS = APP_NAME + '__ui-label';
 const APP_QUALITY_DISPLAY_CLASS = APP_NAME + '__quality-display';
 const APP_PLAYBACK_RATE_DISPLAY_CLASS = APP_NAME + '__playback-rate-display';
 const APP_ADDED_PLAYBACK_RATE_ITEM_CLASS = APP_NAME + '__added-playback-rate-item';
@@ -13,6 +14,7 @@ const APP_EXTEND_VOLUME_SLIDER_CLASS = APP_NAME + '__extend-volume-slider';
 const APP_EASY_OPEN_VOLUME_SLIDER_CLASS = APP_NAME + '__easy-open-volume-slider';
 const APP_REMOVE_VOLUME_SLIDER_ANIMATION_CLASS = APP_NAME + '__remove-volume-slider-animation';
 const APP_MOUSE_POINTER_CLASS = APP_NAME + '__mouse-pointer';
+const APP_EXTEND_MAX_VOLUME_CLASS = APP_NAME + '__extend-max-volume';
 
 // prism player related classes
 const CHECKED_SETTING_ITEM_CLASS = 'pzp-ui-setting-pane-item--checked';

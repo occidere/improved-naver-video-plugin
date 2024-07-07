@@ -8,16 +8,9 @@ class SetDefaultVolumeDecorator extends Decorator {
         const settings = await chrome.storage.sync.get(['defaultVolume', 'extendMaxVolume']);
         const defaultVolume = parseFloat(settings['defaultVolume']);
 
-        // extend-max-volume should be checked before setting volume
-        prismPlayer.isMaxVolumeExtended = settings['extendMaxVolume'];
-
         // 1.0 : userVolume = maxVolume : adjustedVolume
         const maxVolume = await prismPlayer.getMaxVolume();
         let adjustedVolume = maxVolume * defaultVolume;
-        if (prismPlayer.isMaxVolumeExtended) {
-            // maximum value of volume cannot exceed maxVolume
-            adjustedVolume = adjustedVolume / ExtendMaxVolumeDecorator.AMPLIFY_FACTOR;
-        }
         if (!isNaN(adjustedVolume)) {
             if (isDecoratedBeforeLoaded) {
                 await sleep(100); // fix volume slider bug

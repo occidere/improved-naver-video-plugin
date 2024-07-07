@@ -8,10 +8,12 @@
 .pzp.pzp-pc--controls .INVP__ui-button {
     opacity: 1;
 }
-.pzp .INVP__ui-button .pzp-ui-setting-quality-item__prefix,
-.pzp .INVP__ui-button .pzp-ui-setting-playbackrate-item__value {
+.pzp .INVP__ui-button .INVP__ui-label {
     white-space: nowrap;
     font-size: 12px;
+}
+.pzp .pzp-pc__volume-slider:not([aria-valuenow="100"]) ~ .INVP__extend-max-volume {
+    display: none;
 }
 
 /* Volume Slider */
@@ -40,7 +42,7 @@
 }
 
 /* Mouse Pointer */
-.pzp .pzp-pc__dimmed.INVP__mouse-pointer,
+.pzp:not(.pzp-pc--playing) .pzp-pc__dimmed.INVP__mouse-pointer,
 .pzp:not(.pzp-pc--playing) .pzp-pc__header.INVP__mouse-pointer {
     cursor: pointer;
 }

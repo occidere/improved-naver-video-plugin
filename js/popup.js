@@ -92,27 +92,6 @@ async function init() {
         });
     }
 
-    // connect extend-max-volume checkbox & default-volume range
-    {
-        const checkbox = document.querySelector('#extendMaxVolumeCheckbox');
-        const range = document.querySelector('#defaultVolumeRange');
-        if (settings[checkbox.name]) {
-            range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
-        }
-        checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
-            } else {
-                if (parseFloat(range.value) > 1.0) {
-                    range.value = '1.0'
-                    range.dispatchEvent(new Event('input'));
-                    range.dispatchEvent(new Event('change'));
-                }
-                range.max = '1.0';
-            }
-        });
-    }
-
     // connect default-volume range & set-default-volume checkbox
     // mouse down range -> enable checkbox
     {

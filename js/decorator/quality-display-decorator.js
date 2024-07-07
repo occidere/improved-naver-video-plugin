@@ -75,7 +75,8 @@ class QualityDisplayDecorator extends Decorator {
               tooltip.textContent = '해상도 변경';
               button.appendChild(tooltip);
         const span = document.createElement('span');
-              span.classList.add(QUALITY_SETTING_ITEM_SPAN_CLASS);
+              span.classList.add(QUALITY_SETTING_ITEM_SPAN_CLASS,
+                                 APP_UI_LABEL_CLASS);
               button.appendChild(span);
         return button;
     }

@@ -33,7 +33,6 @@ class PrismPlayer extends VideoPlayer {
     source = null; // MediaElementAudioSourceNode
 
     _maxVolume = 1.0;
-    isMaxVolumeExtended = false;
 
     constructor(videoPlayerElement) {
         super(videoPlayerElement);
@@ -49,7 +48,7 @@ class PrismPlayer extends VideoPlayer {
             const video = this.query('video');
             const srcUrl = new URL(video.src);
             if (srcUrl.origin !== location.origin) {
-                video.crossOrigin = 'anonymous'; // CORS issue in blog.naver.com
+                video.crossOrigin = 'anonymous'; // prevent CORS in blog.naver.com
             }
         };
 

@@ -1,6 +1,6 @@
 class ExtendMaxVolumeDecorator extends Decorator {
 
-    static AMPLIFY_FACTOR = 2; // sync with popup.js
+    static AMPLIFY_FACTOR = 2;
 
     static audioContext;
     static gainNode;
@@ -22,10 +22,11 @@ class ExtendMaxVolumeDecorator extends Decorator {
     }
 
     async decorate(prismPlayer) {
-        const isDecoratedBeforeLoaded = !prismPlayer.loaded;
+        const volumeControl = prismPlayer.query('volumeControl');
+        const button = this.createVolumeExtendButton();
+        volumeControl.appendChild(button);
 
-        // connect source to gainNode
-        const onUserActivation = () => {
+        button.addEventListener('click', () => {
             const audioContext = ExtendMaxVolumeDecorator.getAudioContext();
             const gainNode = ExtendMaxVolumeDecorator.getGainNode(audioContext);
             if (!prismPlayer.source) {
@@ -33,24 +34,14 @@ class ExtendMaxVolumeDecorator extends Decorator {
             }
             prismPlayer.source.disconnect();
             prismPlayer.source.connect(gainNode);
-        };
-        if (isUserActivated()) {
-            onUserActivation();
-        } else {
-            setUserActivationListener(prismPlayer.element.ownerDocument, onUserActivation);
-        }
 
-        // preserve output volume
-        await prismPlayer.getMaxVolume(); // wait until maxVolume is set
-        const video = prismPlayer.query('video');
-        const currentVolume = video.volume;
-        if (isDecoratedBeforeLoaded) {
-            await sleep(100); // fix volume slider bug
-        }
-        if (!prismPlayer.isMaxVolumeExtended) { // prevent conflict
+            // preserve output volume
+            const video = prismPlayer.query('video');
+            const currentVolume = video.volume;
             video.volume = currentVolume / ExtendMaxVolumeDecorator.AMPLIFY_FACTOR;
-        }
-        prismPlayer.isMaxVolumeExtended = true;
+
+            this.getQualityDisplay(prismPlayer)?.remove();
+        });
     }
 
     async clear(prismPlayer) {
@@ -61,12 +52,28 @@ class ExtendMaxVolumeDecorator extends Decorator {
             prismPlayer.source.connect(audioContext.destination);
         }
 
-        // preserve output volume
-        const maxVolume = await prismPlayer.getMaxVolume();
-        const video = prismPlayer.query('video');
-        const currentVolume = video.volume;
-        video.volume = Math.min(maxVolume, currentVolume * ExtendMaxVolumeDecorator.AMPLIFY_FACTOR);
-        prismPlayer.isMaxVolumeExtended = false;
+        this.getQualityDisplay(prismPlayer)?.remove();
         return true;
+    }
+
+    createVolumeExtendButton() {
+        const button = document.createElement('button');
+              button.classList.add(PLAYER_BUTTON_CLASS,
+                                   APP_UI_BUTTON_CLASS,
+                                   APP_EXTEND_MAX_VOLUME_CLASS);
+        const tooltip = document.createElement('span');
+              tooltip.classList.add(PLAYER_UI_TOOLTIP_CLASS,
+                                    PLAYER_UI_TOOLTIP_TOP_CLASS);
+              tooltip.textContent = '볼륨 확장';
+              button.appendChild(tooltip);
+        const label = document.createElement('span');
+              label.classList.add(APP_UI_LABEL_CLASS);
+              label.textContent = 'max';
+              button.appendChild(label);
+        return button;
+    }
+
+    getQualityDisplay(prismPlayer) {
+        return prismPlayer.element.querySelector('button.' + APP_EXTEND_MAX_VOLUME_CLASS);
     }
 }

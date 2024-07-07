@@ -65,7 +65,8 @@ class PlaybackRateDisplayDecorator extends Decorator {
               tooltip.textContent = '배속 변경';
               button.appendChild(tooltip);
         const span = document.createElement('span');
-              span.classList.add(PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS);
+              span.classList.add(PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS,
+                                 APP_UI_LABEL_CLASS);
               button.appendChild(span);
         return button;
     }
