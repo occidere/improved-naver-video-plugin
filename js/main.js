@@ -33,7 +33,6 @@ function getVideoPlayerFinder() {
 function getDecorators(settings) {
     switch (location.hostname) {
         case 'cafe.naver.com':
-        case 'blog.naver.com':
             return [
                 [new QualityDisplayDecorator, settings['qualityDisplay']],
                 [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
@@ -43,6 +42,28 @@ function getDecorators(settings) {
                 [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
                 [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
                 [new FixMouseActionDecorator, settings['fixMouseAction']],
+                [new HideSettingButtonDecorator, settings['hideSettingButton']],
+                [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
+                [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
+                [new RemoveVolumeSliderAnimationDecorator, settings['removeVolumeSliderAnimation']],
+                [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
+                [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
+                [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
+                [new LeftRightShortcutDecorator, settings['leftRightShortcut']],
+                [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume']
+                                                      || settings['extendMaxVolume']
+                                                      || settings['preciseVolumeShortcut']],
+            ];
+        case 'blog.naver.com':
+            return [
+                [new QualityDisplayDecorator, settings['qualityDisplay']],
+                [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
+                [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
+                [new DividePlaybackRateDecorator, settings['dividePlaybackRate']],
+                [new PlaybackRateShortcutDecorator, settings['dividePlaybackRate']],
+                [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
+                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
+                [new FixMouseActionBlogDecorator, settings['fixMouseAction']], // different
                 [new HideSettingButtonDecorator, settings['hideSettingButton']],
                 [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],

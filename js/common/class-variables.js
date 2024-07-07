@@ -18,10 +18,21 @@ const APP_MOUSE_POINTER_CLASS = APP_NAME + '__mouse-pointer';
 const APP_EXTEND_MAX_VOLUME_CLASS = APP_NAME + '__extend-max-volume';
 
 // prism player related classes
-const CHECKED_SETTING_ITEM_CLASS = 'pzp-ui-setting-pane-item--checked';
-const QUALITY_SETTING_ITEM_SPAN_CLASS = 'pzp-ui-setting-quality-item__prefix';
-const PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS = 'pzp-ui-setting-playbackrate-item__value';
-const SETTING_MENU_VALUE_SPAN_CLASS = 'pzp-ui-setting-home-item__value';
 const PLAYER_BUTTON_CLASS = 'pzp-button';
-const PLAYER_UI_TOOLTIP_CLASS = 'pzp-button__tooltip';
-const PLAYER_UI_TOOLTIP_TOP_CLASS = 'pzp-button__tooltip--top';
+const PLAYER_UI_BUTTON_CLASS = 'pzp-pc-ui-button';
+let PLAYER_UI_TOOLTIP_CLASS = 'pzp-button__tooltip';
+let PLAYER_UI_TOOLTIP_TOP_CLASS = 'pzp-button__tooltip--top';
+let QUALITY_SETTING_ITEM_SPAN_CLASS = 'pzp-ui-setting-quality-item__prefix';
+let PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS = 'pzp-ui-setting-playbackrate-item__value';
+let CHECKED_SETTING_ITEM_CLASS = 'pzp-ui-setting-pane-item--checked';
+let SETTING_MENU_VALUE_SPAN_CLASS = 'pzp-ui-setting-home-item__value';
+
+// old version
+if (location.hostname === 'blog.naver.com') {
+    PLAYER_UI_TOOLTIP_CLASS = 'pzp-pc-ui-button__tooltip';
+    PLAYER_UI_TOOLTIP_TOP_CLASS = 'pzp-pc-ui-button__tooltip--top';
+    QUALITY_SETTING_ITEM_SPAN_CLASS = 'pzp-pc-ui-setting-quality-item__prefix';
+    PLAYBACK_RATE_SETTING_ITEM_SPAN_CLASS = 'pzp-pc-ui-setting-playbackrate-item__value';
+    CHECKED_SETTING_ITEM_CLASS = 'pzp-pc-ui-setting-item--checked';
+    SETTING_MENU_VALUE_SPAN_CLASS = 'pzp-pc-ui-setting-intro-panel__value';
+}

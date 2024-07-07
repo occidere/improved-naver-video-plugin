@@ -43,6 +43,7 @@
 
 /* Mouse Pointer */
 .pzp:not(.pzp-pc--playing) .pzp-pc__dimmed.INVP__mouse-pointer,
-.pzp:not(.pzp-pc--playing) .pzp-pc__header.INVP__mouse-pointer {
+.pzp:not(.pzp-pc--playing) .pzp-pc__header.INVP__mouse-pointer,
+.pzp:not(.pzp-pc--playing) .pzp-pc__dimmed.INVP__mouse-pointer ~ .pzp-pc__header {
     cursor: pointer;
 }

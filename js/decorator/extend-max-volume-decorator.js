@@ -59,6 +59,7 @@ class ExtendMaxVolumeDecorator extends Decorator {
     createVolumeExtendButton() {
         const button = document.createElement('button');
               button.classList.add(PLAYER_BUTTON_CLASS,
+                                   PLAYER_UI_BUTTON_CLASS, // for compatible
                                    APP_UI_BUTTON_CLASS,
                                    APP_EXTEND_MAX_VOLUME_CLASS);
         const tooltip = document.createElement('span');
