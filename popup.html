@@ -6,8 +6,8 @@
   </head>
   <body>
     <div id="version">
-      <!--Sync with manifest.json-->
-      <span>v2.3.0</span>
+      <span>Improved NAVER Video Plugin</span>
+      <span>v2.3.0</span> <!--sync with manifest.json-->
     </div>
     <div id="settings">
       <div class="setting-checkbox">
@@ -15,7 +15,7 @@
       </div>
       <div id="settingContents">
         <div class="setting-group">
-          <span class="group-title">해상도</span>
+          <span class="group-title">화질</span>
           <div class="group-items">
             <div class="setting-checkbox" title="현재 해상도가 설정 버튼 왼쪽에 표시됩니다.
 클릭 시 해상도를 변경할 수 있습니다.">
@@ -46,15 +46,15 @@
         <div class="setting-group">
           <span class="group-title">재생</span>
           <div class="group-items">
-            <div class="setting-checkbox" title="플레이어 상단의 클릭 막힘 현상을 제거합니다.">
-              <label><input type="checkbox" name="easyClickToPlay">클릭 재생 개선</label>
-            </div>
             <div class="setting-checkbox" title="여러 동영상이 동시에 재생되지 않도록 합니다.">
               <label><input type="checkbox" name="autoPauseLastVideo">이전 영상 자동 중지</label>
             </div>
             <div class="setting-checkbox" title="게시글의 첫 번째 동영상을 자동으로 재생합니다.
 음소거는 아무데나 클릭하여 해제할 수 있습니다.">
               <label><input type="checkbox" name="autoPlayFirstVideo">첫 번째 영상 자동 재생</label>
+            </div>
+            <div class="setting-checkbox" title="플레이어 상단의 클릭 막힘 현상을 제거합니다.">
+              <label><input type="checkbox" name="easyClickToPlay">플레이어 상단 클릭 막힘 제거</label>
             </div>
           </div>
         </div>
@@ -67,8 +67,11 @@
             <div class="setting-checkbox" title="마우스를 볼륨 바 가까이에 가져가면 볼륨 바가 열립니다.">
               <label><input type="checkbox" name="easyOpenVolumeSlider">볼륨 바 잘 뜨게 하기</label>
             </div>
-            <div class="setting-checkbox" title="볼륨 바가 길어져 세밀한 음량 조절이 가능해집니다.">
-              <label><input type="checkbox" name="extendVolumeSlider" id="extendVolumeSliderCheckbox">볼륨 바 확장</label>
+            <div class="setting-checkbox" title="볼륨 바의 길이를 늘려 세밀한 음량 조절이 가능해집니다.">
+              <label><input type="checkbox" name="extendVolumeSlider" id="extendVolumeSliderCheckbox">볼륨 바 길이 확장</label>
+            </div>
+            <div class="setting-checkbox" title="볼륨 바가 즉시 열리고 닫힙니다.">
+              <label><input type="checkbox" name="removeVolumeSliderAnimation">볼륨 바 애니메이션 제거</label>
             </div>
           </div>
         </div>

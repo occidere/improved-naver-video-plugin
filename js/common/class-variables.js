@@ -1,4 +1,4 @@
-const APP_NAME = 'improved-naver-video-plugin';
+const APP_NAME = 'INVP';
 const SETTING_CHANGED_EVENT = 'setting-changed';
 const DEFAULT_VOLUME_CHANGED_EVENT = 'default-volume-changed';
 const VOLUME_NUMBER_CHANGED_EVENT = 'volume-number-changed';
@@ -9,8 +9,7 @@ const APP_UI_BUTTON_CLASS = APP_NAME + '__ui-button';
 const APP_QUALITY_DISPLAY_CLASS = APP_NAME + '__quality-display';
 const APP_PLAYBACK_RATE_DISPLAY_CLASS = APP_NAME + '__playback-rate-display';
 const APP_EXTEND_VOLUME_SLIDER_CLASS = APP_NAME + '__extend-volume-slider';
-const APP_VOLUME_SLIDER_HOVER_HELPER_CLASS = APP_NAME + '__volume-slider-hover-helper';
-const APP_VOLUME_SLIDER_HOVER_HELPER_BLOCKER_CLASS = APP_NAME + '__volume-slider-hover-helper-blocker';
+const APP_REMOVE_VOLUME_SLIDER_ANIMATION_CLASS = APP_NAME + '__remove-volume-slider-animation';
 const APP_ADDED_PLAYBACK_RATE_ITEM_CLASS = APP_NAME + '__added-playback-rate-item';
 
 // prism player related classes

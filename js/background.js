@@ -13,6 +13,7 @@ const defaultItems = {
     morePreciseInLowVolume: true,
     volumeNumber: '10',
     extendVolumeSlider: true,
+    removeVolumeSliderAnimation: true,
     extendMaxVolume: false,
     setDefaultVolume: true,
     defaultVolume: '0.5',

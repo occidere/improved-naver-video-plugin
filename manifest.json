@@ -32,7 +32,14 @@
         "https://cafe.naver.com/*",
         "https://blog.naver.com/*"
       ],
-      "css": ["css/content-style.css"],
+      "all_frames": true,
+      "css": ["css/content-style.css"]
+    },
+    {
+      "matches": [
+        "https://cafe.naver.com/*",
+        "https://blog.naver.com/*"
+      ],
       "js": [
         "js/common/class-variables.js",
         "js/common/util.js",
@@ -54,6 +61,7 @@
         "js/decorator/easy-open-volume-slider-decorator.js",
         "js/decorator/precise-volume-shortcut-decorator.js",
         "js/decorator/extend-volume-slider-decorator.js",
+        "js/decorator/remove-volume-slider-animation-decorator.js",
         "js/decorator/extend-max-volume-decorator.js",
         "js/decorator/set-default-volume-decorator.js",
         "js/decorator/preserve-volume-after-replay-decorator.js",

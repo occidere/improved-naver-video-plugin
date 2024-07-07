@@ -47,6 +47,7 @@ function getDecorators(settings) {
                 [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
                 [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
+                [new RemoveVolumeSliderAnimationDecorator, settings['removeVolumeSliderAnimation']],
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
                 [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
                 [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume']
