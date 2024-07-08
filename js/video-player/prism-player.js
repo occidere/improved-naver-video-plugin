@@ -6,6 +6,7 @@ class PrismPlayer extends VideoPlayer {
         header: '.pzp-pc__header',
         playButton: 'button.pzp-pc__brand-playback-button',
         bottom: '.pzp-pc__bottom',
+        bottomButtons: '.pzp-pc__bottom-buttons',
         playPauseButton: 'button.pzp-pc__playback-switch',
         volumeControl: '.pzp-pc__volume-control',
         volumeButton: 'button.pzp-pc__volume-button',
@@ -132,7 +133,7 @@ class PrismPlayer extends VideoPlayer {
   .pzp-pc__header                                                               'header'
   button.pzp-pc__brand-playback-button                                          'playButton'
   .pzp-pc__buttom                                                               'bottom'
-    .pzp-pc__bottom-buttons
+    .pzp-pc__bottom-buttons                                                     'bottomButtons'
       .pzp-pc__bottom-buttons-left
         button.pzp-pc__playback-switch                                          'playPauseButton'
         .pzp-pc__volume-control                                                 'volumeControl'
