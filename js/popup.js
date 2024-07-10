@@ -10,6 +10,22 @@ async function init() {
         });
     }
 
+    // enable-app switch
+    {
+        const checkbox = document.querySelector('#enableSwitch');
+        const contents = document.querySelector('#settingContents');
+        if (!settings[checkbox.name]) {
+            contents.style.display = 'none';
+        }
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                contents.style.display = 'block';
+            } else {
+                contents.style.display = 'none';
+            }
+        });
+    }
+
     // default-volume range setting
     {
         const range = document.querySelector('#defaultVolumeRange');
@@ -25,18 +41,6 @@ async function init() {
         });
         range.addEventListener('change', () => { // range is released
             saveSetting(range.name, range.value, DEFAULT_VOLUME_CHANGED_EVENT);
-        });
-    }
-
-    // volume-number input setting
-    {
-        const input = document.querySelector('#volumeNumberInput');
-        input.value = settings[input.name];
-        input.addEventListener('change', () => {
-            let value = parseInt(input.value);
-            value = Math.max(value, 1);  // value >= 1
-            value = Math.min(value, 20); // value <= 20
-            saveSetting(input.name, value.toFixed(), VOLUME_NUMBER_CHANGED_EVENT);
         });
     }
 
@@ -76,27 +80,6 @@ async function init() {
         });
     }
 
-    // connect extend-max-volume checkbox & default-volume range
-    {
-        const checkbox = document.querySelector('#extendMaxVolumeCheckbox');
-        const range = document.querySelector('#defaultVolumeRange');
-        if (settings[checkbox.name]) {
-            range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
-        }
-        checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                range.max = '2.0'; // sync with ExtendMaxVolumeDecorator.AMPLIFY_FACTOR
-            } else {
-                if (parseFloat(range.value) > 1.0) {
-                    range.value = '1.0'
-                    range.dispatchEvent(new Event('input'));
-                    range.dispatchEvent(new Event('change'));
-                }
-                range.max = '1.0';
-            }
-        });
-    }
-
     // connect default-volume range & set-default-volume checkbox
     // mouse down range -> enable checkbox
     {
@@ -120,6 +103,18 @@ async function init() {
         });
     }
 
+    // volume-number input setting
+    {
+        const input = document.querySelector('#volumeNumberInput');
+        input.value = settings[input.name];
+        input.addEventListener('change', () => {
+            let value = parseInt(input.value);
+            value = Math.max(value, 1);  // value >= 1
+            value = Math.min(value, 20); // value <= 20
+            saveSetting(input.name, value.toFixed(), VOLUME_NUMBER_CHANGED_EVENT);
+        });
+    }
+
     // connect precise-volume-shortcut checkbox & more-precise-in-low-volume wrapper
     {
         const checkbox = document.querySelector('#preciseVolumeShortcutCheckbox');
@@ -133,6 +128,28 @@ async function init() {
             } else {
                 wrapper.classList.add('disabled');
             }
+        });
+    }
+
+    // connect left-right-shortcut checkbox & time-number input
+    {
+        const checkbox = document.querySelector('#leftRightShortcutCheckbox');
+        const input = document.querySelector('#timeNumberInput');
+        input.disabled = !settings[checkbox.name];
+        checkbox.addEventListener('change', () => {
+            input.disabled = !checkbox.checked;
+        });
+    }
+
+    // time-number input setting
+    {
+        const input = document.querySelector('#timeNumberInput');
+        input.value = settings[input.name];
+        input.addEventListener('change', () => {
+            let value = parseInt(input.value);
+            value = Math.max(value, 1);  // value >= 1
+            value = Math.min(value, 15); // value <= 15
+            saveSetting(input.name, value.toFixed(), TIME_NUMBER_CHANGED_EVENT);
         });
     }
 }

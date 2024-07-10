@@ -1,20 +1,24 @@
 const defaultItems = {
-    selectMaxQuality: true,
+    enableApp: true,
     qualityDisplay: true,
-    dividePlaybackRate: true,
+    selectMaxQuality: true,
     playbackRateDisplay: true,
-    easyClickToPlay: true,
-    autoPauseLastVideo: false,
+    dividePlaybackRate: true,
     autoPlayFirstVideo: false,
+    autoPauseLastVideo: false,
+    fixMouseAction: true,
     hideSettingButton: false,
     easyOpenVolumeSlider: true,
-    preciseVolumeShortcut: true,
-    morePreciseInLowVolume: true,
-    volumeNumber: '10',
     extendVolumeSlider: true,
-    extendMaxVolume: false,
+    removeVolumeSliderAnimation: true,
+    preciseVolumeShortcut: true,
+    volumeNumber: '10',
+    morePreciseInLowVolume: true,
+    extendMaxVolume: true,
     setDefaultVolume: true,
-    defaultVolume: '0.5',
+    defaultVolume: '0.50',
+    leftRightShortcut: true,
+    timeNumber: '2',
 };
 
 chrome.runtime.onInstalled.addListener(async (details) => {
@@ -38,5 +42,16 @@ chrome.runtime.onInstalled.addListener(async (details) => {
             }
         }
         chrome.storage.sync.remove(removedKeys);
+        forceUpdateValues(details.previousVersion);
     }
 });
+
+function forceUpdateValues(previousVersion) {
+    if (previousVersion < '2.3.0') {
+        chrome.storage.sync.set({
+            extendMaxVolume: true,
+            setDefaultVolume: true,
+            defaultVolume: '0.50',
+        });
+    }
+}

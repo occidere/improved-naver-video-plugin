@@ -70,9 +70,6 @@ class PreciseVolumeShortcutDecorator extends Decorator {
     // amount: int - percentage with regard to max volume
     async addVolume(prismPlayer, currentVolume, amount) {
         const maxVolume = await prismPlayer.getMaxVolume();
-        if (prismPlayer.isMaxVolumeExtended) {
-            amount /= ExtendMaxVolumeDecorator.AMPLIFY_FACTOR;
-        }
         let diffVolumeRatio = amount / 100;
         if (PreciseVolumeShortcutDecorator.isMorePreciseMode) {
             diffVolumeRatio = this.getDiffVolumeRatioInMorePreciseMode(diffVolumeRatio, currentVolume / maxVolume);

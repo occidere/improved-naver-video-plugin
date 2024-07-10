@@ -1,4 +1,4 @@
-class PrismPlayer extends VideoPlayer {
+class OldPrismPlayer extends VideoPlayer {
 
     static elementSelectors = {
         video: 'video',
@@ -14,11 +14,11 @@ class PrismPlayer extends VideoPlayer {
         bottomRightButtons: '.pzp-pc__bottom-buttons-right',
         settingButton: 'button.pzp-pc__setting-button',
         fullScreenButton: 'button.pzp-pc__fullscreen-button',
-        qualitySettingMenu: '.pzp-setting-intro-quality',
-        playbackRateSettingMenu: '.pzp-setting-intro-playbackrate',
+        qualitySettingMenu: '.pzp-pc-setting-intro-quality',
+        playbackRateSettingMenu: '.pzp-pc-setting-intro-playbackrate',
     };
     static elementsSelectors = {
-        playbackRateSettingItems: 'li.pzp-ui-setting-playbackrate-item',
+        playbackRateSettingItems: 'li.pzp-pc-ui-setting-playbackrate-item',
     };
     static playerStateClassNames = {
         qualitySettingPaneVisible: 'pzp-pc--setting-quality',
@@ -49,12 +49,12 @@ class PrismPlayer extends VideoPlayer {
             const video = this.query('video');
             const srcUrl = new URL(video.src);
             if (srcUrl.origin !== location.origin) {
-                video.crossOrigin = 'anonymous';
+                video.crossOrigin = 'anonymous'; // prevent CORS in blog.naver.com
             }
         };
 
         // observing should be before first loading of video
-        new ClassChangeObserver(PrismPlayer.playerStateClassNames['loading'],
+        new ClassChangeObserver(OldPrismPlayer.playerStateClassNames['loading'],
             (appeared, _, observer) => {
                 if (!appeared) {
                     observer.disconnect();
@@ -74,13 +74,13 @@ class PrismPlayer extends VideoPlayer {
     }
 
     query(key) {
-        return this.element.querySelector(PrismPlayer.elementSelectors[key]);
+        return this.element.querySelector(OldPrismPlayer.elementSelectors[key]);
     }
     queryAll(key) {
-        return this.element.querySelectorAll(PrismPlayer.elementsSelectors[key]);
+        return this.element.querySelectorAll(OldPrismPlayer.elementsSelectors[key]);
     }
     isState(key) {
-        return this.element.classList.contains(PrismPlayer.playerStateClassNames[key]);
+        return this.element.classList.contains(OldPrismPlayer.playerStateClassNames[key]);
     }
 
     getMaxVolume() {
@@ -103,13 +103,13 @@ class PrismPlayer extends VideoPlayer {
     // ul.pzp-pc-setting-quality-pane__list-container
     //   >> li.pzp-pc-ui-setting-quality-item
     async getQualitySettingItems() {
-        const QUALITY_SETTING_ITEM_CLASS = 'pzp-ui-setting-quality-item';
+        const QUALITY_SETTING_ITEM_CLASS = 'pzp-pc-ui-setting-quality-item';
         const lis = this.element.querySelectorAll('li.' + QUALITY_SETTING_ITEM_CLASS);
         if (lis.length > 0) {
             return lis;
         }
 
-        const ul = this.element.querySelector('ul.pzp-setting-quality-pane__list');
+        const ul = this.element.querySelector('ul.pzp-pc-setting-quality-pane__list-container');
         await getOrObserveChildByClassName(ul, QUALITY_SETTING_ITEM_CLASS); // wait until items are loaded
         return ul.querySelectorAll('li.' + QUALITY_SETTING_ITEM_CLASS);
     }
@@ -139,44 +139,45 @@ class PrismPlayer extends VideoPlayer {
         .pzp-pc__volume-control                                                 'volumeControl'
           button.pzp-pc__volume-button                                          'volumeButton'
           .pzp-pc__volume-slider                                                'volumeSlider'
-      .pzp-pc__bottom-buttons-right                                             'bottomRightButtons'
+          .pzp-pc__bottom-buttons-right                                         'bottomRightButtons'
         button.pzp-pc__setting-button                                           'settingButton'
         button.pzp-pc__fullscreen-button                                        'fullScreenButton'
   .pzp-pc__settings
-    .pzp-ui-setting-home-item .pzp-setting-intro-quality                        'qualitySettingMenu'
-      .pzp-ui-setting-home-item__left
-        span.pzp-ui-setting-home-item__name
+    .pzp-pc-ui-setting-intro-panel .pzp-pc-setting-intro-quality                'qualitySettingMenu'
+      .pzp-pc-ui-setting-intro-panel__left
+        span.pzp-pc-ui-setting-intro-panel__name
           "해상도"
-    .pzp-ui-setting-home-item .pzp-setting-intro-subtitle
-    .pzp-ui-setting-home-item .pzp-setting-intro-playbackrate                   'playbackRateSettingMenu'
-      .pzp-ui-setting-home-item__left
-        span.pzp-ui-setting-home-item__name
+    .pzp-pc-ui-setting-intro-panel .pzp-pc-setting-intro-subtitle
+    .pzp-pc-ui-setting-intro-panel .pzp-pc-setting-intro-playbackrate           'playbackRateSettingMenu'
+      .pzp-pc-ui-setting-intro-panel__left
+        span.pzp-pc-ui-setting-intro-panel__name
           "재생 속도"
-      .pzp-ui-setting-home-item__right
-        span.pzp-ui-setting-home-item__value (SETTING_MENU_VALUE_SPAN)
+      .pzp-pc-ui-setting-intro-panel__right
+        span.pzp-pc-ui-setting-intro-panel__value
           "1.0x (기본)"
   .pzp-pc__setting-quality-pane
-    .pzp-setting-quality-pane__list-container
-      ul.pzp-setting-quality-pane__list
-        (이하는 동적으로 로딩됨)
-        li.pzp-ui-setting-quality-item (QUALITY_SETTING_ITEM_CLASS)             getQualitySettingItems()
-        li.pzp-ui-setting-quality-item .pzp-ui-setting-pane-item--checked (CHECKED_SETTING_ITEM)
-        li.pzp-ui-setting-quality-item
-        li.pzp-ui-setting-quality-item
-        li.pzp-ui-setting-quality-item
-          .pzp-ui-setting-pane-item__slot
-            span.pzp-ui-setting-pane-item__value
-              .pzp-ui-setting-quality-item__left
-                span.pzp-ui-setting-quality-item__prefix (QUALITY_SETTING_ITEM_SPAN)
+    .pzp-pc-setting-quality-pane
+      .pzp-pc-setting-quality-pane__list
+        ul.pzp-pc-setting-quality-pane__list-container
+          (이하는 동적으로 로딩됨)
+          li.pzp-pc-ui-setting-quality-item                                     getQualitySettingItems()
+          li.pzp-pc-ui-setting-quality-item .pzp-pc-ui-setting-item--checked
+          li.pzp-pc-ui-setting-quality-item             CHECKED_SETTING_ITEM
+          li.pzp-pc-ui-setting-quality-item
+          li.pzp-pc-ui-setting-quality-item
+            .pzp-pc-ui-setting-item__slot
+              .pzp-pc-ui-setting-quality-item__left
+                span.pzp-pc-ui-setting-quality-item__prefix                     QUALITY_SETTING_ITEM_SPAN
   .pzp-pc__setting-playbackrate-pane
-    .pzp-setting-playbackrate-pane__list-container
-      ul.pzp-setting-playbackrate-pane__list
-        li.pzp-ui-setting-playbackrate-item                                    'playbackRateSettingItems'
-        li.pzp-ui-setting-playbackrate-item
-        li.pzp-ui-setting-playbackrate-item .pzp-ui-setting-pane-item--checked
-        li.pzp-ui-setting-playbackrate-item
-        li.pzp-ui-setting-playbackrate-item
-          .pzp-ui-setting-item__slot
-            span.pzp-ui-setting-pane-item__value
-              span.pzp-ui-setting-playbackrate-item__value (PLAYBACK_RATE_SETTING_ITEM_SPAN)
+    .pzp-pc-setting-playbackrate-pane
+      (아래 두 클래스의 이름이 화질 설정의 경우와 반대임에 유의)
+      .pzp-pc-setting-playbackrate-pane__list-container
+        ul.pzp-pc-setting-playbackrate-pane__list
+          li.pzp-pc-ui-setting-playbackrate-item                                'playbackRateSettingItems'
+          li.pzp-pc-ui-setting-playbackrate-item
+          li.pzp-pc-ui-setting-playbackrate-item .pzp-pc-ui-setting-item--checked
+          li.pzp-pc-ui-setting-playbackrate-item             CHECKED_SETTING_ITEM
+          li.pzp-pc-ui-setting-playbackrate-item
+            .pzp-pc-ui-setting-item__slot
+              span.pzp-pc-ui-setting-playbackrate-item__value                   PLAYBACK_RATE_SETTING_ITEM_SPAN
 */

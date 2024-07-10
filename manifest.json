@@ -1,7 +1,7 @@
 {
   "name": "Improved NAVER video plugin",
   "description": "네이버 카페 / 블로그 동영상을 위한 추가 기능 플러그인",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "manifest_version": 3,
   "background": {
     "service_worker": "js/background.js"
@@ -33,30 +33,40 @@
         "https://blog.naver.com/*"
       ],
       "all_frames": true,
-      "css": ["css/content-style.css"],
+      "css": ["css/content-style.css"]
+    },
+    {
+      "matches": [
+        "https://cafe.naver.com/*",
+        "https://blog.naver.com/*"
+      ],
       "js": [
         "js/common/class-variables.js",
         "js/common/util.js",
         "js/video-player/video-player.js",
         "js/video-player/prism-player.js",
+        "js/video-player/prism-player-old.js",
         "js/video-player-finder/video-player-finder.js",
         "js/video-player-finder/cafe-video-player-finder.js",
         "js/video-player-finder/blog-video-player-finder.js",
         "js/decorator/decorator.js",
-        "js/decorator/select-max-quality-decorator.js",
         "js/decorator/quality-display-decorator.js",
-        "js/decorator/divide-playback-rate-decorator.js",
+        "js/decorator/select-max-quality-decorator.js",
         "js/decorator/playback-rate-display-decorator.js",
+        "js/decorator/divide-playback-rate-decorator.js",
         "js/decorator/playback-rate-shortcut-decorator.js",
-        "js/decorator/easy-click-to-play-decorator.js",
-        "js/decorator/auto-pause-last-video-decorator.js",
         "js/decorator/auto-play-first-video-decorator.js",
+        "js/decorator/auto-pause-last-video-decorator.js",
+        "js/decorator/fix-mouse-action-decorator.js",
+        "js/decorator/fix-mouse-action-blog-decorator.js",
         "js/decorator/hide-setting-button-decorator.js",
         "js/decorator/easy-open-volume-slider-decorator.js",
-        "js/decorator/precise-volume-shortcut-decorator.js",
         "js/decorator/extend-volume-slider-decorator.js",
+        "js/decorator/remove-volume-slider-animation-decorator.js",
+        "js/decorator/precise-volume-shortcut-decorator.js",
         "js/decorator/extend-max-volume-decorator.js",
         "js/decorator/set-default-volume-decorator.js",
+        "js/decorator/left-right-shortcut-decorator.js",
         "js/decorator/preserve-volume-after-replay-decorator.js",
         "js/main.js"
       ]

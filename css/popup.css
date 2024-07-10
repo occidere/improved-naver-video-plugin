@@ -8,6 +8,7 @@
 #settings {
     width: 210px;
 }
+
 .setting-group {
     display: flex;
     margin-top: 6px;
@@ -46,7 +47,7 @@
 .setting-checkbox.disabled {
     display: none;
 }
-#volumeNumberInput {
+.setting-checkbox input[type="number"] {
     font-size: 0.9em;
     width: 30px;
 }
@@ -71,4 +72,65 @@
 }
 #defaultVolumeRange.extended {
     width: calc(100% - 4px);
+}
+
+/* Toggle Switch */
+/* https://www.w3schools.com/howto/howto_css_switch.asp */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+.slider.round {
+  border-radius: 13px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

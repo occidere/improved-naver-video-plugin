@@ -3,7 +3,7 @@ class AutoPauseLastVideoDecorator extends Decorator {
     decorate(prismPlayer) {
         const onPlayVideo = () => {
             const video = prismPlayer.query('video');
-            const otherVideos = document.querySelectorAll('video');
+            const otherVideos = prismPlayer.element.ownerDocument.querySelectorAll('video');
             for (const otherVideo of otherVideos) {
                 if (otherVideo !== video && !otherVideo.paused) {
                     otherVideo.pause();

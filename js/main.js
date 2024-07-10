@@ -33,22 +33,45 @@ function getVideoPlayerFinder() {
 function getDecorators(settings) {
     switch (location.hostname) {
         case 'cafe.naver.com':
-        case 'blog.naver.com':
             return [
-                [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
                 [new QualityDisplayDecorator, settings['qualityDisplay']],
+                [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
+                [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
                 [new DividePlaybackRateDecorator, settings['dividePlaybackRate']],
                 [new PlaybackRateShortcutDecorator, settings['dividePlaybackRate']],
-                [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
-                [new EasyClickToPlayDecorator, settings['easyClickToPlay']],
-                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
                 [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
+                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
+                [new FixMouseActionDecorator, settings['fixMouseAction']],
                 [new HideSettingButtonDecorator, settings['hideSettingButton']],
                 [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
-                [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
                 [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
+                [new RemoveVolumeSliderAnimationDecorator, settings['removeVolumeSliderAnimation']],
+                [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
                 [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
                 [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
+                [new LeftRightShortcutDecorator, settings['leftRightShortcut']],
+                [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume']
+                                                      || settings['extendMaxVolume']
+                                                      || settings['preciseVolumeShortcut']],
+            ];
+        case 'blog.naver.com':
+            return [
+                [new QualityDisplayDecorator, settings['qualityDisplay']],
+                [new SelectMaxQualityDecorator, settings['selectMaxQuality']],
+                [new PlaybackRateDisplayDecorator, settings['playbackRateDisplay']],
+                [new DividePlaybackRateDecorator, settings['dividePlaybackRate']],
+                [new PlaybackRateShortcutDecorator, settings['dividePlaybackRate']],
+                [new AutoPlayFirstVideoDecorator, settings['autoPlayFirstVideo']],
+                [new AutoPauseLastVideoDecorator, settings['autoPauseLastVideo']],
+                [new FixMouseActionBlogDecorator, settings['fixMouseAction']], // different
+                [new HideSettingButtonDecorator, settings['hideSettingButton']],
+                [new EasyOpenVolumeSliderDecorator, settings['easyOpenVolumeSlider']],
+                [new ExtendVolumeSliderDecorator, settings['extendVolumeSlider']],
+                [new RemoveVolumeSliderAnimationDecorator, settings['removeVolumeSliderAnimation']],
+                [new PreciseVolumeShortcutDecorator, settings['preciseVolumeShortcut']],
+                [new ExtendMaxVolumeDecorator, settings['extendMaxVolume']],
+                [new SetDefaultVolumeDecorator, settings['setDefaultVolume']],
+                [new LeftRightShortcutDecorator, settings['leftRightShortcut']],
                 [new PreserveVolumeAfterReplayDecorator, settings['setDefaultVolume']
                                                       || settings['extendMaxVolume']
                                                       || settings['preciseVolumeShortcut']],
@@ -58,6 +81,13 @@ function getDecorators(settings) {
 
 async function update(videoPlayerFinder) {
     const settings = await chrome.storage.sync.get(null); // get all items
+    if (!settings['enableApp']) {
+        for (const item in settings) {
+            if (settings[item] === true) {
+                settings[item] = false;
+            }
+        }
+    }
     const decorators = getDecorators(settings);
     videoPlayerFinder.applyCallback((videoPlayer) => {
         for (const [decorator, isEnabled] of decorators) {
