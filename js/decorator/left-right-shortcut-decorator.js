@@ -1,6 +1,6 @@
 class LeftRightShortcutDecorator extends Decorator {
 
-    static timeNumber; // int
+    static timeNumber; // float
 
     static {
         this.updateTimeNumber();
@@ -16,7 +16,7 @@ class LeftRightShortcutDecorator extends Decorator {
 
     static async updateTimeNumber() {
         const settings = await chrome.storage.sync.get('timeNumber');
-        this.timeNumber = parseInt(settings['timeNumber']);
+        this.timeNumber = parseFloat(settings['timeNumber']);
     }
 
     decorate(prismPlayer) {
