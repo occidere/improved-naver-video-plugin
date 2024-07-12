@@ -5,6 +5,7 @@ class PrismPlayer extends VideoPlayer {
         dim: '.pzp-pc__dimmed',
         header: '.pzp-pc__header',
         playButton: 'button.pzp-pc__brand-playback-button',
+        durationIndicator: '.pzp-pc__duration-indicator',
         bottom: '.pzp-pc__bottom',
         bottomButtons: '.pzp-pc__bottom-buttons',
         playPauseButton: 'button.pzp-pc__playback-switch',
@@ -132,6 +133,7 @@ class PrismPlayer extends VideoPlayer {
   .pzp-pc__dimmed                                                               'dim'
   .pzp-pc__header                                                               'header'
   button.pzp-pc__brand-playback-button                                          'playButton'
+  .pzp-pc__duration-indicator                                                   'durationIndicator'
   .pzp-pc__buttom                                                               'bottom'
     .pzp-pc__bottom-buttons                                                     'bottomButtons'
       .pzp-pc__bottom-buttons-left
