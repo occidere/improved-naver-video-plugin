@@ -1,6 +1,6 @@
 class ExtendMaxVolumeDecorator extends Decorator {
 
-    static AMPLIFY_FACTOR = 2;
+    static AMPLIFY_FACTOR = 2.5;
 
     static audioContext;
     static gainNode;
@@ -35,11 +35,6 @@ class ExtendMaxVolumeDecorator extends Decorator {
             prismPlayer.source.disconnect();
             prismPlayer.source.connect(gainNode);
 
-            // preserve output volume
-            const video = prismPlayer.query('video');
-            const currentVolume = video.volume;
-            video.volume = currentVolume / ExtendMaxVolumeDecorator.AMPLIFY_FACTOR;
-
             this.getQualityDisplay(prismPlayer)?.remove();
         });
     }
@@ -65,11 +60,11 @@ class ExtendMaxVolumeDecorator extends Decorator {
         const tooltip = document.createElement('span');
               tooltip.classList.add(PLAYER_UI_TOOLTIP_CLASS,
                                     PLAYER_UI_TOOLTIP_TOP_CLASS);
-              tooltip.textContent = '볼륨 확장';
+              tooltip.textContent = '볼륨 키우기';
               button.appendChild(tooltip);
         const label = document.createElement('span');
               label.classList.add(APP_UI_LABEL_CLASS);
-              label.textContent = 'max';
+              label.textContent = 'MAX';
               button.appendChild(label);
         return button;
     }
