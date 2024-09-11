@@ -1,7 +1,7 @@
 {
   "name": "Improved NAVER video plugin",
   "description": "네이버 카페 / 블로그 동영상을 위한 추가 기능 플러그인",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "manifest_version": 3,
   "background": {
     "service_worker": "js/background.js"
@@ -45,7 +45,6 @@
         "js/common/util.js",
         "js/video-player/video-player.js",
         "js/video-player/prism-player.js",
-        "js/video-player/prism-player-old.js",
         "js/video-player-finder/video-player-finder.js",
         "js/video-player-finder/cafe-video-player-finder.js",
         "js/video-player-finder/blog-video-player-finder.js",
@@ -58,7 +57,6 @@
         "js/decorator/auto-play-first-video-decorator.js",
         "js/decorator/auto-pause-last-video-decorator.js",
         "js/decorator/fix-mouse-action-decorator.js",
-        "js/decorator/fix-mouse-action-blog-decorator.js",
         "js/decorator/hide-setting-button-decorator.js",
         "js/decorator/easy-open-volume-slider-decorator.js",
         "js/decorator/extend-volume-slider-decorator.js",

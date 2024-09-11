@@ -27,7 +27,7 @@ class BlogVideoPlayerFinder extends VideoPlayerFinder {
             findNext(videoModule, 'prismplayer-area').then((prismPlayerArea) => {
                 const pzpPc = prismPlayerArea.querySelector('.pzp-pc');
                 if (pzpPc) {
-                    const prismPlayer = new OldPrismPlayer(pzpPc);
+                    const prismPlayer = new PrismPlayer(pzpPc);
                     this.callback?.(prismPlayer);
                     this.videoPlayers.push(prismPlayer);
                 }
