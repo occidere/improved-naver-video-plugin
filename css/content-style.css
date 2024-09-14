@@ -32,18 +32,19 @@
 .pzp.pzp-pc--active-volume-control .pzp-pc__volume-control.INVP__remove-volume-slider-animation .pzp-pc__volume-slider {
     transition-property: none;
 }
-.pzp .INVP__easy-open-volume-slider:hover .pzp-pc__volume-slider {
+.pzp .INVP__easy-open-volume-slider:hover:not(:has(.pzp-pc__bottom-buttons-right:hover)) .pzp-pc__volume-slider {
     overflow: visible;
     width: 72px;
     margin-right: 13px;
 }
-.pzp .INVP__easy-open-volume-slider:hover .INVP__extend-volume-slider .pzp-pc__volume-slider {
+.pzp .INVP__easy-open-volume-slider:hover:not(:has(.pzp-pc__bottom-buttons-right:hover)) .INVP__extend-volume-slider .pzp-pc__volume-slider {
     width: 120px;
 }
 
 /* Mouse Pointer */
 .pzp:not(.pzp-pc--playing) .pzp-pc__dimmed.INVP__mouse-pointer,
 .pzp:not(.pzp-pc--playing) .pzp-pc__header.INVP__mouse-pointer,
-.pzp:not(.pzp-pc--playing) .pzp-pc__dimmed.INVP__mouse-pointer ~ .pzp-pc__header {
+.pzp:not(.pzp-pc--playing) .pzp-pc__dimmed.INVP__mouse-pointer ~ .pzp-pc__header,
+.pzp:not(.pzp-pc--playing) .pzp-pc__duration-indicator.INVP__mouse-pointer {
     cursor: pointer;
 }

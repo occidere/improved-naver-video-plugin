@@ -146,10 +146,10 @@ async function init() {
         const input = document.querySelector('#timeNumberInput');
         input.value = settings[input.name];
         input.addEventListener('change', () => {
-            let value = parseInt(input.value);
-            value = Math.max(value, 1);  // value >= 1
-            value = Math.min(value, 15); // value <= 15
-            saveSetting(input.name, value.toFixed(), TIME_NUMBER_CHANGED_EVENT);
+            let value = parseFloat(input.value);
+            value = Math.max(value, 0.1); // value >= 0.1
+            value = Math.min(value, 60);  // value <= 60
+            saveSetting(input.name, value.toFixed(1), TIME_NUMBER_CHANGED_EVENT);
         });
     }
 }
